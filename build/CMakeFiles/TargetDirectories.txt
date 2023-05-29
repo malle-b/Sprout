@@ -1,0 +1,4 @@
+/home/malin/hades/software/src/RHelper/build/CMakeFiles/RHelperDict.dir
+/home/malin/hades/software/src/RHelper/build/CMakeFiles/RHelper.dir
+/home/malin/hades/software/src/RHelper/build/CMakeFiles/edit_cache.dir
+/home/malin/hades/software/src/RHelper/build/CMakeFiles/rebuild_cache.dir

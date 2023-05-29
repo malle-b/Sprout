@@ -1,0 +1,7 @@
+module "RHelper" {
+  requires cplusplus
+  module "RHelper.h" { header "RHelper.h" export * }
+  link "libRHelper.so"
+  export *
+}
+
