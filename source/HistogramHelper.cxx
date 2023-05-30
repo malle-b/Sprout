@@ -12,17 +12,71 @@ TCanvas* HistogramHelper::makeTCanvas(){
 	canvas->SetWindowSize(801, 501);
 	canvas->SetTopMargin(1.);
 	canvas->SetBottomMargin(0.15);
-	canvas->SetRightMargin(0.03);
+	canvas->SetRightMargin(0.10);
 	canvas->SetLeftMargin(0.10);
 
 	return canvas;
 }
+
+TCanvas* HistogramHelper::makeTCanvas(int nhist){
+	TCanvas* c = new TCanvas();
+
+	/*Finds suitible canvas splitting into 
+	rows and columns depending on nhist*/
+	int rows,cols;
+	int i=1; int res=1;
+	if(nhist==0 || nhist==1){rows=nhist; rows = nhist;}
+	else{ while(res <= nhist){i++; res=i*i;} rows=i-1;}	
+	if(nhist%rows==0){cols=nhist/rows;}
+	else{cols = nhist/rows + 1;}
+
+
+	c->SetCanvasSize(800*cols, 500*rows);
+	c->SetWindowSize(810*cols, 510*rows);
+	c->SetTopMargin(1.);
+	c->SetBottomMargin(0.01);
+	c->SetRightMargin(0.50);
+	c->SetLeftMargin(0.10);
+
+	c->Divide(cols,rows);
+
+	return c;
+}
+
+TCanvas* HistogramHelper::makeTCanvas(RHtree* tree){
+	TCanvas* c = makeTCanvas(tree->getNumBranches());
+
+	for(int i=0; i<tree->getNumBranches(); i++){
+		TH1F* h = makeTH1F(tree->getBranch(i), "h"+int2str(i));
+		setPlotText(h,"bin "+int2str(i));
+		c->cd(i+1);
+		h->Draw();
+	}
+	return c;
+}
+
 
 TH1F* HistogramHelper::makeTH1F(TString name, double xmin, double xmax, TString xlabel, TString ylabel, int bins){
     TH1F* h = new TH1F(name, "", bins, xmin, xmax);
     h->SetXTitle(xlabel);
     h->SetYTitle(ylabel);
     setStyle(h);
+    return h;
+}
+
+TH1F* HistogramHelper::makeTH1F(std::vector<float> data, TString name, TString xlabel, TString ylabel){
+	float min = *std::min_element(data.begin(), data.end());
+	float max = *std::max_element(data.begin(), data.end());
+
+	int count = 0;
+	int number = data.size();
+    while(number != 0){number = number / 10; count++;}
+
+	TH1F* h = new TH1F(name, "", 10^(count/2), min, max);
+	h->SetXTitle(xlabel);
+    h->SetYTitle(ylabel);
+    setStyle(h);
+	for(int i=0; i<data.size(); i++) h->Fill(data[i]);
     return h;
 }
 
@@ -87,24 +141,23 @@ void HistogramHelper::writeHist(TH1F *h1, TString plot_text){
 	can->SaveAs(title+".png");
 }
 
-//Make this return a ttree with n branches and the elements of evtnum and bdata sorted into the correct ones 
-//Make sure each branch only contains one vector
-//std::vector<std::vector<float>> binning(std::vector<float> evtnum, std::vector<float> adata, std::vector<float> bdata, int n){
+void HistogramHelper::writeCanvas(TCanvas* can, TString name){
+	can->Write();
+	can->SaveAs(name+".png");
+}
 
+RHtree* HistogramHelper::binData(std::vector<float> adata, std::vector<float> bdata, int n){
 
+	float min = *std::min_element(adata.begin(), adata.end());
+	float max = *std::max_element(adata.begin(), adata.end());
+	float bin_width = (max-min)/n;
 
-	// float min = *std::min_element(adata.begin(), adata.end());
-	// float max = *std::max_element(adata.begin(), adata.end());
-	// float range = max-min;
+	RHtree* tree = new RHtree(n);
 
-	// for(int i=0; i<adata.size(); i++){
-	// 	for(int j=0; j<n; j++){
-	// 		if(adata[i]==max){
-
-	// 		}
-	// 		else if(adata[i]<range/n*(j+1)){
-				
-	// 		}
-	// 	}
-	// }
-//}
+	for(int i=0; i<adata.size(); i++){
+		for(int j=1; j<n+1; j++){
+			if(adata[i]>=bin_width*(j-1) && adata[i]<bin_width*j){tree->addToBranch(j-1,bdata[i]);} // skips last element
+		}
+	}
+	return tree;
+}

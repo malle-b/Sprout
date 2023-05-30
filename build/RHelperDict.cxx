@@ -44,38 +44,6 @@
 namespace std {} using namespace std;
 
 namespace ROOT {
-   static void *new_HistogramHelper(void *p = nullptr);
-   static void *newArray_HistogramHelper(Long_t size, void *p);
-   static void delete_HistogramHelper(void *p);
-   static void deleteArray_HistogramHelper(void *p);
-   static void destruct_HistogramHelper(void *p);
-
-   // Function generating the singleton type initializer
-   static TGenericClassInfo *GenerateInitInstanceLocal(const ::HistogramHelper*)
-   {
-      ::HistogramHelper *ptr = nullptr;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::HistogramHelper >(nullptr);
-      static ::ROOT::TGenericClassInfo 
-         instance("HistogramHelper", ::HistogramHelper::Class_Version(), "include/HistogramHelper.h", 13,
-                  typeid(::HistogramHelper), ::ROOT::Internal::DefineBehavior(ptr, ptr),
-                  &::HistogramHelper::Dictionary, isa_proxy, 4,
-                  sizeof(::HistogramHelper) );
-      instance.SetNew(&new_HistogramHelper);
-      instance.SetNewArray(&newArray_HistogramHelper);
-      instance.SetDelete(&delete_HistogramHelper);
-      instance.SetDeleteArray(&deleteArray_HistogramHelper);
-      instance.SetDestructor(&destruct_HistogramHelper);
-      return &instance;
-   }
-   TGenericClassInfo *GenerateInitInstance(const ::HistogramHelper*)
-   {
-      return GenerateInitInstanceLocal(static_cast<::HistogramHelper*>(nullptr));
-   }
-   // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::HistogramHelper*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
-} // end of namespace ROOT
-
-namespace ROOT {
    static void *new_RHtree(void *p = nullptr);
    static void *newArray_RHtree(Long_t size, void *p);
    static void delete_RHtree(void *p);
@@ -107,40 +75,37 @@ namespace ROOT {
    static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::RHtree*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
-//______________________________________________________________________________
-atomic_TClass_ptr HistogramHelper::fgIsA(nullptr);  // static to hold class pointer
+namespace ROOT {
+   static void *new_HistogramHelper(void *p = nullptr);
+   static void *newArray_HistogramHelper(Long_t size, void *p);
+   static void delete_HistogramHelper(void *p);
+   static void deleteArray_HistogramHelper(void *p);
+   static void destruct_HistogramHelper(void *p);
 
-//______________________________________________________________________________
-const char *HistogramHelper::Class_Name()
-{
-   return "HistogramHelper";
-}
-
-//______________________________________________________________________________
-const char *HistogramHelper::ImplFileName()
-{
-   return ::ROOT::GenerateInitInstanceLocal((const ::HistogramHelper*)nullptr)->GetImplFileName();
-}
-
-//______________________________________________________________________________
-int HistogramHelper::ImplFileLine()
-{
-   return ::ROOT::GenerateInitInstanceLocal((const ::HistogramHelper*)nullptr)->GetImplFileLine();
-}
-
-//______________________________________________________________________________
-TClass *HistogramHelper::Dictionary()
-{
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::HistogramHelper*)nullptr)->GetClass();
-   return fgIsA;
-}
-
-//______________________________________________________________________________
-TClass *HistogramHelper::Class()
-{
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::HistogramHelper*)nullptr)->GetClass(); }
-   return fgIsA;
-}
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::HistogramHelper*)
+   {
+      ::HistogramHelper *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::HistogramHelper >(nullptr);
+      static ::ROOT::TGenericClassInfo 
+         instance("HistogramHelper", ::HistogramHelper::Class_Version(), "include/HistogramHelper.h", 15,
+                  typeid(::HistogramHelper), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::HistogramHelper::Dictionary, isa_proxy, 4,
+                  sizeof(::HistogramHelper) );
+      instance.SetNew(&new_HistogramHelper);
+      instance.SetNewArray(&newArray_HistogramHelper);
+      instance.SetDelete(&delete_HistogramHelper);
+      instance.SetDeleteArray(&deleteArray_HistogramHelper);
+      instance.SetDestructor(&destruct_HistogramHelper);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::HistogramHelper*)
+   {
+      return GenerateInitInstanceLocal(static_cast<::HistogramHelper*>(nullptr));
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::HistogramHelper*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+} // end of namespace ROOT
 
 //______________________________________________________________________________
 atomic_TClass_ptr RHtree::fgIsA(nullptr);  // static to hold class pointer
@@ -178,37 +143,39 @@ TClass *RHtree::Class()
 }
 
 //______________________________________________________________________________
-void HistogramHelper::Streamer(TBuffer &R__b)
-{
-   // Stream an object of class HistogramHelper.
+atomic_TClass_ptr HistogramHelper::fgIsA(nullptr);  // static to hold class pointer
 
-   if (R__b.IsReading()) {
-      R__b.ReadClassBuffer(HistogramHelper::Class(),this);
-   } else {
-      R__b.WriteClassBuffer(HistogramHelper::Class(),this);
-   }
+//______________________________________________________________________________
+const char *HistogramHelper::Class_Name()
+{
+   return "HistogramHelper";
 }
 
-namespace ROOT {
-   // Wrappers around operator new
-   static void *new_HistogramHelper(void *p) {
-      return  p ? new(p) ::HistogramHelper : new ::HistogramHelper;
-   }
-   static void *newArray_HistogramHelper(Long_t nElements, void *p) {
-      return p ? new(p) ::HistogramHelper[nElements] : new ::HistogramHelper[nElements];
-   }
-   // Wrapper around operator delete
-   static void delete_HistogramHelper(void *p) {
-      delete (static_cast<::HistogramHelper*>(p));
-   }
-   static void deleteArray_HistogramHelper(void *p) {
-      delete [] (static_cast<::HistogramHelper*>(p));
-   }
-   static void destruct_HistogramHelper(void *p) {
-      typedef ::HistogramHelper current_t;
-      (static_cast<current_t*>(p))->~current_t();
-   }
-} // end of namespace ROOT for class ::HistogramHelper
+//______________________________________________________________________________
+const char *HistogramHelper::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::HistogramHelper*)nullptr)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+int HistogramHelper::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::HistogramHelper*)nullptr)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+TClass *HistogramHelper::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::HistogramHelper*)nullptr)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+TClass *HistogramHelper::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::HistogramHelper*)nullptr)->GetClass(); }
+   return fgIsA;
+}
 
 //______________________________________________________________________________
 void RHtree::Streamer(TBuffer &R__b)
@@ -242,6 +209,39 @@ namespace ROOT {
       (static_cast<current_t*>(p))->~current_t();
    }
 } // end of namespace ROOT for class ::RHtree
+
+//______________________________________________________________________________
+void HistogramHelper::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class HistogramHelper.
+
+   if (R__b.IsReading()) {
+      R__b.ReadClassBuffer(HistogramHelper::Class(),this);
+   } else {
+      R__b.WriteClassBuffer(HistogramHelper::Class(),this);
+   }
+}
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_HistogramHelper(void *p) {
+      return  p ? new(p) ::HistogramHelper : new ::HistogramHelper;
+   }
+   static void *newArray_HistogramHelper(Long_t nElements, void *p) {
+      return p ? new(p) ::HistogramHelper[nElements] : new ::HistogramHelper[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_HistogramHelper(void *p) {
+      delete (static_cast<::HistogramHelper*>(p));
+   }
+   static void deleteArray_HistogramHelper(void *p) {
+      delete [] (static_cast<::HistogramHelper*>(p));
+   }
+   static void destruct_HistogramHelper(void *p) {
+      typedef ::HistogramHelper current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class ::HistogramHelper
 
 namespace ROOT {
    static TClass *vectorlEvectorlEfloatgRsPgR_Dictionary();
@@ -393,8 +393,8 @@ nullptr
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_AutoLoading_Map;
+class __attribute__((annotate("$clingAutoload$/home/malin/hades/software/src/RHelper/include/HistogramHelper.h")))  RHtree;
 class __attribute__((annotate("$clingAutoload$/home/malin/hades/software/src/RHelper/include/HistogramHelper.h")))  HistogramHelper;
-class __attribute__((annotate("$clingAutoload$/home/malin/hades/software/src/RHelper/include/RHtree.h")))  RHtree;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
 #line 1 "libRHelperDict dictionary payload"
