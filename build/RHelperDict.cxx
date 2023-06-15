@@ -37,6 +37,7 @@
 // Header files passed as explicit arguments
 #include "/home/malin/hades/software/src/RHelper/include/HistogramHelper.h"
 #include "/home/malin/hades/software/src/RHelper/include/RHtree.h"
+#include "/home/malin/hades/software/src/RHelper/include/RHfit.h"
 
 // Header files passed via #pragma extra_include
 
@@ -76,6 +77,47 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
+   static TClass *RHfit_Dictionary();
+   static void RHfit_TClassManip(TClass*);
+   static void delete_RHfit(void *p);
+   static void deleteArray_RHfit(void *p);
+   static void destruct_RHfit(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::RHfit*)
+   {
+      ::RHfit *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::RHfit));
+      static ::ROOT::TGenericClassInfo 
+         instance("RHfit", "include/RHfit.h", 11,
+                  typeid(::RHfit), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &RHfit_Dictionary, isa_proxy, 4,
+                  sizeof(::RHfit) );
+      instance.SetDelete(&delete_RHfit);
+      instance.SetDeleteArray(&deleteArray_RHfit);
+      instance.SetDestructor(&destruct_RHfit);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::RHfit*)
+   {
+      return GenerateInitInstanceLocal(static_cast<::RHfit*>(nullptr));
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::RHfit*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *RHfit_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const ::RHfit*>(nullptr))->GetClass();
+      RHfit_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void RHfit_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
    static void *new_HistogramHelper(void *p = nullptr);
    static void *newArray_HistogramHelper(Long_t size, void *p);
    static void delete_HistogramHelper(void *p);
@@ -88,7 +130,7 @@ namespace ROOT {
       ::HistogramHelper *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::HistogramHelper >(nullptr);
       static ::ROOT::TGenericClassInfo 
-         instance("HistogramHelper", ::HistogramHelper::Class_Version(), "include/HistogramHelper.h", 15,
+         instance("HistogramHelper", ::HistogramHelper::Class_Version(), "include/HistogramHelper.h", 17,
                   typeid(::HistogramHelper), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::HistogramHelper::Dictionary, isa_proxy, 4,
                   sizeof(::HistogramHelper) );
@@ -209,6 +251,20 @@ namespace ROOT {
       (static_cast<current_t*>(p))->~current_t();
    }
 } // end of namespace ROOT for class ::RHtree
+
+namespace ROOT {
+   // Wrapper around operator delete
+   static void delete_RHfit(void *p) {
+      delete (static_cast<::RHfit*>(p));
+   }
+   static void deleteArray_RHfit(void *p) {
+      delete [] (static_cast<::RHfit*>(p));
+   }
+   static void destruct_RHfit(void *p) {
+      typedef ::RHfit current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class ::RHfit
 
 //______________________________________________________________________________
 void HistogramHelper::Streamer(TBuffer &R__b)
@@ -378,6 +434,7 @@ namespace {
     static const char* headers[] = {
 "/home/malin/hades/software/src/RHelper/include/HistogramHelper.h",
 "/home/malin/hades/software/src/RHelper/include/RHtree.h",
+"/home/malin/hades/software/src/RHelper/include/RHfit.h",
 nullptr
     };
     static const char* includePaths[] = {
@@ -394,6 +451,7 @@ nullptr
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_AutoLoading_Map;
 class __attribute__((annotate("$clingAutoload$/home/malin/hades/software/src/RHelper/include/HistogramHelper.h")))  RHtree;
+class __attribute__((annotate("$clingAutoload$/home/malin/hades/software/src/RHelper/include/HistogramHelper.h")))  RHfit;
 class __attribute__((annotate("$clingAutoload$/home/malin/hades/software/src/RHelper/include/HistogramHelper.h")))  HistogramHelper;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
@@ -404,11 +462,13 @@ class __attribute__((annotate("$clingAutoload$/home/malin/hades/software/src/RHe
 // Inline headers
 #include "/home/malin/hades/software/src/RHelper/include/HistogramHelper.h"
 #include "/home/malin/hades/software/src/RHelper/include/RHtree.h"
+#include "/home/malin/hades/software/src/RHelper/include/RHfit.h"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";
     static const char* classesHeaders[] = {
 "HistogramHelper", payloadCode, "@",
+"RHfit", payloadCode, "@",
 "RHtree", payloadCode, "@",
 nullptr
 };

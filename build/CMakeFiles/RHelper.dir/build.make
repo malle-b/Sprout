@@ -72,11 +72,13 @@ include CMakeFiles/RHelper.dir/flags.make
 RHelperDict.cxx: ../include/RHelperLinkDef.h
 RHelperDict.cxx: ../include/HistogramHelper.h
 RHelperDict.cxx: ../include/RHtree.h
+RHelperDict.cxx: ../include/RHfit.h
 RHelperDict.cxx: ../include/HistogramHelper.h
 RHelperDict.cxx: ../include/RHtree.h
+RHelperDict.cxx: ../include/RHfit.h
 RHelperDict.cxx: ../include/RHelperLinkDef.h
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating RHelperDict.cxx, libRHelperDict_rdict.pcm, libRHelperDict.rootmap"
-	/usr/bin/cmake -E env LD_LIBRARY_PATH=/home/malin/hades/software/install/root/lib:/home/malin/hades/software/install/root/lib /home/malin/hades/software/install/root/bin/rootcling -v2 -f RHelperDict.cxx -s /home/malin/hades/software/src/RHelper/build/libRHelperDict.so -rml libRHelperDict.so -rmf /home/malin/hades/software/src/RHelper/build/libRHelperDict.rootmap -compilerI/usr/include/c++/11 -compilerI/usr/include/x86_64-linux-gnu/c++/11 -compilerI/usr/include/c++/11/backward -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -I/home/malin/hades/software/install/root/include -I/home/malin/hades/software/src/RHelper /home/malin/hades/software/src/RHelper/include/HistogramHelper.h /home/malin/hades/software/src/RHelper/include/RHtree.h /home/malin/hades/software/src/RHelper/include/RHelperLinkDef.h
+	/usr/bin/cmake -E env LD_LIBRARY_PATH=/home/malin/hades/software/install/root/lib:/home/malin/hades/software/install/root/lib /home/malin/hades/software/install/root/bin/rootcling -v2 -f RHelperDict.cxx -s /home/malin/hades/software/src/RHelper/build/libRHelperDict.so -rml libRHelperDict.so -rmf /home/malin/hades/software/src/RHelper/build/libRHelperDict.rootmap -compilerI/usr/include/c++/11 -compilerI/usr/include/x86_64-linux-gnu/c++/11 -compilerI/usr/include/c++/11/backward -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -I/home/malin/hades/software/install/root/include -I/home/malin/hades/software/src/RHelper /home/malin/hades/software/src/RHelper/include/HistogramHelper.h /home/malin/hades/software/src/RHelper/include/RHtree.h /home/malin/hades/software/src/RHelper/include/RHfit.h /home/malin/hades/software/src/RHelper/include/RHelperLinkDef.h
 
 libRHelperDict_rdict.pcm: RHelperDict.cxx
 	@$(CMAKE_COMMAND) -E touch_nocreate libRHelperDict_rdict.pcm
@@ -112,10 +114,24 @@ CMakeFiles/RHelper.dir/source/RHtree.cxx.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RHelper.dir/source/RHtree.cxx.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/malin/hades/software/src/RHelper/source/RHtree.cxx -o CMakeFiles/RHelper.dir/source/RHtree.cxx.s
 
+CMakeFiles/RHelper.dir/source/RHfit.cxx.o: CMakeFiles/RHelper.dir/flags.make
+CMakeFiles/RHelper.dir/source/RHfit.cxx.o: ../source/RHfit.cxx
+CMakeFiles/RHelper.dir/source/RHfit.cxx.o: CMakeFiles/RHelper.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/RHelper.dir/source/RHfit.cxx.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RHelper.dir/source/RHfit.cxx.o -MF CMakeFiles/RHelper.dir/source/RHfit.cxx.o.d -o CMakeFiles/RHelper.dir/source/RHfit.cxx.o -c /home/malin/hades/software/src/RHelper/source/RHfit.cxx
+
+CMakeFiles/RHelper.dir/source/RHfit.cxx.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RHelper.dir/source/RHfit.cxx.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/malin/hades/software/src/RHelper/source/RHfit.cxx > CMakeFiles/RHelper.dir/source/RHfit.cxx.i
+
+CMakeFiles/RHelper.dir/source/RHfit.cxx.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RHelper.dir/source/RHfit.cxx.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/malin/hades/software/src/RHelper/source/RHfit.cxx -o CMakeFiles/RHelper.dir/source/RHfit.cxx.s
+
 CMakeFiles/RHelper.dir/RHelperDict.cxx.o: CMakeFiles/RHelper.dir/flags.make
 CMakeFiles/RHelper.dir/RHelperDict.cxx.o: RHelperDict.cxx
 CMakeFiles/RHelper.dir/RHelperDict.cxx.o: CMakeFiles/RHelper.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/RHelper.dir/RHelperDict.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/RHelper.dir/RHelperDict.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RHelper.dir/RHelperDict.cxx.o -MF CMakeFiles/RHelper.dir/RHelperDict.cxx.o.d -o CMakeFiles/RHelper.dir/RHelperDict.cxx.o -c /home/malin/hades/software/src/RHelper/build/RHelperDict.cxx
 
 CMakeFiles/RHelper.dir/RHelperDict.cxx.i: cmake_force
@@ -130,6 +146,7 @@ CMakeFiles/RHelper.dir/RHelperDict.cxx.s: cmake_force
 RHelper_OBJECTS = \
 "CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o" \
 "CMakeFiles/RHelper.dir/source/RHtree.cxx.o" \
+"CMakeFiles/RHelper.dir/source/RHfit.cxx.o" \
 "CMakeFiles/RHelper.dir/RHelperDict.cxx.o"
 
 # External object files for target RHelper
@@ -137,6 +154,7 @@ RHelper_EXTERNAL_OBJECTS =
 
 libRHelper.so: CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o
 libRHelper.so: CMakeFiles/RHelper.dir/source/RHtree.cxx.o
+libRHelper.so: CMakeFiles/RHelper.dir/source/RHfit.cxx.o
 libRHelper.so: CMakeFiles/RHelper.dir/RHelperDict.cxx.o
 libRHelper.so: CMakeFiles/RHelper.dir/build.make
 libRHelper.so: /home/malin/hades/software/install/root/lib/libCore.so
@@ -159,7 +177,7 @@ libRHelper.so: /home/malin/hades/software/install/root/lib/libThread.so
 libRHelper.so: /home/malin/hades/software/install/root/lib/libMultiProc.so
 libRHelper.so: /home/malin/hades/software/install/root/lib/libROOTVecOps.so
 libRHelper.so: CMakeFiles/RHelper.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX shared library libRHelper.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX shared library libRHelper.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/RHelper.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

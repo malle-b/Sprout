@@ -82,7 +82,7 @@ clean: CMakeFiles/RHelper.dir/clean
 CMakeFiles/RHelperDict.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelperDict.dir/build.make CMakeFiles/RHelperDict.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelperDict.dir/build.make CMakeFiles/RHelperDict.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=6 "Built target RHelperDict"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=7 "Built target RHelperDict"
 .PHONY : CMakeFiles/RHelperDict.dir/all
 
 # Build rule for subdir invocation for target.
@@ -108,12 +108,12 @@ CMakeFiles/RHelperDict.dir/clean:
 CMakeFiles/RHelper.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target RHelper"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target RHelper"
 .PHONY : CMakeFiles/RHelper.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/RHelper.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/RHelper/build/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/RHelper/build/CMakeFiles 6
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/RHelper.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/RHelper/build/CMakeFiles 0
 .PHONY : CMakeFiles/RHelper.dir/rule

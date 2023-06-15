@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/malin/hades/software/src/RHelper/include/RHelperLinkDef.h" "/home/malin/hades/software/src/RHelper/build/RHelperDict.cxx"
   "/home/malin/hades/software/src/RHelper/include/HistogramHelper.h" "/home/malin/hades/software/src/RHelper/build/RHelperDict.cxx"
   "/home/malin/hades/software/src/RHelper/include/RHtree.h" "/home/malin/hades/software/src/RHelper/build/RHelperDict.cxx"
+  "/home/malin/hades/software/src/RHelper/include/RHfit.h" "/home/malin/hades/software/src/RHelper/build/RHelperDict.cxx"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -29,6 +30,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/malin/hades/software/src/RHelper/build/RHelperDict.cxx" "CMakeFiles/RHelper.dir/RHelperDict.cxx.o" "gcc" "CMakeFiles/RHelper.dir/RHelperDict.cxx.o.d"
   "/home/malin/hades/software/src/RHelper/source/HistogramHelper.cxx" "CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o" "gcc" "CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o.d"
+  "/home/malin/hades/software/src/RHelper/source/RHfit.cxx" "CMakeFiles/RHelper.dir/source/RHfit.cxx.o" "gcc" "CMakeFiles/RHelper.dir/source/RHfit.cxx.o.d"
   "/home/malin/hades/software/src/RHelper/source/RHtree.cxx" "CMakeFiles/RHelper.dir/source/RHtree.cxx.o" "gcc" "CMakeFiles/RHelper.dir/source/RHtree.cxx.o.d"
   )
 

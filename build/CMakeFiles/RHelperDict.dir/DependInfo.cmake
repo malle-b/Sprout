@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/malin/hades/software/src/RHelper/include/RHelperLinkDef.h" "/home/malin/hades/software/src/RHelper/build/RHelperDict.cxx"
   "/home/malin/hades/software/src/RHelper/include/HistogramHelper.h" "/home/malin/hades/software/src/RHelper/build/RHelperDict.cxx"
   "/home/malin/hades/software/src/RHelper/include/RHtree.h" "/home/malin/hades/software/src/RHelper/build/RHelperDict.cxx"
+  "/home/malin/hades/software/src/RHelper/include/RHfit.h" "/home/malin/hades/software/src/RHelper/build/RHelperDict.cxx"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

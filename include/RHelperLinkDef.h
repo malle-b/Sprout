@@ -10,5 +10,6 @@
 
 #pragma link C++ class HistogramHelper+;
 #pragma link C++ class RHtree+;
+#pragma link C++ class RHfit+;
 
 #endif

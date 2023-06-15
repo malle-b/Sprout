@@ -3,20 +3,30 @@
 ClassImp(RHtree) // Needed for compatability with ROOT's Cling interpreter 
 
 
-RHtree::RHtree() : t(), fvec(){}
+RHtree::RHtree() :fvec(){}
 
 RHtree::RHtree(int num_branches){
-    t = new TTree("t","");
     fvec.reserve(num_branches);
     for(int i=0; i<num_branches;i++){std::vector<float> val; fvec.push_back(val);}    
 }
 
-
-void RHtree::fillTTree(){
+void RHtree::writeTTree(TString name){
+    TTree t(name,"");
     for(int i=0; i<fvec.size(); i++){
-        t->Branch("b"+int2str(i), &fvec);
+        t.Branch("b"+int2str(i), &fvec);
     }
-    t->Fill(); 
+    t.Fill(); 
+    t.Write();
+}
+
+int RHtree::getMaxEntries(){
+    int max = 0;
+    for(int i=0; i<fvec.size();i++){
+        for(int j=0; j<fvec.size();j++){
+            if(fvec[j].size() >= fvec[i].size() && fvec[j].size() >= max){max = fvec[j].size();}
+        } 
+    }
+    return max;
 }
 
 void RHtree::printBranch(int branch_num){

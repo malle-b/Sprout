@@ -1,6 +1,8 @@
 [ libRHelperDict.so ]
 # List of selected classes
 class HistogramHelper
+class RHfit
 class RHtree
 header include/HistogramHelper.h
+header include/RHfit.h
 header include/RHtree.h

@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/RHelper.dir/RHelperDict.cxx.o.d"
   "CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o"
   "CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o.d"
+  "CMakeFiles/RHelper.dir/source/RHfit.cxx.o"
+  "CMakeFiles/RHelper.dir/source/RHfit.cxx.o.d"
   "CMakeFiles/RHelper.dir/source/RHtree.cxx.o"
   "CMakeFiles/RHelper.dir/source/RHtree.cxx.o.d"
   "RHelperDict.cxx"

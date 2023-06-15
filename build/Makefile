@@ -190,6 +190,30 @@ source/HistogramHelper.cxx.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.s
 .PHONY : source/HistogramHelper.cxx.s
 
+source/RHfit.o: source/RHfit.cxx.o
+.PHONY : source/RHfit.o
+
+# target to build an object file
+source/RHfit.cxx.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/RHfit.cxx.o
+.PHONY : source/RHfit.cxx.o
+
+source/RHfit.i: source/RHfit.cxx.i
+.PHONY : source/RHfit.i
+
+# target to preprocess a source file
+source/RHfit.cxx.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/RHfit.cxx.i
+.PHONY : source/RHfit.cxx.i
+
+source/RHfit.s: source/RHfit.cxx.s
+.PHONY : source/RHfit.s
+
+# target to generate assembly for a file
+source/RHfit.cxx.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/RHfit.cxx.s
+.PHONY : source/RHfit.cxx.s
+
 source/RHtree.o: source/RHtree.cxx.o
 .PHONY : source/RHtree.o
 
@@ -230,6 +254,9 @@ help:
 	@echo "... source/HistogramHelper.o"
 	@echo "... source/HistogramHelper.i"
 	@echo "... source/HistogramHelper.s"
+	@echo "... source/RHfit.o"
+	@echo "... source/RHfit.i"
+	@echo "... source/RHfit.s"
 	@echo "... source/RHtree.o"
 	@echo "... source/RHtree.i"
 	@echo "... source/RHtree.s"

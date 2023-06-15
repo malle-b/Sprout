@@ -9,8 +9,8 @@ message(FATAL_ERROR "ROOT is required but missing !")
 endif ( NOT ROOT_FOUND )
 
 #Sets path of source and header files 
-set(SRCFILES ${PROJECT_SOURCE_DIR}/source/HistogramHelper.cxx ${PROJECT_SOURCE_DIR}/source/RHtree.cxx)
-set(HFILES ${PROJECT_SOURCE_DIR}/include/HistogramHelper.h ${PROJECT_SOURCE_DIR}/include/RHtree.h)
+set(SRCFILES ${PROJECT_SOURCE_DIR}/source/HistogramHelper.cxx ${PROJECT_SOURCE_DIR}/source/RHtree.cxx ${PROJECT_SOURCE_DIR}/source/RHfit.cxx)
+set(HFILES ${PROJECT_SOURCE_DIR}/include/HistogramHelper.h ${PROJECT_SOURCE_DIR}/include/RHtree.h ${PROJECT_SOURCE_DIR}/include/RHfit.h)
 
 #Include this to access the cmake functions from ROOT
 include(${ROOT_USE_FILE})

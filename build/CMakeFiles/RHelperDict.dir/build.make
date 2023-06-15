@@ -73,11 +73,13 @@ CMakeFiles/RHelperDict: libRHelperDict.rootmap
 RHelperDict.cxx: ../include/RHelperLinkDef.h
 RHelperDict.cxx: ../include/HistogramHelper.h
 RHelperDict.cxx: ../include/RHtree.h
+RHelperDict.cxx: ../include/RHfit.h
 RHelperDict.cxx: ../include/HistogramHelper.h
 RHelperDict.cxx: ../include/RHtree.h
+RHelperDict.cxx: ../include/RHfit.h
 RHelperDict.cxx: ../include/RHelperLinkDef.h
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating RHelperDict.cxx, libRHelperDict_rdict.pcm, libRHelperDict.rootmap"
-	/usr/bin/cmake -E env LD_LIBRARY_PATH=/home/malin/hades/software/install/root/lib:/home/malin/hades/software/install/root/lib /home/malin/hades/software/install/root/bin/rootcling -v2 -f RHelperDict.cxx -s /home/malin/hades/software/src/RHelper/build/libRHelperDict.so -rml libRHelperDict.so -rmf /home/malin/hades/software/src/RHelper/build/libRHelperDict.rootmap -compilerI/usr/include/c++/11 -compilerI/usr/include/x86_64-linux-gnu/c++/11 -compilerI/usr/include/c++/11/backward -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -I/home/malin/hades/software/install/root/include -I/home/malin/hades/software/src/RHelper /home/malin/hades/software/src/RHelper/include/HistogramHelper.h /home/malin/hades/software/src/RHelper/include/RHtree.h /home/malin/hades/software/src/RHelper/include/RHelperLinkDef.h
+	/usr/bin/cmake -E env LD_LIBRARY_PATH=/home/malin/hades/software/install/root/lib:/home/malin/hades/software/install/root/lib /home/malin/hades/software/install/root/bin/rootcling -v2 -f RHelperDict.cxx -s /home/malin/hades/software/src/RHelper/build/libRHelperDict.so -rml libRHelperDict.so -rmf /home/malin/hades/software/src/RHelper/build/libRHelperDict.rootmap -compilerI/usr/include/c++/11 -compilerI/usr/include/x86_64-linux-gnu/c++/11 -compilerI/usr/include/c++/11/backward -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -I/home/malin/hades/software/install/root/include -I/home/malin/hades/software/src/RHelper /home/malin/hades/software/src/RHelper/include/HistogramHelper.h /home/malin/hades/software/src/RHelper/include/RHtree.h /home/malin/hades/software/src/RHelper/include/RHfit.h /home/malin/hades/software/src/RHelper/include/RHelperLinkDef.h
 
 libRHelperDict_rdict.pcm: RHelperDict.cxx
 	@$(CMAKE_COMMAND) -E touch_nocreate libRHelperDict_rdict.pcm

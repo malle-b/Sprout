@@ -3,24 +3,23 @@
 ClassImp(HistogramHelper) // Needed for compatability with ROOT's Cling interpreter 
 
 HistogramHelper::HistogramHelper(){
-	
+	fcanvas = new TCanvas();
+	fhist1 = new TH1F();
+
+	setStyle(fhist1);
 }
 
-TCanvas* HistogramHelper::makeTCanvas(){
-	TCanvas *canvas = new TCanvas();
-	canvas->SetCanvasSize(800, 500);
-	canvas->SetWindowSize(801, 501);
-	canvas->SetTopMargin(1.);
-	canvas->SetBottomMargin(0.15);
-	canvas->SetRightMargin(0.10);
-	canvas->SetLeftMargin(0.10);
-
-	return canvas;
+void HistogramHelper::makeTCanvas(){
+	fcanvas->Clear();
+	fcanvas->SetCanvasSize(800, 500);
+	fcanvas->SetWindowSize(801, 501);
+	fcanvas->SetTopMargin(1.);
+	fcanvas->SetBottomMargin(0.15);
+	fcanvas->SetRightMargin(0.10);
+	fcanvas->SetLeftMargin(0.10);
 }
 
-TCanvas* HistogramHelper::makeTCanvas(int nhist){
-	TCanvas* c = new TCanvas();
-
+void HistogramHelper::makeTCanvas(int nhist){
 	/*Finds suitible canvas splitting into 
 	rows and columns depending on nhist*/
 	int rows,cols;
@@ -30,41 +29,51 @@ TCanvas* HistogramHelper::makeTCanvas(int nhist){
 	if(nhist%rows==0){cols=nhist/rows;}
 	else{cols = nhist/rows + 1;}
 
+	fcanvas->Clear();
+	fcanvas->SetCanvasSize(800*cols, 500*rows);
+	fcanvas->SetWindowSize(810*cols, 510*rows);
+	fcanvas->SetTopMargin(1.);
+	fcanvas->SetBottomMargin(0.01);
+	fcanvas->SetRightMargin(0.50);
+	fcanvas->SetLeftMargin(0.10);
 
-	c->SetCanvasSize(800*cols, 500*rows);
-	c->SetWindowSize(810*cols, 510*rows);
-	c->SetTopMargin(1.);
-	c->SetBottomMargin(0.01);
-	c->SetRightMargin(0.50);
-	c->SetLeftMargin(0.10);
-
-	c->Divide(cols,rows);
-
-	return c;
+	fcanvas->Divide(cols,rows);
 }
 
-TCanvas* HistogramHelper::makeTCanvas(RHtree* tree){
-	TCanvas* c = makeTCanvas(tree->getNumBranches());
+void HistogramHelper::makeTCanvas(RHtree tree){
+	makeTCanvas(tree.getNumBranches()); // fcanvas gets cleared and adjusted 
 
-	for(int i=0; i<tree->getNumBranches(); i++){
-		TH1F* h = makeTH1F(tree->getBranch(i), "h"+int2str(i));
-		setPlotText(h,"bin "+int2str(i));
-		c->cd(i+1);
-		h->Draw();
+	for(int i=0; i<tree.getNumBranches(); i++){
+		makeTH1F(tree.getBranch(i), "h"+int2str(i)); //fhist1 gets cleared and adjusted
+		setPlotText(fhist1,"bin "+int2str(i));
+		fcanvas->cd(i+1);
+		fhist1->DrawCopy();
 	}
-	return c;
+}
+
+void HistogramHelper::makeTCanvas(RHtree tree, RHfit* hfit){
+	makeTCanvas(tree.getNumBranches()); // fcanvas gets cleared here 
+
+	for(int i=0; i<tree.getNumBranches(); i++){
+		makeTH1F(tree.getBranch(i), "hfit"+int2str(i)); //fhist1 gets cleared and adjusted
+		setPlotText(fhist1,"bin "+int2str(i));
+		fcanvas->cd(i+1);
+		hfit->fit(fhist1);
+		fhist1->DrawCopy();
+	}
 }
 
 
-TH1F* HistogramHelper::makeTH1F(TString name, double xmin, double xmax, TString xlabel, TString ylabel, int bins){
-    TH1F* h = new TH1F(name, "", bins, xmin, xmax);
-    h->SetXTitle(xlabel);
-    h->SetYTitle(ylabel);
-    setStyle(h);
-    return h;
+void HistogramHelper::makeTH1F(TString name, double xmin, double xmax, TString xlabel, TString ylabel, int bins){
+	fhist1->Reset("ICESM");
+
+	fhist1->SetName(name);
+	fhist1->SetBins(bins, xmin, xmax);
+    fhist1->SetXTitle(xlabel);
+    fhist1->SetYTitle(ylabel);
 }
 
-TH1F* HistogramHelper::makeTH1F(std::vector<float> data, TString name, TString xlabel, TString ylabel){
+void HistogramHelper::makeTH1F(std::vector<float> data, TString name, TString xlabel, TString ylabel){
 	float min = *std::min_element(data.begin(), data.end());
 	float max = *std::max_element(data.begin(), data.end());
 
@@ -72,30 +81,15 @@ TH1F* HistogramHelper::makeTH1F(std::vector<float> data, TString name, TString x
 	int number = data.size();
     while(number != 0){number = number / 10; count++;}
 
-	TH1F* h = new TH1F(name, "", 10^(count/2), min, max);
-	h->SetXTitle(xlabel);
-    h->SetYTitle(ylabel);
-    setStyle(h);
-	for(int i=0; i<data.size(); i++) h->Fill(data[i]);
-    return h;
+	fhist1->Reset("ICESM");
+
+	fhist1->SetName(name);
+	fhist1->SetBins(10^(count), min, max);
+    fhist1->SetXTitle(xlabel);
+    fhist1->SetYTitle(ylabel);
+
+	for(int i=0; i<data.size(); i++) fhist1->Fill(data[i]);
 }
-
-TH1F* HistogramHelper::makeInvMassTH1F(TString name, double mass, double range, int bins){
-	TH1F* h = makeTH1F(name, mass-range, mass+range, "MeV/c^{2}", "counts", bins);
-	return h;
-}
-
-std::vector<TH1F*> HistogramHelper::makeInvMassTH1FVector(int num, TString name, double mass, double range, int bins){
-	std::vector<TH1F*> hvec;
-	hvec.clear();
-	for(int i=0; i<num; i++){
-		TString index_str; index_str.Form("%d", i);
-		hvec.push_back(makeInvMassTH1F(name+index_str, mass, range, bins)); 
-	}
-
-	return hvec;
-}
-
 
 void HistogramHelper::setPlotText(TH1F* h1, TString text){
     TLatex latexText(h1->GetXaxis()->GetBinUpEdge(h1->GetXaxis()->GetLast())*0.8, h1->GetMaximum()*0.85, text);
@@ -125,38 +119,36 @@ void HistogramHelper::setStyle(TH1F *h){
 }
 
 
-void HistogramHelper::writeHist(TH1F *h1, TString plot_text){
-
-	//h1->ClearUnderflowAndOverflow();
+void HistogramHelper::writeHist(TString plot_text){
 	
-	TCanvas *can = makeTCanvas();
-	can->cd();
-    h1->Draw();
+	makeTCanvas(); //fcanvas gets cleared and set to default 
+	fcanvas->cd();
+    fhist1->Draw();
 
-    setPlotText(h1, plot_text);
+    setPlotText(fhist1, plot_text);
 
-	can->Write();
+	fcanvas->Write();
 
-    TString title = h1->GetName();
-	can->SaveAs(title+".png");
+    TString title = fhist1->GetName();
+	fcanvas->SaveAs(title+".png");
 }
 
-void HistogramHelper::writeCanvas(TCanvas* can, TString name){
-	can->Write();
-	can->SaveAs(name+".png");
+void HistogramHelper::writeCanvas(TString name){
+	fcanvas->Write();
+	fcanvas->SaveAs(name+".png");
 }
 
-RHtree* HistogramHelper::binData(std::vector<float> adata, std::vector<float> bdata, int n){
+RHtree HistogramHelper::binData(std::vector<float> adata, std::vector<float> bdata, int n){ // write copy constructor so I can call this without returning a pointer. 
 
 	float min = *std::min_element(adata.begin(), adata.end());
 	float max = *std::max_element(adata.begin(), adata.end());
 	float bin_width = (max-min)/n;
 
-	RHtree* tree = new RHtree(n);
+	RHtree tree(n);
 
 	for(int i=0; i<adata.size(); i++){
 		for(int j=1; j<n+1; j++){
-			if(adata[i]>=bin_width*(j-1) && adata[i]<bin_width*j){tree->addToBranch(j-1,bdata[i]);} // skips last element
+			if(adata[i]>=bin_width*(j-1) && adata[i]<bin_width*j){tree.addToBranch(j-1,bdata[i]);} // skips last element
 		}
 	}
 	return tree;
