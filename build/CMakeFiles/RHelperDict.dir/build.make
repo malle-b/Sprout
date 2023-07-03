@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/malin/hades/software/src/RHelper
+CMAKE_SOURCE_DIR = /home/malin/hades/software/src/Sprout
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/malin/hades/software/src/RHelper/build
+CMAKE_BINARY_DIR = /home/malin/hades/software/src/Sprout/build
 
 # Utility rule file for RHelperDict.
 
@@ -71,15 +71,15 @@ CMakeFiles/RHelperDict: libRHelperDict_rdict.pcm
 CMakeFiles/RHelperDict: libRHelperDict.rootmap
 
 RHelperDict.cxx: ../include/RHelperLinkDef.h
-RHelperDict.cxx: ../include/HistogramHelper.h
-RHelperDict.cxx: ../include/RHtree.h
-RHelperDict.cxx: ../include/RHfit.h
-RHelperDict.cxx: ../include/HistogramHelper.h
-RHelperDict.cxx: ../include/RHtree.h
-RHelperDict.cxx: ../include/RHfit.h
+RHelperDict.cxx: ../include/SproutPlot.h
+RHelperDict.cxx: ../include/SproutTree.h
+RHelperDict.cxx: ../include/SproutFit.h
+RHelperDict.cxx: ../include/SproutPlot.h
+RHelperDict.cxx: ../include/SproutTree.h
+RHelperDict.cxx: ../include/SproutFit.h
 RHelperDict.cxx: ../include/RHelperLinkDef.h
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating RHelperDict.cxx, libRHelperDict_rdict.pcm, libRHelperDict.rootmap"
-	/usr/bin/cmake -E env LD_LIBRARY_PATH=/home/malin/hades/software/install/root/lib:/home/malin/hades/software/install/root/lib /home/malin/hades/software/install/root/bin/rootcling -v2 -f RHelperDict.cxx -s /home/malin/hades/software/src/RHelper/build/libRHelperDict.so -rml libRHelperDict.so -rmf /home/malin/hades/software/src/RHelper/build/libRHelperDict.rootmap -compilerI/usr/include/c++/11 -compilerI/usr/include/x86_64-linux-gnu/c++/11 -compilerI/usr/include/c++/11/backward -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -I/home/malin/hades/software/install/root/include -I/home/malin/hades/software/src/RHelper /home/malin/hades/software/src/RHelper/include/HistogramHelper.h /home/malin/hades/software/src/RHelper/include/RHtree.h /home/malin/hades/software/src/RHelper/include/RHfit.h /home/malin/hades/software/src/RHelper/include/RHelperLinkDef.h
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/malin/hades/software/src/Sprout/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating RHelperDict.cxx, libRHelperDict_rdict.pcm, libRHelperDict.rootmap"
+	/usr/bin/cmake -E env LD_LIBRARY_PATH=/home/malin/hades/software/install/root/lib:/home/malin/hades/software/install/root/lib /home/malin/hades/software/install/root/bin/rootcling -v2 -f RHelperDict.cxx -s /home/malin/hades/software/src/Sprout/build/libRHelperDict.so -rml libRHelperDict.so -rmf /home/malin/hades/software/src/Sprout/build/libRHelperDict.rootmap -compilerI/usr/include/c++/11 -compilerI/usr/include/x86_64-linux-gnu/c++/11 -compilerI/usr/include/c++/11/backward -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -I/home/malin/hades/software/install/root/include -I/home/malin/hades/software/src/Sprout /home/malin/hades/software/src/Sprout/include/SproutPlot.h /home/malin/hades/software/src/Sprout/include/SproutTree.h /home/malin/hades/software/src/Sprout/include/SproutFit.h /home/malin/hades/software/src/Sprout/include/RHelperLinkDef.h
 
 libRHelperDict_rdict.pcm: RHelperDict.cxx
 	@$(CMAKE_COMMAND) -E touch_nocreate libRHelperDict_rdict.pcm
@@ -103,6 +103,6 @@ CMakeFiles/RHelperDict.dir/clean:
 .PHONY : CMakeFiles/RHelperDict.dir/clean
 
 CMakeFiles/RHelperDict.dir/depend:
-	cd /home/malin/hades/software/src/RHelper/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/malin/hades/software/src/RHelper /home/malin/hades/software/src/RHelper /home/malin/hades/software/src/RHelper/build /home/malin/hades/software/src/RHelper/build /home/malin/hades/software/src/RHelper/build/CMakeFiles/RHelperDict.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/malin/hades/software/src/Sprout/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/malin/hades/software/src/Sprout /home/malin/hades/software/src/Sprout /home/malin/hades/software/src/Sprout/build /home/malin/hades/software/src/Sprout/build /home/malin/hades/software/src/Sprout/build/CMakeFiles/RHelperDict.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/RHelperDict.dir/depend
 

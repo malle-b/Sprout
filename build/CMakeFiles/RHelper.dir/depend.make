@@ -241,7 +241,7 @@ RHelperDict.cxx: \
  /home/malin/hades/software/install/root/include/snprintf.h \
  /home/malin/hades/software/install/root/include/strlcpy.h \
  /home/malin/hades/software/install/root/include/strtok.h \
- ../include/HistogramHelper.h \
  ../include/RHelperLinkDef.h \
- ../include/RHfit.h \
- ../include/RHtree.h
+ ../include/SproutFit.h \
+ ../include/SproutPlot.h \
+ ../include/SproutTree.h

@@ -1,15 +1,15 @@
-#include "HistogramHelper.h"
+#include "SproutPlot.h"
 
-ClassImp(HistogramHelper) // Needed for compatability with ROOT's Cling interpreter 
+ClassImp(SproutPlot) // Needed for compatability with ROOT's Cling interpreter 
 
-HistogramHelper::HistogramHelper(){
+SproutPlot::SproutPlot(){
 	fcanvas = new TCanvas();
 	fhist1 = new TH1F();
 
 	setStyle(fhist1);
 }
 
-void HistogramHelper::makeTCanvas(){
+void SproutPlot::makeTCanvas(){
 	fcanvas->Clear();
 	fcanvas->SetCanvasSize(800, 500);
 	fcanvas->SetWindowSize(801, 501);
@@ -19,7 +19,7 @@ void HistogramHelper::makeTCanvas(){
 	fcanvas->SetLeftMargin(0.10);
 }
 
-void HistogramHelper::makeTCanvas(int nhist){
+void SproutPlot::makeTCanvas(int nhist){
 	/*Finds suitible canvas splitting into 
 	rows and columns depending on nhist*/
 	int rows,cols;
@@ -40,31 +40,52 @@ void HistogramHelper::makeTCanvas(int nhist){
 	fcanvas->Divide(cols,rows);
 }
 
-void HistogramHelper::makeTCanvas(RHtree tree){
+void SproutPlot::makeTCanvas(SproutTree tree){
 	makeTCanvas(tree.getNumBranches()); // fcanvas gets cleared and adjusted 
-
 	for(int i=0; i<tree.getNumBranches(); i++){
 		makeTH1F(tree.getBranch(i), "h"+int2str(i)); //fhist1 gets cleared and adjusted
 		setPlotText(fhist1,"bin "+int2str(i));
 		fcanvas->cd(i+1);
 		fhist1->DrawCopy();
+		
 	}
 }
 
-void HistogramHelper::makeTCanvas(RHtree tree, RHfit* hfit){
+SproutTree SproutPlot::makeTCanvas(SproutTree tree, SproutFit* hfit){ // Think of a way to do this without double for-loop
 	makeTCanvas(tree.getNumBranches()); // fcanvas gets cleared here 
 
+	SproutTree outtree(1);
 	for(int i=0; i<tree.getNumBranches(); i++){
 		makeTH1F(tree.getBranch(i), "hfit"+int2str(i)); //fhist1 gets cleared and adjusted
 		setPlotText(fhist1,"bin "+int2str(i));
+
 		fcanvas->cd(i+1);
 		hfit->fit(fhist1);
+		TF1* bg = hfit->getBackground();
+		TF1* sig = hfit->getSignal();
 		fhist1->DrawCopy();
+		fhist1->Add(bg,-1);
+		fhist1->DrawClone("same");
+		sig->Draw("same");
+		bg->Draw("same");
+
+		if(hfit->getSigFuncName() == "gaus"){
+			double low = (double) sig->GetParameter(1)-3*sig->GetParameter(2);
+			double high = (double) sig->GetParameter(1)+3*sig->GetParameter(2);
+
+			double blow = (double) fhist1->FindFixBin(low);
+			double bhigh = (double) fhist1->FindFixBin(high);
+
+			outtree.addToBranch(0,(float)fhist1->Integral(blow,bhigh));
+		}
+		else{outtree.addToBranch(0,(float)fhist1->Integral(0,fhist1->GetNbinsX()));}
 	}
+	if(hfit->getSigFuncName() != "gaus"){std::cout << "Signal not Gaussian, no cut-off on histogram entries." << std::endl;}
+	return outtree;
 }
 
 
-void HistogramHelper::makeTH1F(TString name, double xmin, double xmax, TString xlabel, TString ylabel, int bins){
+void SproutPlot::makeTH1F(TString name, double xmin, double xmax, TString xlabel, TString ylabel, int bins){
 	fhist1->Reset("ICESM");
 
 	fhist1->SetName(name);
@@ -73,25 +94,31 @@ void HistogramHelper::makeTH1F(TString name, double xmin, double xmax, TString x
     fhist1->SetYTitle(ylabel);
 }
 
-void HistogramHelper::makeTH1F(std::vector<float> data, TString name, TString xlabel, TString ylabel){
-	float min = *std::min_element(data.begin(), data.end());
-	float max = *std::max_element(data.begin(), data.end());
+void SproutPlot::makeTH1F(std::vector<float> data, TString name, TString xlabel, TString ylabel){
 
-	int count = 0;
-	int number = data.size();
-    while(number != 0){number = number / 10; count++;}
+	float min=0; float max=1; int count = 0;
+	long number = data.size();
+	if(number>0){
+		min = *std::min_element(data.begin(), data.end());
+		max = *std::max_element(data.begin(), data.end());
+		while(number != 0){number = number / 10; count++;}
+	}
 
 	fhist1->Reset("ICESM");
 
+	if(count < 2){fhist1->SetBins(2, min, max);}
+	else if(count < 4){fhist1->SetBins(10^(count), min, max);}
+	else{fhist1->SetBins(10^3, min,max);}
+
+
 	fhist1->SetName(name);
-	fhist1->SetBins(10^(count), min, max);
     fhist1->SetXTitle(xlabel);
     fhist1->SetYTitle(ylabel);
 
-	for(int i=0; i<data.size(); i++) fhist1->Fill(data[i]);
+	for(int i=0; i<data.size(); i++){fhist1->Fill(data[i]);}
 }
 
-void HistogramHelper::setPlotText(TH1F* h1, TString text){
+void SproutPlot::setPlotText(TH1F* h1, TString text){
     TLatex latexText(h1->GetXaxis()->GetBinUpEdge(h1->GetXaxis()->GetLast())*0.8, h1->GetMaximum()*0.85, text);
 	latexText.SetTextFont(42);
 	latexText.SetTextSize(0.08);
@@ -99,12 +126,12 @@ void HistogramHelper::setPlotText(TH1F* h1, TString text){
 	latexText.DrawClone();
 }
 
-void HistogramHelper::setStyle(TH1F *h){
+void SproutPlot::setStyle(TH1F *h){
 
 	gStyle->SetOptStat(0);
 	h->GetXaxis()->SetLabelSize(0.06);
 	h->GetXaxis()->SetTitleSize(0.06);
-	h->GetXaxis()->SetTitleOffset(1.1);
+	h->GetXaxis()->SetTitleOffset(0.7);
 	h->GetXaxis()->CenterTitle();
 
 	h->GetYaxis()->SetLabelSize(0.06);
@@ -119,7 +146,7 @@ void HistogramHelper::setStyle(TH1F *h){
 }
 
 
-void HistogramHelper::writeHist(TString plot_text){
+void SproutPlot::writeHist(TString plot_text){
 	
 	makeTCanvas(); //fcanvas gets cleared and set to default 
 	fcanvas->cd();
@@ -133,23 +160,9 @@ void HistogramHelper::writeHist(TString plot_text){
 	fcanvas->SaveAs(title+".png");
 }
 
-void HistogramHelper::writeCanvas(TString name){
+void SproutPlot::writeCanvas(TString name){
 	fcanvas->Write();
 	fcanvas->SaveAs(name+".png");
 }
 
-RHtree HistogramHelper::binData(std::vector<float> adata, std::vector<float> bdata, int n){ // write copy constructor so I can call this without returning a pointer. 
 
-	float min = *std::min_element(adata.begin(), adata.end());
-	float max = *std::max_element(adata.begin(), adata.end());
-	float bin_width = (max-min)/n;
-
-	RHtree tree(n);
-
-	for(int i=0; i<adata.size(); i++){
-		for(int j=1; j<n+1; j++){
-			if(adata[i]>=bin_width*(j-1) && adata[i]<bin_width*j){tree.addToBranch(j-1,bdata[i]);} // skips last element
-		}
-	}
-	return tree;
-}

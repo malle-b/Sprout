@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/malin/hades/software/src/RHelper
+CMAKE_SOURCE_DIR = /home/malin/hades/software/src/Sprout
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/malin/hades/software/src/RHelper/build
+CMAKE_BINARY_DIR = /home/malin/hades/software/src/Sprout/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/RHelper.dir/depend.make
@@ -70,15 +70,15 @@ include CMakeFiles/RHelper.dir/progress.make
 include CMakeFiles/RHelper.dir/flags.make
 
 RHelperDict.cxx: ../include/RHelperLinkDef.h
-RHelperDict.cxx: ../include/HistogramHelper.h
-RHelperDict.cxx: ../include/RHtree.h
-RHelperDict.cxx: ../include/RHfit.h
-RHelperDict.cxx: ../include/HistogramHelper.h
-RHelperDict.cxx: ../include/RHtree.h
-RHelperDict.cxx: ../include/RHfit.h
+RHelperDict.cxx: ../include/SproutPlot.h
+RHelperDict.cxx: ../include/SproutTree.h
+RHelperDict.cxx: ../include/SproutFit.h
+RHelperDict.cxx: ../include/SproutPlot.h
+RHelperDict.cxx: ../include/SproutTree.h
+RHelperDict.cxx: ../include/SproutFit.h
 RHelperDict.cxx: ../include/RHelperLinkDef.h
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating RHelperDict.cxx, libRHelperDict_rdict.pcm, libRHelperDict.rootmap"
-	/usr/bin/cmake -E env LD_LIBRARY_PATH=/home/malin/hades/software/install/root/lib:/home/malin/hades/software/install/root/lib /home/malin/hades/software/install/root/bin/rootcling -v2 -f RHelperDict.cxx -s /home/malin/hades/software/src/RHelper/build/libRHelperDict.so -rml libRHelperDict.so -rmf /home/malin/hades/software/src/RHelper/build/libRHelperDict.rootmap -compilerI/usr/include/c++/11 -compilerI/usr/include/x86_64-linux-gnu/c++/11 -compilerI/usr/include/c++/11/backward -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -I/home/malin/hades/software/install/root/include -I/home/malin/hades/software/src/RHelper /home/malin/hades/software/src/RHelper/include/HistogramHelper.h /home/malin/hades/software/src/RHelper/include/RHtree.h /home/malin/hades/software/src/RHelper/include/RHfit.h /home/malin/hades/software/src/RHelper/include/RHelperLinkDef.h
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/malin/hades/software/src/Sprout/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating RHelperDict.cxx, libRHelperDict_rdict.pcm, libRHelperDict.rootmap"
+	/usr/bin/cmake -E env LD_LIBRARY_PATH=/home/malin/hades/software/install/root/lib:/home/malin/hades/software/install/root/lib /home/malin/hades/software/install/root/bin/rootcling -v2 -f RHelperDict.cxx -s /home/malin/hades/software/src/Sprout/build/libRHelperDict.so -rml libRHelperDict.so -rmf /home/malin/hades/software/src/Sprout/build/libRHelperDict.rootmap -compilerI/usr/include/c++/11 -compilerI/usr/include/x86_64-linux-gnu/c++/11 -compilerI/usr/include/c++/11/backward -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -compilerI/usr/lib/gcc/x86_64-linux-gnu/11/include -compilerI/usr/local/include -compilerI/usr/include/x86_64-linux-gnu -compilerI/usr/include -I/home/malin/hades/software/install/root/include -I/home/malin/hades/software/src/Sprout /home/malin/hades/software/src/Sprout/include/SproutPlot.h /home/malin/hades/software/src/Sprout/include/SproutTree.h /home/malin/hades/software/src/Sprout/include/SproutFit.h /home/malin/hades/software/src/Sprout/include/RHelperLinkDef.h
 
 libRHelperDict_rdict.pcm: RHelperDict.cxx
 	@$(CMAKE_COMMAND) -E touch_nocreate libRHelperDict_rdict.pcm
@@ -86,75 +86,75 @@ libRHelperDict_rdict.pcm: RHelperDict.cxx
 libRHelperDict.rootmap: RHelperDict.cxx
 	@$(CMAKE_COMMAND) -E touch_nocreate libRHelperDict.rootmap
 
-CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o: CMakeFiles/RHelper.dir/flags.make
-CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o: ../source/HistogramHelper.cxx
-CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o: CMakeFiles/RHelper.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o -MF CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o.d -o CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o -c /home/malin/hades/software/src/RHelper/source/HistogramHelper.cxx
+CMakeFiles/RHelper.dir/source/SproutPlot.cxx.o: CMakeFiles/RHelper.dir/flags.make
+CMakeFiles/RHelper.dir/source/SproutPlot.cxx.o: ../source/SproutPlot.cxx
+CMakeFiles/RHelper.dir/source/SproutPlot.cxx.o: CMakeFiles/RHelper.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/malin/hades/software/src/Sprout/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/RHelper.dir/source/SproutPlot.cxx.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RHelper.dir/source/SproutPlot.cxx.o -MF CMakeFiles/RHelper.dir/source/SproutPlot.cxx.o.d -o CMakeFiles/RHelper.dir/source/SproutPlot.cxx.o -c /home/malin/hades/software/src/Sprout/source/SproutPlot.cxx
 
-CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/malin/hades/software/src/RHelper/source/HistogramHelper.cxx > CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.i
+CMakeFiles/RHelper.dir/source/SproutPlot.cxx.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RHelper.dir/source/SproutPlot.cxx.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/malin/hades/software/src/Sprout/source/SproutPlot.cxx > CMakeFiles/RHelper.dir/source/SproutPlot.cxx.i
 
-CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/malin/hades/software/src/RHelper/source/HistogramHelper.cxx -o CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.s
+CMakeFiles/RHelper.dir/source/SproutPlot.cxx.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RHelper.dir/source/SproutPlot.cxx.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/malin/hades/software/src/Sprout/source/SproutPlot.cxx -o CMakeFiles/RHelper.dir/source/SproutPlot.cxx.s
 
-CMakeFiles/RHelper.dir/source/RHtree.cxx.o: CMakeFiles/RHelper.dir/flags.make
-CMakeFiles/RHelper.dir/source/RHtree.cxx.o: ../source/RHtree.cxx
-CMakeFiles/RHelper.dir/source/RHtree.cxx.o: CMakeFiles/RHelper.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/RHelper.dir/source/RHtree.cxx.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RHelper.dir/source/RHtree.cxx.o -MF CMakeFiles/RHelper.dir/source/RHtree.cxx.o.d -o CMakeFiles/RHelper.dir/source/RHtree.cxx.o -c /home/malin/hades/software/src/RHelper/source/RHtree.cxx
+CMakeFiles/RHelper.dir/source/SproutTree.cxx.o: CMakeFiles/RHelper.dir/flags.make
+CMakeFiles/RHelper.dir/source/SproutTree.cxx.o: ../source/SproutTree.cxx
+CMakeFiles/RHelper.dir/source/SproutTree.cxx.o: CMakeFiles/RHelper.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/malin/hades/software/src/Sprout/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/RHelper.dir/source/SproutTree.cxx.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RHelper.dir/source/SproutTree.cxx.o -MF CMakeFiles/RHelper.dir/source/SproutTree.cxx.o.d -o CMakeFiles/RHelper.dir/source/SproutTree.cxx.o -c /home/malin/hades/software/src/Sprout/source/SproutTree.cxx
 
-CMakeFiles/RHelper.dir/source/RHtree.cxx.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RHelper.dir/source/RHtree.cxx.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/malin/hades/software/src/RHelper/source/RHtree.cxx > CMakeFiles/RHelper.dir/source/RHtree.cxx.i
+CMakeFiles/RHelper.dir/source/SproutTree.cxx.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RHelper.dir/source/SproutTree.cxx.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/malin/hades/software/src/Sprout/source/SproutTree.cxx > CMakeFiles/RHelper.dir/source/SproutTree.cxx.i
 
-CMakeFiles/RHelper.dir/source/RHtree.cxx.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RHelper.dir/source/RHtree.cxx.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/malin/hades/software/src/RHelper/source/RHtree.cxx -o CMakeFiles/RHelper.dir/source/RHtree.cxx.s
+CMakeFiles/RHelper.dir/source/SproutTree.cxx.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RHelper.dir/source/SproutTree.cxx.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/malin/hades/software/src/Sprout/source/SproutTree.cxx -o CMakeFiles/RHelper.dir/source/SproutTree.cxx.s
 
-CMakeFiles/RHelper.dir/source/RHfit.cxx.o: CMakeFiles/RHelper.dir/flags.make
-CMakeFiles/RHelper.dir/source/RHfit.cxx.o: ../source/RHfit.cxx
-CMakeFiles/RHelper.dir/source/RHfit.cxx.o: CMakeFiles/RHelper.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/RHelper.dir/source/RHfit.cxx.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RHelper.dir/source/RHfit.cxx.o -MF CMakeFiles/RHelper.dir/source/RHfit.cxx.o.d -o CMakeFiles/RHelper.dir/source/RHfit.cxx.o -c /home/malin/hades/software/src/RHelper/source/RHfit.cxx
+CMakeFiles/RHelper.dir/source/SproutFit.cxx.o: CMakeFiles/RHelper.dir/flags.make
+CMakeFiles/RHelper.dir/source/SproutFit.cxx.o: ../source/SproutFit.cxx
+CMakeFiles/RHelper.dir/source/SproutFit.cxx.o: CMakeFiles/RHelper.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/malin/hades/software/src/Sprout/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/RHelper.dir/source/SproutFit.cxx.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RHelper.dir/source/SproutFit.cxx.o -MF CMakeFiles/RHelper.dir/source/SproutFit.cxx.o.d -o CMakeFiles/RHelper.dir/source/SproutFit.cxx.o -c /home/malin/hades/software/src/Sprout/source/SproutFit.cxx
 
-CMakeFiles/RHelper.dir/source/RHfit.cxx.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RHelper.dir/source/RHfit.cxx.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/malin/hades/software/src/RHelper/source/RHfit.cxx > CMakeFiles/RHelper.dir/source/RHfit.cxx.i
+CMakeFiles/RHelper.dir/source/SproutFit.cxx.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RHelper.dir/source/SproutFit.cxx.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/malin/hades/software/src/Sprout/source/SproutFit.cxx > CMakeFiles/RHelper.dir/source/SproutFit.cxx.i
 
-CMakeFiles/RHelper.dir/source/RHfit.cxx.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RHelper.dir/source/RHfit.cxx.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/malin/hades/software/src/RHelper/source/RHfit.cxx -o CMakeFiles/RHelper.dir/source/RHfit.cxx.s
+CMakeFiles/RHelper.dir/source/SproutFit.cxx.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RHelper.dir/source/SproutFit.cxx.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/malin/hades/software/src/Sprout/source/SproutFit.cxx -o CMakeFiles/RHelper.dir/source/SproutFit.cxx.s
 
 CMakeFiles/RHelper.dir/RHelperDict.cxx.o: CMakeFiles/RHelper.dir/flags.make
 CMakeFiles/RHelper.dir/RHelperDict.cxx.o: RHelperDict.cxx
 CMakeFiles/RHelper.dir/RHelperDict.cxx.o: CMakeFiles/RHelper.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/RHelper.dir/RHelperDict.cxx.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RHelper.dir/RHelperDict.cxx.o -MF CMakeFiles/RHelper.dir/RHelperDict.cxx.o.d -o CMakeFiles/RHelper.dir/RHelperDict.cxx.o -c /home/malin/hades/software/src/RHelper/build/RHelperDict.cxx
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/malin/hades/software/src/Sprout/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/RHelper.dir/RHelperDict.cxx.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RHelper.dir/RHelperDict.cxx.o -MF CMakeFiles/RHelper.dir/RHelperDict.cxx.o.d -o CMakeFiles/RHelper.dir/RHelperDict.cxx.o -c /home/malin/hades/software/src/Sprout/build/RHelperDict.cxx
 
 CMakeFiles/RHelper.dir/RHelperDict.cxx.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RHelper.dir/RHelperDict.cxx.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/malin/hades/software/src/RHelper/build/RHelperDict.cxx > CMakeFiles/RHelper.dir/RHelperDict.cxx.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/malin/hades/software/src/Sprout/build/RHelperDict.cxx > CMakeFiles/RHelper.dir/RHelperDict.cxx.i
 
 CMakeFiles/RHelper.dir/RHelperDict.cxx.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RHelper.dir/RHelperDict.cxx.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/malin/hades/software/src/RHelper/build/RHelperDict.cxx -o CMakeFiles/RHelper.dir/RHelperDict.cxx.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/malin/hades/software/src/Sprout/build/RHelperDict.cxx -o CMakeFiles/RHelper.dir/RHelperDict.cxx.s
 
 # Object files for target RHelper
 RHelper_OBJECTS = \
-"CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o" \
-"CMakeFiles/RHelper.dir/source/RHtree.cxx.o" \
-"CMakeFiles/RHelper.dir/source/RHfit.cxx.o" \
+"CMakeFiles/RHelper.dir/source/SproutPlot.cxx.o" \
+"CMakeFiles/RHelper.dir/source/SproutTree.cxx.o" \
+"CMakeFiles/RHelper.dir/source/SproutFit.cxx.o" \
 "CMakeFiles/RHelper.dir/RHelperDict.cxx.o"
 
 # External object files for target RHelper
 RHelper_EXTERNAL_OBJECTS =
 
-libRHelper.so: CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o
-libRHelper.so: CMakeFiles/RHelper.dir/source/RHtree.cxx.o
-libRHelper.so: CMakeFiles/RHelper.dir/source/RHfit.cxx.o
+libRHelper.so: CMakeFiles/RHelper.dir/source/SproutPlot.cxx.o
+libRHelper.so: CMakeFiles/RHelper.dir/source/SproutTree.cxx.o
+libRHelper.so: CMakeFiles/RHelper.dir/source/SproutFit.cxx.o
 libRHelper.so: CMakeFiles/RHelper.dir/RHelperDict.cxx.o
 libRHelper.so: CMakeFiles/RHelper.dir/build.make
 libRHelper.so: /home/malin/hades/software/install/root/lib/libCore.so
@@ -177,7 +177,7 @@ libRHelper.so: /home/malin/hades/software/install/root/lib/libThread.so
 libRHelper.so: /home/malin/hades/software/install/root/lib/libMultiProc.so
 libRHelper.so: /home/malin/hades/software/install/root/lib/libROOTVecOps.so
 libRHelper.so: CMakeFiles/RHelper.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX shared library libRHelper.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/malin/hades/software/src/Sprout/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX shared library libRHelper.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/RHelper.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -191,6 +191,6 @@ CMakeFiles/RHelper.dir/clean:
 CMakeFiles/RHelper.dir/depend: RHelperDict.cxx
 CMakeFiles/RHelper.dir/depend: libRHelperDict.rootmap
 CMakeFiles/RHelper.dir/depend: libRHelperDict_rdict.pcm
-	cd /home/malin/hades/software/src/RHelper/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/malin/hades/software/src/RHelper /home/malin/hades/software/src/RHelper /home/malin/hades/software/src/RHelper/build /home/malin/hades/software/src/RHelper/build /home/malin/hades/software/src/RHelper/build/CMakeFiles/RHelper.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/malin/hades/software/src/Sprout/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/malin/hades/software/src/Sprout /home/malin/hades/software/src/Sprout /home/malin/hades/software/src/Sprout/build /home/malin/hades/software/src/Sprout/build /home/malin/hades/software/src/Sprout/build/CMakeFiles/RHelper.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/RHelper.dir/depend
 

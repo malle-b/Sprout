@@ -1,4 +1,0 @@
-[ libRHelper.so ]
-# List of selected classes
-class RHelper
-header RHelper.h

@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DRHelper_EXPORTS
 
-CXX_INCLUDES = -I/home/malin/hades/software/install/root/include -I/home/malin/hades/software/src/RHelper/include
+CXX_INCLUDES = -I/home/malin/hades/software/install/root/include -I/home/malin/hades/software/src/Sprout/include
 
 CXX_FLAGS =   -std=c++17 -pipe -fsigned-char -pthread -fPIC
 

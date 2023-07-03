@@ -1,20 +1,18 @@
-#ifndef HISTOGRAMHELPER_H
-#define HISTOGRAMHELPER_H
+#ifndef SPROUTPLOT_H
+#define SPROUTPLOT_H
 
 #include "TCanvas.h"
 #include "TH1F.h"
-#include "TH2F.h"
 #include "TLatex.h"
 #include "TStyle.h"
-#include "TTree.h"
 
-#include "RHtree.h"
-#include "RHfit.h"
+#include "SproutTree.h"
+#include "SproutFit.h"
 
 #include <iostream>
 #include <vector>
 
-class HistogramHelper {
+class SproutPlot {
 
 private:
     TCanvas* fcanvas;
@@ -24,15 +22,16 @@ private:
     void makeTCanvas(int nhist);
     TString int2str(int i){TString str; str.Form("%d", i); return str;}
 
+
 public:
 
-    HistogramHelper();
-    ~HistogramHelper(){delete fcanvas; delete fhist1;}
-    HistogramHelper(const HistogramHelper& that) = delete;
-    HistogramHelper& operator=(const HistogramHelper& that) = delete;
+    SproutPlot();
+    ~SproutPlot(){delete fcanvas; delete fhist1;}
+    SproutPlot(const SproutPlot& that) = delete;
+    SproutPlot& operator=(const SproutPlot& that) = delete;
 
-    void makeTCanvas(RHtree tree);
-    void makeTCanvas(RHtree tree, RHfit* hfit);
+    void makeTCanvas(SproutTree tree);
+    SproutTree makeTCanvas(SproutTree tree, SproutFit* hfit);
 
     void makeTH1F(TString name, double xmin, double xmax, 
                    TString xlabel="x", TString ylabel="Counts", int bins=100);
@@ -46,9 +45,17 @@ public:
     void writeHist(TString plot_text = "");
     void writeCanvas(TString name);
 
-    RHtree binData(std::vector<float> adata, std::vector<float> bdata, int n);
+    TH1F getTH1F(){return *fhist1;}
+    TH1F getTH1F(TString name, double xmin, double xmax, 
+        TString xlabel="x", TString ylabel="Counts", int bins=100){
+        
+        makeTH1F(name, xmin, xmax, xlabel, ylabel, bins);
+        return getTH1F();}
+    
 
-    ClassDef(HistogramHelper, 1) // Needed for compatability with ROOT's Cling interpreter 
+    //SproutTree binData(std::vector<float> adata, std::vector<float> bdata, int n);
+
+    ClassDef(SproutPlot, 1) // Needed for compatability with ROOT's Cling interpreter 
 
 };
 #endif // RHELPER_H

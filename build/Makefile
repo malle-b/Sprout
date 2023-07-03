@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/malin/hades/software/src/RHelper
+CMAKE_SOURCE_DIR = /home/malin/hades/software/src/Sprout
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/malin/hades/software/src/RHelper/build
+CMAKE_BINARY_DIR = /home/malin/hades/software/src/Sprout/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/RHelper/build/CMakeFiles /home/malin/hades/software/src/RHelper/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/Sprout/build/CMakeFiles /home/malin/hades/software/src/Sprout/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/RHelper/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/Sprout/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -117,126 +117,126 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named RHelperDict
+# Target rules for targets named SproutDict
 
 # Build rule for target.
-RHelperDict: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 RHelperDict
-.PHONY : RHelperDict
+SproutDict: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 SproutDict
+.PHONY : SproutDict
 
 # fast build rule for target.
-RHelperDict/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelperDict.dir/build.make CMakeFiles/RHelperDict.dir/build
-.PHONY : RHelperDict/fast
+SproutDict/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SproutDict.dir/build.make CMakeFiles/SproutDict.dir/build
+.PHONY : SproutDict/fast
 
 #=============================================================================
-# Target rules for targets named RHelper
+# Target rules for targets named Sprout
 
 # Build rule for target.
-RHelper: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 RHelper
-.PHONY : RHelper
+Sprout: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Sprout
+.PHONY : Sprout
 
 # fast build rule for target.
-RHelper/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/build
-.PHONY : RHelper/fast
+Sprout/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/build
+.PHONY : Sprout/fast
 
-RHelperDict.o: RHelperDict.cxx.o
-.PHONY : RHelperDict.o
-
-# target to build an object file
-RHelperDict.cxx.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/RHelperDict.cxx.o
-.PHONY : RHelperDict.cxx.o
-
-RHelperDict.i: RHelperDict.cxx.i
-.PHONY : RHelperDict.i
-
-# target to preprocess a source file
-RHelperDict.cxx.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/RHelperDict.cxx.i
-.PHONY : RHelperDict.cxx.i
-
-RHelperDict.s: RHelperDict.cxx.s
-.PHONY : RHelperDict.s
-
-# target to generate assembly for a file
-RHelperDict.cxx.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/RHelperDict.cxx.s
-.PHONY : RHelperDict.cxx.s
-
-source/HistogramHelper.o: source/HistogramHelper.cxx.o
-.PHONY : source/HistogramHelper.o
+SproutDict.o: SproutDict.cxx.o
+.PHONY : SproutDict.o
 
 # target to build an object file
-source/HistogramHelper.cxx.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o
-.PHONY : source/HistogramHelper.cxx.o
+SproutDict.cxx.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/SproutDict.cxx.o
+.PHONY : SproutDict.cxx.o
 
-source/HistogramHelper.i: source/HistogramHelper.cxx.i
-.PHONY : source/HistogramHelper.i
+SproutDict.i: SproutDict.cxx.i
+.PHONY : SproutDict.i
 
 # target to preprocess a source file
-source/HistogramHelper.cxx.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.i
-.PHONY : source/HistogramHelper.cxx.i
+SproutDict.cxx.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/SproutDict.cxx.i
+.PHONY : SproutDict.cxx.i
 
-source/HistogramHelper.s: source/HistogramHelper.cxx.s
-.PHONY : source/HistogramHelper.s
+SproutDict.s: SproutDict.cxx.s
+.PHONY : SproutDict.s
 
 # target to generate assembly for a file
-source/HistogramHelper.cxx.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.s
-.PHONY : source/HistogramHelper.cxx.s
+SproutDict.cxx.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/SproutDict.cxx.s
+.PHONY : SproutDict.cxx.s
 
-source/RHfit.o: source/RHfit.cxx.o
-.PHONY : source/RHfit.o
+source/SproutFit.o: source/SproutFit.cxx.o
+.PHONY : source/SproutFit.o
 
 # target to build an object file
-source/RHfit.cxx.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/RHfit.cxx.o
-.PHONY : source/RHfit.cxx.o
+source/SproutFit.cxx.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/source/SproutFit.cxx.o
+.PHONY : source/SproutFit.cxx.o
 
-source/RHfit.i: source/RHfit.cxx.i
-.PHONY : source/RHfit.i
+source/SproutFit.i: source/SproutFit.cxx.i
+.PHONY : source/SproutFit.i
 
 # target to preprocess a source file
-source/RHfit.cxx.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/RHfit.cxx.i
-.PHONY : source/RHfit.cxx.i
+source/SproutFit.cxx.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/source/SproutFit.cxx.i
+.PHONY : source/SproutFit.cxx.i
 
-source/RHfit.s: source/RHfit.cxx.s
-.PHONY : source/RHfit.s
+source/SproutFit.s: source/SproutFit.cxx.s
+.PHONY : source/SproutFit.s
 
 # target to generate assembly for a file
-source/RHfit.cxx.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/RHfit.cxx.s
-.PHONY : source/RHfit.cxx.s
+source/SproutFit.cxx.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/source/SproutFit.cxx.s
+.PHONY : source/SproutFit.cxx.s
 
-source/RHtree.o: source/RHtree.cxx.o
-.PHONY : source/RHtree.o
+source/SproutPlot.o: source/SproutPlot.cxx.o
+.PHONY : source/SproutPlot.o
 
 # target to build an object file
-source/RHtree.cxx.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/RHtree.cxx.o
-.PHONY : source/RHtree.cxx.o
+source/SproutPlot.cxx.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/source/SproutPlot.cxx.o
+.PHONY : source/SproutPlot.cxx.o
 
-source/RHtree.i: source/RHtree.cxx.i
-.PHONY : source/RHtree.i
+source/SproutPlot.i: source/SproutPlot.cxx.i
+.PHONY : source/SproutPlot.i
 
 # target to preprocess a source file
-source/RHtree.cxx.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/RHtree.cxx.i
-.PHONY : source/RHtree.cxx.i
+source/SproutPlot.cxx.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/source/SproutPlot.cxx.i
+.PHONY : source/SproutPlot.cxx.i
 
-source/RHtree.s: source/RHtree.cxx.s
-.PHONY : source/RHtree.s
+source/SproutPlot.s: source/SproutPlot.cxx.s
+.PHONY : source/SproutPlot.s
 
 # target to generate assembly for a file
-source/RHtree.cxx.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/source/RHtree.cxx.s
-.PHONY : source/RHtree.cxx.s
+source/SproutPlot.cxx.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/source/SproutPlot.cxx.s
+.PHONY : source/SproutPlot.cxx.s
+
+source/SproutTree.o: source/SproutTree.cxx.o
+.PHONY : source/SproutTree.o
+
+# target to build an object file
+source/SproutTree.cxx.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/source/SproutTree.cxx.o
+.PHONY : source/SproutTree.cxx.o
+
+source/SproutTree.i: source/SproutTree.cxx.i
+.PHONY : source/SproutTree.i
+
+# target to preprocess a source file
+source/SproutTree.cxx.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/source/SproutTree.cxx.i
+.PHONY : source/SproutTree.cxx.i
+
+source/SproutTree.s: source/SproutTree.cxx.s
+.PHONY : source/SproutTree.s
+
+# target to generate assembly for a file
+source/SproutTree.cxx.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/source/SproutTree.cxx.s
+.PHONY : source/SproutTree.cxx.s
 
 # Help Target
 help:
@@ -246,20 +246,20 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... RHelperDict"
-	@echo "... RHelper"
-	@echo "... RHelperDict.o"
-	@echo "... RHelperDict.i"
-	@echo "... RHelperDict.s"
-	@echo "... source/HistogramHelper.o"
-	@echo "... source/HistogramHelper.i"
-	@echo "... source/HistogramHelper.s"
-	@echo "... source/RHfit.o"
-	@echo "... source/RHfit.i"
-	@echo "... source/RHfit.s"
-	@echo "... source/RHtree.o"
-	@echo "... source/RHtree.i"
-	@echo "... source/RHtree.s"
+	@echo "... SproutDict"
+	@echo "... Sprout"
+	@echo "... SproutDict.o"
+	@echo "... SproutDict.i"
+	@echo "... SproutDict.s"
+	@echo "... source/SproutFit.o"
+	@echo "... source/SproutFit.i"
+	@echo "... source/SproutFit.s"
+	@echo "... source/SproutPlot.o"
+	@echo "... source/SproutPlot.i"
+	@echo "... source/SproutPlot.s"
+	@echo "... source/SproutTree.o"
+	@echo "... source/SproutTree.i"
+	@echo "... source/SproutTree.s"
 .PHONY : help
 
 

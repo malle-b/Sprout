@@ -51,6 +51,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/RHelperDict.dir/DependInfo.cmake"
-  "CMakeFiles/RHelper.dir/DependInfo.cmake"
+  "CMakeFiles/SproutDict.dir/DependInfo.cmake"
+  "CMakeFiles/Sprout.dir/DependInfo.cmake"
   )

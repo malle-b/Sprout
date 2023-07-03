@@ -1,7 +1,7 @@
 CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o: \
- /home/malin/hades/software/src/RHelper/source/HistogramHelper.cxx \
+ /home/malin/hades/software/src/Sprout/source/HistogramHelper.cxx \
  /usr/include/stdc-predef.h \
- /home/malin/hades/software/src/RHelper/include/HistogramHelper.h \
+ /home/malin/hades/software/src/Sprout/include/HistogramHelper.h \
  /home/malin/hades/software/install/root/include/TCanvas.h \
  /home/malin/hades/software/install/root/include/TPad.h \
  /home/malin/hades/software/install/root/include/TVirtualPad.h \
@@ -314,7 +314,7 @@ CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o: \
  /home/malin/hades/software/install/root/include/TBranch.h \
  /home/malin/hades/software/install/root/include/TBranchCacheInfo.h \
  /home/malin/hades/software/install/root/include/TBits.h \
- /home/malin/hades/software/src/RHelper/include/RHtree.h \
+ /home/malin/hades/software/src/Sprout/include/SproutTree.h \
  /home/malin/hades/software/install/root/include/TString.h \
  /home/malin/hades/software/install/root/include/TFile.h \
  /home/malin/hades/software/install/root/include/TDirectoryFile.h \
@@ -347,7 +347,7 @@ CMakeFiles/RHelper.dir/source/HistogramHelper.cxx.o: \
  /usr/include/c++/11/bits/locale_conv.h \
  /usr/include/c++/11/bits/quoted_string.h /usr/include/c++/11/sstream \
  /usr/include/c++/11/bits/sstream.tcc \
- /home/malin/hades/software/src/RHelper/include/RHfit.h \
+ /home/malin/hades/software/src/Sprout/include/SproutFit.h \
  /home/malin/hades/software/install/root/include/TF1.h \
  /home/malin/hades/software/install/root/include/RConfigure.h \
  /home/malin/hades/software/install/root/include/TFormula.h \

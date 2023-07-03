@@ -54,16 +54,16 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/malin/hades/software/src/RHelper
+CMAKE_SOURCE_DIR = /home/malin/hades/software/src/Sprout
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/malin/hades/software/src/RHelper/build
+CMAKE_BINARY_DIR = /home/malin/hades/software/src/Sprout/build
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/RHelper.dir/all
+all: CMakeFiles/Sprout.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -71,61 +71,61 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/RHelperDict.dir/clean
-clean: CMakeFiles/RHelper.dir/clean
+clean: CMakeFiles/SproutDict.dir/clean
+clean: CMakeFiles/Sprout.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/RHelperDict.dir
+# Target rules for target CMakeFiles/SproutDict.dir
 
 # All Build rule for target.
-CMakeFiles/RHelperDict.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelperDict.dir/build.make CMakeFiles/RHelperDict.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelperDict.dir/build.make CMakeFiles/RHelperDict.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=7 "Built target RHelperDict"
-.PHONY : CMakeFiles/RHelperDict.dir/all
+CMakeFiles/SproutDict.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SproutDict.dir/build.make CMakeFiles/SproutDict.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SproutDict.dir/build.make CMakeFiles/SproutDict.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/malin/hades/software/src/Sprout/build/CMakeFiles --progress-num=7 "Built target SproutDict"
+.PHONY : CMakeFiles/SproutDict.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/RHelperDict.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/RHelper/build/CMakeFiles 1
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/RHelperDict.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/RHelper/build/CMakeFiles 0
-.PHONY : CMakeFiles/RHelperDict.dir/rule
+CMakeFiles/SproutDict.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/Sprout/build/CMakeFiles 1
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/SproutDict.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/Sprout/build/CMakeFiles 0
+.PHONY : CMakeFiles/SproutDict.dir/rule
 
 # Convenience name for target.
-RHelperDict: CMakeFiles/RHelperDict.dir/rule
-.PHONY : RHelperDict
+SproutDict: CMakeFiles/SproutDict.dir/rule
+.PHONY : SproutDict
 
 # clean rule for target.
-CMakeFiles/RHelperDict.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelperDict.dir/build.make CMakeFiles/RHelperDict.dir/clean
-.PHONY : CMakeFiles/RHelperDict.dir/clean
+CMakeFiles/SproutDict.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SproutDict.dir/build.make CMakeFiles/SproutDict.dir/clean
+.PHONY : CMakeFiles/SproutDict.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/RHelper.dir
+# Target rules for target CMakeFiles/Sprout.dir
 
 # All Build rule for target.
-CMakeFiles/RHelper.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/malin/hades/software/src/RHelper/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target RHelper"
-.PHONY : CMakeFiles/RHelper.dir/all
+CMakeFiles/Sprout.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/malin/hades/software/src/Sprout/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target Sprout"
+.PHONY : CMakeFiles/Sprout.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/RHelper.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/RHelper/build/CMakeFiles 6
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/RHelper.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/RHelper/build/CMakeFiles 0
-.PHONY : CMakeFiles/RHelper.dir/rule
+CMakeFiles/Sprout.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/Sprout/build/CMakeFiles 6
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Sprout.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/malin/hades/software/src/Sprout/build/CMakeFiles 0
+.PHONY : CMakeFiles/Sprout.dir/rule
 
 # Convenience name for target.
-RHelper: CMakeFiles/RHelper.dir/rule
-.PHONY : RHelper
+Sprout: CMakeFiles/Sprout.dir/rule
+.PHONY : Sprout
 
 # clean rule for target.
-CMakeFiles/RHelper.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/RHelper.dir/build.make CMakeFiles/RHelper.dir/clean
-.PHONY : CMakeFiles/RHelper.dir/clean
+CMakeFiles/Sprout.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sprout.dir/build.make CMakeFiles/Sprout.dir/clean
+.PHONY : CMakeFiles/Sprout.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

@@ -8,8 +8,8 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class HistogramHelper+;
-#pragma link C++ class RHtree+;
-#pragma link C++ class RHfit+;
+#pragma link C++ class SproutPlot+;
+#pragma link C++ class SproutTree+;
+#pragma link C++ class SproutFit+;
 
 #endif
