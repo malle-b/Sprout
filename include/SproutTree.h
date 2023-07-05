@@ -21,7 +21,7 @@ private:
 
 public:
     SproutTree(): fvec(), fsize(), nmax(){};
-    SproutTree(int num_branches);
+    SproutTree(int num_branches, int entries=0);
     SproutTree(TTree* t, std::vector<TString> bstr={});
     
     void addBranch(){std::vector<float> vec; fvec.push_back(vec);}

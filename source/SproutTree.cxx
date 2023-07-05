@@ -3,10 +3,10 @@
 ClassImp(SproutTree) // Needed for compatability with ROOT's Cling interpreter 
 
 
-SproutTree::SproutTree(int num_branches){
+SproutTree::SproutTree(int num_branches, int entries){
     fvec.reserve(num_branches);
-    for(int i=0; i<num_branches;i++){std::vector<float> val; fvec.push_back(val);}
-    fsize = fvec.size(); 
+    for(int i=0; i<num_branches;i++){std::vector<float> val; val.reserve(entries);fvec.push_back(val);}
+    fsize = fvec.size(); nmax = 0;
 }
 
 SproutTree::SproutTree(TTree* t, std::vector<TString> bstr){ // coult add try and catch for bstr input
@@ -20,7 +20,7 @@ SproutTree::SproutTree(TTree* t, std::vector<TString> bstr){ // coult add try an
     std::cout << "nbranch " << nbranch << std::endl;
     
     for(int i=0; i<nbranch; i++){
-        std::vector<float> val;
+        std::vector<float> val; val.reserve(t->GetEntries());
         float bval;
 
         if(bstr.size()==0){t->SetBranchAddress("b"+int2str(i),&bval);}

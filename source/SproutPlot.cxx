@@ -6,7 +6,8 @@ SproutPlot::SproutPlot(){
 	fcanvas = new TCanvas();
 	fhist1 = new TH1F();
 
-	setStyle(fhist1);
+	line_color=1; line_width=3; line_style=1;
+	marker_color=1; marker_size=1; marker_style=1;
 }
 
 void SproutPlot::makeTCanvas(){
@@ -17,6 +18,11 @@ void SproutPlot::makeTCanvas(){
 	fcanvas->SetBottomMargin(0.15);
 	fcanvas->SetRightMargin(0.10);
 	fcanvas->SetLeftMargin(0.10);
+}
+
+TH1F SproutPlot::getTH1F(TString name, int bins, double xmin, double xmax, TString xlabel="x", TString ylabel="Counts"){
+	makeTH1F(name, bins, xmin, xmax, xlabel, ylabel);
+	return getTH1F();
 }
 
 void SproutPlot::makeTCanvas(int nhist){
@@ -51,10 +57,11 @@ void SproutPlot::makeTCanvas(SproutTree tree){
 	}
 }
 
-SproutTree SproutPlot::makeTCanvas(SproutTree tree, SproutFit* hfit){ // Think of a way to do this without double for-loop
+SproutTree SproutPlot::fitTree(SproutTree tree, SproutFit* hfit){ // Think of a way to do this without double for-loop
 	makeTCanvas(tree.getNumBranches()); // fcanvas gets cleared here 
 
-	SproutTree outtree(1);
+	SproutTree outtree(4);
+
 	for(int i=0; i<tree.getNumBranches(); i++){
 		makeTH1F(tree.getBranch(i), "hfit"+int2str(i)); //fhist1 gets cleared and adjusted
 		setPlotText(fhist1,"bin "+int2str(i));
@@ -66,27 +73,22 @@ SproutTree SproutPlot::makeTCanvas(SproutTree tree, SproutFit* hfit){ // Think o
 		fhist1->DrawCopy();
 		fhist1->Add(bg,-1);
 		fhist1->DrawClone("same");
-		sig->Draw("same");
-		bg->Draw("same");
+		sig->DrawCopy("same");
+		bg->DrawCopy("same");
 
-		if(hfit->getSigFuncName() == "gaus"){
-			double low = (double) sig->GetParameter(1)-3*sig->GetParameter(2);
-			double high = (double) sig->GetParameter(1)+3*sig->GetParameter(2);
+		double low = fhist1->GetXaxis()->GetXmin();
+		double high = fhist1->GetXaxis()->GetXmax();
 
-			double blow = (double) fhist1->FindFixBin(low);
-			double bhigh = (double) fhist1->FindFixBin(high);
+		SproutTree counts = hfit->integrate(low, high,fhist1->GetBinWidth(1));
+		for(int j=0; j<outtree.getNumBranches(); j++){outtree.addToBranch(j,counts.get(j,0));}
+	 }
 
-			outtree.addToBranch(0,(float)fhist1->Integral(blow,bhigh));
-		}
-		else{outtree.addToBranch(0,(float)fhist1->Integral(0,fhist1->GetNbinsX()));}
-	}
-	if(hfit->getSigFuncName() != "gaus"){std::cout << "Signal not Gaussian, no cut-off on histogram entries." << std::endl;}
 	return outtree;
 }
 
 
-void SproutPlot::makeTH1F(TString name, double xmin, double xmax, TString xlabel, TString ylabel, int bins){
-	fhist1->Reset("ICESM");
+void SproutPlot::makeTH1F(TString name, int bins, double xmin, double xmax, TString xlabel, TString ylabel){
+	fhist1->Reset("ICESM"); setStyle(fhist1);
 
 	fhist1->SetName(name);
 	fhist1->SetBins(bins, xmin, xmax);
@@ -104,12 +106,11 @@ void SproutPlot::makeTH1F(std::vector<float> data, TString name, TString xlabel,
 		while(number != 0){number = number / 10; count++;}
 	}
 
-	fhist1->Reset("ICESM");
+	fhist1->Reset("ICESM"); setStyle(fhist1);
 
 	if(count < 2){fhist1->SetBins(2, min, max);}
 	else if(count < 4){fhist1->SetBins(10^(count), min, max);}
 	else{fhist1->SetBins(10^3, min,max);}
-
 
 	fhist1->SetName(name);
     fhist1->SetXTitle(xlabel);
@@ -126,7 +127,7 @@ void SproutPlot::setPlotText(TH1F* h1, TString text){
 	latexText.DrawClone();
 }
 
-void SproutPlot::setStyle(TH1F *h){
+void SproutPlot::setStyle(TH1F* h){
 
 	gStyle->SetOptStat(0);
 	h->GetXaxis()->SetLabelSize(0.06);
@@ -141,8 +142,9 @@ void SproutPlot::setStyle(TH1F *h){
 	if(h->GetMaximum()/1000 >1) h->GetYaxis()->SetMaxDigits(3);
 	if(h->GetMaximum()/10000 >1) h->GetYaxis()->SetMaxDigits(4);
 	
-	h->SetLineWidth(1);
-	h->SetLineColor(kBlack);
+	h->SetLineStyle(line_style);
+	h->SetLineWidth(line_width);
+	h->SetLineColor(line_color);
 }
 
 
