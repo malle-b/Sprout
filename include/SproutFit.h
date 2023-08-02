@@ -12,59 +12,95 @@
 
 
 class SproutFit{
-    private:
-    TF1* fsig;
-    TF1* fbg;
-    TF1* ffit;
+public:
 
-    int npar_sig;
-    int npar_bg;
-    int npar;
-    int count;
-    int ecount;
-    float par_range;
-
-    TMatrixDSym cfit;
-    TMatrixDSym csig;
-    TMatrixDSym cbg;
-
-    int fit_line_color;
-    int sig_line_color;
-    int bg_line_color;
-    int fit_line_style;
-    int sig_line_style;
-    int bg_line_style;
-    int line_width;
-    
-
-    TString sig_func_name;
-    std::string inputfile;
-
-    SproutTree ftree;
-    
-    void readInput();
-    void writeOutput();
-    int getNumParam(TF1 f){int n=0; for(Int_t i=0; i<f.GetNpar();i++){n++;} return n;}
-
-    public:
+    /**
+    * Constructor of a SproutTree object with a specified signal and background model 
+    * function as well as the number of histograms that will be fitted. 
+    * 
+    * @param sig_func name of the signal function, eg. "gaus"
+    * @param bg_func name of the background function, eg. "pol2"
+    * @param num number of objects that will be fitted 
+    */
     SproutFit(TString sig_func, TString bg_func,int num=0);
+
+    /**
+    * Constructor of a SproutTree object with a specified signal and background model 
+    * function, input file with start parameters as well as the number of histograms 
+    * that will be fitted. 
+    * 
+    * @param sig_func name of the signal function, eg. "gaus"
+    * @param bg_func name of the background function, eg. "pol2"
+    * @param infile name of file containing the input parameters
+    * @param num number of objects that will be fitted 
+    */
     SproutFit(TString sig_func, TString bg_func, std::string infile,int num=0);
-    ~SproutFit(){delete fsig; delete fbg; delete ffit;}
-    SproutFit(const SproutFit& that) = delete;
-    SproutFit& operator=(const SproutFit& that) = delete;
 
-    void fit(TH1F* h);
+    ~SproutFit(){delete fsig; delete fbg; delete ffit;} // Destructor 
+    SproutFit(const SproutFit& that) = delete; //Copy constructor set to delete. Object cannot be copied
+    SproutFit& operator=(const SproutFit& that) = delete; // assignment operator set to delete. Object cannot be assigned 
 
-    SproutTree integrate(double low, double high, double bin_width);
-    
+    /**
+    * Fits the sum of the specified signal and background functions to the specified histogram 
+    * 
+    * @param h pointer to TH1F histogram to be fitted 
+    */
+    void fit(TH1F* h);    
 
+    /**
+    * Get the fitted function, i.e. the sum of the specified signal and background functions, 
+    * 
+    * @return pointer to the TF1 object corresponding to the fitted function 
+    */
     TF1* getFit(){return ffit;}
+
+    /**
+    * Get the fitted signal function 
+    *
+    * @return pointer to the TF1 object corresponding to the fitted signal function 
+    */
     TF1* getSignal(){return fsig;}
+
+    /**
+    * Get the fitted signal funciton 
+    * 
+    * @return pointer to the TF1 object corresponding to the fitted background function 
+    */
     TF1* getBackground(){return fbg;}
+
+    /**
+    * Get the name of the signal funciton that was specified in the constructor 
+    * 
+    * @return TString of the signal function name specified in the constructor 
+    */
     TString getSigFuncName(){return sig_func_name;}
+
+    /**
+    * Get the covariance matrix of the fit 
+    * 
+    * @return TMatrixDSym object representing the covariance matrix of the fitted function 
+    */
     TMatrixDSym getFitCovariance(){return cfit;}
+
+    /**
+    * Get the covariance matrix of the fitted signal function. 
+    * 
+    * @return TMatrixDSym object representing the covariance matrix of the fitted signal function 
+    */
     TMatrixDSym getSignalCovariance(){return csig;}
+
+    /**
+    * Get the covariance matrix of the fitted background function. 
+    * 
+    * @return TMatrixDSym object representing the covariance matrix of the fitted background function 
+    */
     TMatrixDSym getBackgroundCovariance(){return cbg;}
+
+    /**
+    * 
+    */
+    SproutTree integrate(double low, double high, double bin_width);
+
 
     void setStyle();
     void setLineStyle(int fitcolor=15, int sigcolor=42, int bgcolor=35,
@@ -76,5 +112,39 @@ class SproutFit{
 
     void writeInput();
     void printInput();
+
+private:
+    TF1* fsig; // signal function 
+    TF1* fbg; // background function 
+    TF1* ffit; // fit-function, i.e. sum of fsig and fbg
+
+    int npar_sig; // number of parameters in fsig
+    int npar_bg; // number of parameters in fbg
+    int npar; // number of parameters in ffit 
+    int count; // number of times the fit has been applied 
+    int ecount; // number of histogram to be fitted 
+    float par_range; // range of fit parameters.
+
+    TMatrixDSym cfit; // Covariance matrix of ffit after fit 
+    TMatrixDSym csig; // covariance matrix of fsig after fit 
+    TMatrixDSym cbg; // Covariance matrix of fbg after fit 
+
+    int fit_line_color; // ffit line color displayed when drawn 
+    int sig_line_color; // fsig line color displayed when drawn
+    int bg_line_color; // fbg line color displayed when drawn 
+    int fit_line_style; // ffit line style displayed when drawn 
+    int sig_line_style; // fsig line style displayed when drawn 
+    int bg_line_style; // fbg line color displayed when drawn 
+    int line_width; // line width displayed when drawn 
+    
+
+    TString sig_func_name; // name of the signal function 
+    std::string inputfile; // name of the input file 
+
+    SproutTree ftree; // SproutTree to keep track of fit parameters 
+    
+    void readInput();
+    void writeOutput();
+    int getNumParam(TF1 f){int n=0; for(Int_t i=0; i<f.GetNpar();i++){n++;} return n;}
 
 };
