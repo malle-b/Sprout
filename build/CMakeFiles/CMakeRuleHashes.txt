@@ -1,3 +1,0 @@
-# Hashes of file build rules.
-a747708ec624278e60fe5f982a554aa9 CMakeFiles/SproutDict
-fc512ecfe80ff1d8e461da57dd27ca00 SproutDict.cxx
