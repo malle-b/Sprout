@@ -7,18 +7,17 @@
 #include "TStyle.h"
 
 #include "SproutTree.h"
-#include "SproutFit.h"
 
 #include <iostream>
-#include <vector>
+#include <list>
 
 class SproutPlot {
 public:
 
     SproutPlot(); // Constructor 
-    ~SproutPlot(){delete fcanvas; delete fhist1;} // Destructor 
-    SproutPlot(const SproutPlot& that) = delete; // Copy constructor set to delete, object cannot be copied
-    SproutPlot& operator=(const SproutPlot& that) = delete; // Assignmet operator set to delete, object cannot be assigned
+    // ~SproutPlot(){delete fcanvas; delete fhist1;} // Destructor 
+    // SproutPlot(const SproutPlot& that) = delete; // Copy constructor set to delete, object cannot be copied
+    // SproutPlot& operator=(const SproutPlot& that) = delete; // Assignmet operator set to delete, object cannot be assigned
 
     /** 
     * Returns an empty TH1F histogram with properties set to the specified parameters.
@@ -32,7 +31,7 @@ public:
     *
     * @return empty TH1F histogram 
     */
-    TH1F getTH1F(TString name, int bins, double xmin, double xmax, TString xlabel="x", TString ylabel="Counts");
+    TH1F& getTH1F(TString name, int bins, double xmin, double xmax, TString xlabel="x", TString ylabel="Counts");
 
 
     /**
@@ -46,7 +45,7 @@ public:
     *
     * @return filled TH1F histogram 
     */
-    TH1F getTH1F(std::vector<float> data, TString name, TString xlabel="x", TString ylabel="Counts");
+    TH1F& getTH1F(std::vector<float> data, TString name, TString xlabel="x", TString ylabel="Counts");
 
     /**
     * Fits all branches of 'tree' to some signal and background model functions specified in 'hfit'
@@ -64,7 +63,7 @@ public:
     * Branch 2 the number of background events and
     * Branch 3 the background event uncertainty.    
     */
-    SproutTree fitTree(SproutTree tree, SproutFit* hfit);
+    //SproutTree fitTree(SproutTree tree, SproutFit* hfit);
 
 
     /**
@@ -132,11 +131,21 @@ public:
     * @param h pointer to the TH1F histogram that is to be saved. 
     * @param plot_text specifies a plot text to be displayed on the drawn histogram. 
     */
-    void writeHist(TH1F* h, TString plot_text = "");
+    void writeHist(TString plot_text = "");
+
+    void writeCanvas(TString name);
+
+    void setTCanvas(TCanvas* fcanvas);
+    void setTCanvas(TCanvas* fcanvas, int nhist);
+
+    int getSize(){return fvec.size();}
+
+    std::list<TH1F>::iterator begin() {return fvec.begin();}
+    std::list<TH1F>::iterator end() {return fvec.end();}
 
     private:
-    TCanvas* fcanvas;
-    TH1F* fhist1;
+    TH1F fhist1;
+    std::list<TH1F> fvec;
     int line_color; 
     int line_style; 
     int line_width;
@@ -149,10 +158,9 @@ public:
     void makeTH1F(TString name, int bins ,double xmin, double xmax,TString xlabel="x", TString ylabel="Counts");
     void makeTH1F(std::vector<float> data, TString name, TString xlabel="x", TString ylabel="Counts");
 
-    void makeTCanvas();
-    void makeTCanvas(int nhist);
 
-    void writeCanvas(TString name);
+
+    
     
     ClassDef(SproutPlot, 1) // Needed for compatability with ROOT's Cling interpreter 
 
