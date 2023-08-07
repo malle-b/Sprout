@@ -68,17 +68,23 @@ TH1F& SproutPlot::getTH1F(std::vector<float> data, TString name, TString xlabel,
 
 void SproutPlot::plotTree(SproutTree tree){
 	//fcanvas gets cleared and initialized to contain the same number of histograms as 'tree' has branches. 
-	TCanvas can = TCanvas();
-	setTCanvas(&can, tree.getNumBranches());
+	//TCanvas can = TCanvas();
+	//setTCanvas(&can, tree.getNumBranches());
 
 	//Loop over each branch in 'tree'
 	for(int i=0; i<tree.getNumBranches(); i++){
 		//fhist1 gets cleared and filled with data in branch i in 'tree'
-		makeTH1F(tree.getBranch(i), "h"+int2str(i));
-		setPlotText(&fhist1,"bin "+int2str(i)); //fhist1 plot text set to "bin i"
+		// makeTH1F(tree.getBranch(i), "h"+int2str(i));
+		// fhist1.SetTitle("B"+int2str(i));
 
-		can.cd(i+1); //open canvas for drawing 
-		fhist1.DrawCopy(); //draw the histogram
+		TH1F& temp = getTH1F(tree.getBranch(i), "h"+int2str(i));
+		temp.SetTitle("B"+int2str(i+1));
+		
+		//fhist1.SetTitleOffset(0.06);
+		//setPlotText(&fhist1,"bin "+int2str(i)); //fhist1 plot text set to "bin i"
+
+		//can.cd(i+1); //open canvas for drawing 
+		//fhist1.DrawClone(); //draw the histogram
 	}
 }
 

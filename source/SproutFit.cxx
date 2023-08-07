@@ -4,8 +4,9 @@ SproutFit::SproutFit(std::string filename) :
 inputfile(filename),
 fsig(new TF1()), fbg(new TF1()), ffit(new TF1()),
 npar_sig(0), npar_bg(0), npar(0),
+chi2_sig(0), chi2_bg(0), chi2(0),
 cfit(TMatrixDSym()), csig(TMatrixDSym()), cbg(TMatrixDSym()),
-fit_line_color(1), sig_line_color(1), bg_line_color(1),
+fit_line_color(1), sig_line_color(2), bg_line_color(3),
 fit_line_style(2), sig_line_style(2), bg_line_style(2),
 line_width(3) 
 {}
@@ -23,12 +24,10 @@ void SproutFit::fit(SproutPlot splot){
         readLine(&ob,line);
 
         setFitFunctions();
-        h.Fit(ffit,"SQ0");
-        updateParam();
+        fit(h);
 
         can.cd(i+1);
         drawResult(h);
-
 
         i++;
         writeOutput();
@@ -53,8 +52,55 @@ void SproutFit::fitBackground(TH1F h){
         low_bin++;
     }
 
-    
+    temp->Fit(fbg, "SQ0", "", xmin, xmax);
 
+    chi2_bg = fbg->GetChisquare()/fbg->GetNDF();
+
+    for(int i=0; i<npar_bg; i++){
+        ffit->SetParameter(i, fbg->GetParameter(i));
+    }
+}
+
+void SproutFit::fitSignal(TH1F h){
+    TH1F* temp = (TH1F*) h.Clone("temp");
+
+    // //Fix parameters of ffit to current values of fbg
+    // for(int i=0; i<npar_bg; i++){ffit->FixParameter(i,fbg->GetParameter(i));} 
+
+    // temp->Fit(ffit, "S0B","",xsigmin, xsigmax);
+
+    // //Release the parameters of ffit so they're no longer fixed 
+    // for(int i=0; i<npar_bg; i++){ffit->ReleaseParameter(i);} 
+
+    // chi2_sig = ffit->GetNDF();
+    // updateParam();
+
+    temp->Add(fbg, -1);
+    temp->Fit(fsig, "SQ0", "", xsigmin, xsigmax);
+    chi2_sig = fsig->GetChisquare()/fsig->GetNDF();
+
+    for(int i=npar_bg; i<npar; i++){
+        ffit->SetParameter(i, fsig->GetParameter(i-npar_bg));
+    }  
+}
+
+void SproutFit::fit(TH1F h){
+    fitBackground(h);
+    fitSignal(h);
+    h.Fit(ffit, "SQ0", "",xmin, xmax);
+    updateParam();
+
+    fitBackground(h);
+    fitSignal(h);
+    h.Fit(ffit, "SQ0", "",xmin, xmax);
+    updateParam();
+
+    fitBackground(h);
+    fitSignal(h);
+    h.Fit(ffit, "SQ0", "",xmin, xmax);
+    updateParam();
+
+    chi2 = ffit->GetChisquare()/ffit->GetNDF();
 }
 
 void SproutFit::drawResult(TH1F h){
@@ -65,6 +111,45 @@ void SproutFit::drawResult(TH1F h){
     fsig->DrawCopy("same"); //draw the fitted signal function 
     fbg->DrawCopy("same"); //draw the fitted background function 
     ffit->DrawCopy("same");
+
+    // Draw lines to Indicate the limits of the fit-Integral
+    int height = h.GetMaximum() + 0.1 * h.GetMaximum(); 
+
+    TGraph xmin1 = TGraph(2);
+    TGraph xmax1 = TGraph(2);
+    TGraph xmin2 = TGraph(2);
+    TGraph xmax2 = TGraph(2);
+
+    xmin1.SetPoint(0, xmin, 0);
+    xmin1.SetPoint(1, xmin, height);
+
+    xmax1.SetPoint(0, xsigmin, 0);
+    xmax1.SetPoint(1, xsigmin, height);
+
+    xmin2.SetPoint(0, xsigmax, 0);
+    xmin2.SetPoint(1, xsigmax, height);
+
+    xmax2.SetPoint(0, xmax, 0);
+    xmax2.SetPoint(1, xmax, height);
+
+    xmin1.SetLineColor(13); xmin1.SetLineWidth(3); xmin1.SetLineStyle(2);
+    xmax1.SetLineColor(15); xmax1.SetLineWidth(3); xmax1.SetLineStyle(2);
+    xmin2.SetLineColor(15); xmin2.SetLineWidth(3); xmin2.SetLineStyle(2);
+    xmax2.SetLineColor(13); xmax2.SetLineWidth(3); xmax2.SetLineStyle(2);
+
+    xmin1.DrawClone("same");
+    xmax1.DrawClone("same");
+    xmin2.DrawClone("same");
+    xmax2.DrawClone("same");
+
+    TPaveText pt = TPaveText(0.7,0.7,0.99,0.99,"brNDC");
+    pt.SetBorderSize(0);
+    pt.SetFillColor(0);
+    pt.SetFillStyle(0);
+    pt.AddText("#chi^{2}_{#nu}(bg) = "+double2str(chi2_bg));
+    pt.AddText("#chi^{2}_{#nu}(sig) = "+double2str(chi2_sig));
+    pt.AddText("#chi^{2}_{#nu}(tot) = "+double2str(chi2));
+    pt.DrawClone("same");
 }
 
 void SproutFit::updateParam(){
@@ -77,17 +162,26 @@ void SproutFit::updateParam(){
 void SproutFit::setFitFunctions(){
     TF1 tsig = TF1("tsig", (TString)sig_name, xmin, xmax);
     TF1 tbg = TF1("tbg", (TString) bg_name, xmin, xmax);
-    TF1 tfit = TF1("tfit", "tsig+tbg", xmin, xmax);
 
     fsig = (TF1*) tsig.Clone("fsig");
     fbg = (TF1*) tbg.Clone("fbg");
-    ffit = (TF1*) tfit.Clone("ffit");
 
     npar_sig = getNumParam(*fsig);
     npar_bg = getNumParam(*fbg);
+    
+    TF1 tfit = TF1("tfit", "tsig+tbg", xmin, xmax);
+
+    ffit = (TF1*) tfit.Clone("ffit");
     npar = getNumParam(*ffit);
 
-    for(int i=0; i<param.size(); i++){ffit->SetParameter(i,param[i]);}
+    if(param.size()<npar){
+        for(int i=0; i<npar; i++){ffit->SetParameter(i,1);}
+    }
+    else{
+        for(int i=0; i<param.size(); i++){ffit->SetParameter(i,param[i]);}
+    }
+
+    updateParam();
 
     setStyle();
 }
@@ -108,9 +202,9 @@ void SproutFit::readLine(std::fstream* ob, std::string line){
         param.push_back(val);
     }
 
-    std::cout << "read line: " << bg_name << " " << sig_name << " " << xmin << " " << xmax << " " << xsigmin << " " << xsigmax << " ";
-    for(float val : param){std::cout << val << " ";}
-    std::cout << "\n";
+    // std::cout << "read line: " << bg_name << " " << sig_name << " " << xmin << " " << xmax << " " << xsigmin << " " << xsigmax << " ";
+    // for(float val : param){std::cout << val << " ";}
+    // std::cout << "\n";
 
 }
 

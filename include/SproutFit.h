@@ -9,6 +9,8 @@
 #include "TMatrixDSym.h"
 #include "TMatrixD.h"
 #include "TFormula.h"
+#include "TGraph.h"
+#include "TPaveText.h"
 
 #include <fstream>
 #include <sstream>
@@ -123,6 +125,8 @@ public:
     void printInput();
 
     void fitBackground(TH1F h);
+    void fitSignal(TH1F h);
+    void fit(TH1F h);
 
 
 private:
@@ -136,6 +140,10 @@ private:
     // int count; // number of times the fit has been applied 
     // int ecount; // number of histogram to be fitted 
     // float par_range; // range of fit parameters.
+
+    double chi2_sig;
+    double chi2_bg;
+    double chi2;
 
     std::string sig_name;
     std::string bg_name;
@@ -163,6 +171,7 @@ private:
     void readLine(std::fstream* ob, std::string line);
     
     TString int2str(int i){TString str; str.Form("%d", i); return str;}
+    TString double2str(double d){TString str; str.Form("%g", d); return str;}
     void readInput();
     void writeOutput();
     int getNumParam(TF1 f){int n=0; for(Int_t i=0; i<f.GetNpar();i++){n++;} return n;}
