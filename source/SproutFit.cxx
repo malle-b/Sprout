@@ -1,17 +1,20 @@
 #include "SproutFit.h"
 
-SproutFit::SproutFit(std::string filename) :
-inputfile(filename),
+SproutFit::SproutFit() :
+inputfile("FitParam.txt"),
 fsig(new TF1()), fbg(new TF1()), ffit(new TF1()),
+sig_name(""), bg_name(""),
+xmin(0), xmax(0), xsigmin(0), xsigmax(0),
 npar_sig(0), npar_bg(0), npar(0),
 chi2_sig(0), chi2_bg(0), chi2(0),
-cfit(TMatrixDSym()), csig(TMatrixDSym()), cbg(TMatrixDSym()),
+cfit(new TMatrixDSym()), csig(new TMatrixDSym()), cbg(new TMatrixDSym()),
 fit_line_color(1), sig_line_color(2), bg_line_color(3),
 fit_line_style(2), sig_line_style(2), bg_line_style(2),
 line_width(3) 
 {}
 
-void SproutFit::fit(SproutPlot splot){
+void SproutFit::fit(SproutPlot splot, TString save_as, SproutTree* stree, bool save_hist){
+
     TCanvas can = TCanvas(); 
     splot.setTCanvas(&can, splot.getSize());
 
@@ -23,16 +26,30 @@ void SproutFit::fit(SproutPlot splot){
     for(TH1F& h : splot){
         readLine(&ob,line);
 
-        setFitFunctions();
-        fit(h);
+        setFitProperties();
 
+        if(save_hist==true){fit(h,save_as+int2str(i+1));}
+        else{fit(h);}
+        
         can.cd(i+1);
         drawResult(h);
 
         i++;
         writeOutput();
+
+        if(stree!=nullptr){
+            float counts[4]; 
+            integrate(h,counts);
+            int i=0;
+            for(float val : counts){
+                stree->addToBranch(i,val);
+                i++;
+            }
+        }
     }
-    can.SaveAs("testCanFit.png");
+
+    if(save_as != " "){can.SaveAs(save_as+".png");}
+    
     ob.close();
 
     const int length = inputfile.length();
@@ -44,6 +61,7 @@ void SproutFit::fit(SproutPlot splot){
 
 void SproutFit::fitBackground(TH1F h){
     TH1F* temp = (TH1F*) h.Clone("temp");
+
     int low_bin = temp->GetXaxis()->FindBin(xsigmin);
     int up_bin = temp->GetXaxis()->FindBin(xsigmax);
 
@@ -64,31 +82,21 @@ void SproutFit::fitBackground(TH1F h){
 void SproutFit::fitSignal(TH1F h){
     TH1F* temp = (TH1F*) h.Clone("temp");
 
-    // //Fix parameters of ffit to current values of fbg
-    // for(int i=0; i<npar_bg; i++){ffit->FixParameter(i,fbg->GetParameter(i));} 
+    //Fix parameters of ffit to current values of fbg
+    for(int i=0; i<npar_bg; i++){ffit->FixParameter(i,fbg->GetParameter(i));} 
 
-    // temp->Fit(ffit, "S0B","",xsigmin, xsigmax);
+    temp->Fit(ffit, "SQ0B","",xsigmin, xsigmax);
 
-    // //Release the parameters of ffit so they're no longer fixed 
-    // for(int i=0; i<npar_bg; i++){ffit->ReleaseParameter(i);} 
+    //Release the parameters of ffit so they're no longer fixed 
+    for(int i=0; i<npar_bg; i++){ffit->ReleaseParameter(i);} 
 
-    // chi2_sig = ffit->GetNDF();
-    // updateParam();
+    chi2_sig = ffit->GetChisquare()/ffit->GetNDF();
+    updateParam();
 
-    temp->Add(fbg, -1);
-    temp->Fit(fsig, "SQ0", "", xsigmin, xsigmax);
-    chi2_sig = fsig->GetChisquare()/fsig->GetNDF();
-
-    for(int i=npar_bg; i<npar; i++){
-        ffit->SetParameter(i, fsig->GetParameter(i-npar_bg));
-    }  
 }
 
-void SproutFit::fit(TH1F h){
-    fitBackground(h);
-    fitSignal(h);
-    h.Fit(ffit, "SQ0", "",xmin, xmax);
-    updateParam();
+void SproutFit::fit(TH1F h, TString save_as){
+    if(xmin==xmax){xmin = h.GetXaxis()->GetXmin(); xmax = h.GetXaxis()->GetXmax();}
 
     fitBackground(h);
     fitSignal(h);
@@ -98,9 +106,28 @@ void SproutFit::fit(TH1F h){
     fitBackground(h);
     fitSignal(h);
     h.Fit(ffit, "SQ0", "",xmin, xmax);
+    updateParam();
+
+    fitBackground(h);
+    fitSignal(h);
+    TFitResultPtr r = h.Fit(ffit, "SQ0", "",xmin, xmax);
     updateParam();
 
     chi2 = ffit->GetChisquare()/ffit->GetNDF();
+
+    *cfit = r->GetCovarianceMatrix();
+    cfit->GetSub(npar_bg,npar-1, *csig,""); 
+    cfit->GetSub(0,(npar_bg-1), *cbg,"");
+
+    if(save_as != ""){
+        SproutPlot plt = SproutPlot();
+        TCanvas can = TCanvas();
+        plt.setTCanvas(&can);
+
+        can.cd();
+        drawResult(h);
+        can.SaveAs(save_as+".png");
+    }
 }
 
 void SproutFit::drawResult(TH1F h){
@@ -120,17 +147,10 @@ void SproutFit::drawResult(TH1F h){
     TGraph xmin2 = TGraph(2);
     TGraph xmax2 = TGraph(2);
 
-    xmin1.SetPoint(0, xmin, 0);
-    xmin1.SetPoint(1, xmin, height);
-
-    xmax1.SetPoint(0, xsigmin, 0);
-    xmax1.SetPoint(1, xsigmin, height);
-
-    xmin2.SetPoint(0, xsigmax, 0);
-    xmin2.SetPoint(1, xsigmax, height);
-
-    xmax2.SetPoint(0, xmax, 0);
-    xmax2.SetPoint(1, xmax, height);
+    xmin1.SetPoint(0, xmin, 0);     xmin1.SetPoint(1, xmin, height);
+    xmax1.SetPoint(0, xsigmin, 0);  xmax1.SetPoint(1, xsigmin, height);
+    xmin2.SetPoint(0, xsigmax, 0);  xmin2.SetPoint(1, xsigmax, height);
+    xmax2.SetPoint(0, xmax, 0);     xmax2.SetPoint(1, xmax, height);
 
     xmin1.SetLineColor(13); xmin1.SetLineWidth(3); xmin1.SetLineStyle(2);
     xmax1.SetLineColor(15); xmax1.SetLineWidth(3); xmax1.SetLineStyle(2);
@@ -159,7 +179,7 @@ void SproutFit::updateParam(){
     fbg->SetParameters(&p[0]);
 }
 
-void SproutFit::setFitFunctions(){
+void SproutFit::setFitProperties(){
     TF1 tsig = TF1("tsig", (TString)sig_name, xmin, xmax);
     TF1 tbg = TF1("tbg", (TString) bg_name, xmin, xmax);
 
@@ -183,6 +203,15 @@ void SproutFit::setFitFunctions(){
 
     updateParam();
 
+    TMatrixDSym cfit_temp = TMatrixDSym(npar);
+    TMatrixDSym csig_temp = TMatrixDSym(npar_sig);
+    TMatrixDSym cbg_temp = TMatrixDSym(npar_bg);
+
+    cfit = (TMatrixDSym*) cfit_temp.Clone();
+    csig = (TMatrixDSym*) csig_temp.Clone();
+    cbg = (TMatrixDSym*) cbg_temp.Clone();
+
+
     setStyle();
 }
 
@@ -201,11 +230,6 @@ void SproutFit::readLine(std::fstream* ob, std::string line){
     while(iss >> val){
         param.push_back(val);
     }
-
-    // std::cout << "read line: " << bg_name << " " << sig_name << " " << xmin << " " << xmax << " " << xsigmin << " " << xsigmax << " ";
-    // for(float val : param){std::cout << val << " ";}
-    // std::cout << "\n";
-
 }
 
 void SproutFit::writeOutput(){
@@ -218,101 +242,26 @@ void SproutFit::writeOutput(){
     ob.close();
 }
 
+void SproutFit::integrate(TH1F h, float vals[4]){
 
-// SproutFit::SproutFit(TString sig_func, TString bg_func, int num) 
-//     : fsig(new TF1("fsig", sig_func, 0,1)), fbg(new TF1("fbg", bg_func, 0,1)), ffit(new TF1("ffit", "fsig+fbg",0,1)),
-//     npar(getNumParam(*ffit)), npar_sig(getNumParam(*fsig)), npar_bg(getNumParam(*fbg)),
-//     ftree(npar), count(0), sig_func_name(sig_func), ecount(num), par_range(100),inputfile("FitParam.txt"),
-//     cfit(TMatrixDSym(npar)), csig(TMatrixDSym(npar_sig)), cbg(TMatrixDSym(npar_bg)),
-//     fit_line_color(1), sig_line_color(1), bg_line_color(1),
-//     fit_line_style(2), sig_line_style(2), bg_line_style(2),
-//     line_width(3){
+    float sig_integral = fsig->Integral(xmin,xmax)/(h.GetXaxis()->GetBinWidth(1)); 
+    float sig_error = fsig->IntegralError(xmin,xmax, fsig->GetParameters(),csig->GetMatrixArray(),1.E-6)/(h.GetXaxis()->GetBinWidth(1)); 
 
-//     readInput();
-//     static std::fstream ob;
-//     ob.open(inputfile, std::ios::out | std::ios::trunc);
-//     ob.close();
-// }
+    float bg_integral = fbg->Integral(xmin,xmax);
+    float bg_error = fbg->IntegralError(xmin,xmax, fbg->GetParameters(),cbg->GetMatrixArray(),1.E-6)/(h.GetXaxis()->GetBinWidth(1)); 
 
-// SproutFit::SproutFit(TString sig_func, TString bg_func, std::string infile, int num) 
-//     : fsig(new TF1("fsig", sig_func, 0,1)), fbg(new TF1("fbg", bg_func, 0,1)), ffit(new TF1("ffit", "fsig+fbg",0,1)),
-//     npar(getNumParam(*ffit)), npar_sig(getNumParam(*fsig)), npar_bg(getNumParam(*fbg)),
-//     ftree(npar), count(0), sig_func_name(sig_func), ecount(num), par_range(100), inputfile(infile),
-//     cfit(TMatrixDSym(npar)), csig(TMatrixDSym(npar_sig)), cbg(TMatrixDSym(npar_bg)),
-//     fit_line_color(1), sig_line_color(1), bg_line_color(1),
-//     fit_line_style(2), sig_line_style(2), bg_line_style(2),
-//     line_width(3){
+    h.Sumw2();
+    h.Add(fbg,-1,"I");
+    double h_error;
 
-//     readInput();
-//     static std::fstream ob;
-//     ob.open("FitParam.txt", std::ios::out | std::ios::trunc);
-//     ob.close();
-// }
+    float hsig_integral = h.IntegralAndError(h.GetXaxis()->FindBin(xmin),h.GetXaxis()->FindBin(xmax),h_error);
+    float hsig_error = sqrt(h_error*h_error + bg_error*bg_error);
 
-
-// void SproutFit::readInput(){
-//     std::fstream ob;
-//     ob.open(inputfile, std::ios::in);
-//     float val;
-//     int i=0;
-//     while(ob >> val){
-//         ftree.addToBranch(i%npar, val);
-//         i++;
-//     }
-//     ob.close();
-
-//     if(ftree.getNumEntries(0)==1){
-//         for(int i=1; i<ecount*npar+1; i++){ftree.addToBranch((i-1)%npar, ftree.get((i-1)%npar,0));}
-//     }
-// }
-
-// void SproutFit::fit(TH1F* h){
-//     fsig->SetRange(h->GetXaxis()->GetXmin(), h->GetXaxis()->GetXmax());
-//     fbg->SetRange(h->GetXaxis()->GetXmin(), h->GetXaxis()->GetXmax());
-//     ffit->SetRange(h->GetXaxis()->GetXmin(), h->GetXaxis()->GetXmax());
-
-
-//     if(ftree.getNumEntries(0)!=0){
-//         for(int i=0; i<npar; i++){
-//             ffit->SetParameter(i,ftree.get(i,count));
-//             ffit->SetParLimits(i,ftree.get(i,count)-par_range, ftree.get(i,count)+par_range);
-//         }
-//     }
-
-//     setStyle();    
-//     TFitResultPtr r = h->Fit("ffit","SQB");
-
-//     Double_t param[npar];
-//     ffit->GetParameters(param);
-//     fsig->SetParameters(&param[npar_bg]);
-//     fbg->SetParameters(&param[0]);
-
-//     cfit = r->GetCovarianceMatrix();
-//     cfit.GetSub(npar_bg,npar-1, csig,""); 
-//     cfit.GetSub(0,(npar_bg-1), cbg,"");
-
-//     writeOutput();
-//     count++;
-// }
-
-// SproutTree SproutFit::integrate(double low, double high, double bin_width){
-//     SproutTree outtree(4);
-
-//     int sig_integral = fsig->Integral(low,high)/bin_width; 
-//     int bg_integral = fbg->Integral(low,high)/bin_width;
-
-//     float sig_error = fsig->IntegralError(low,high, fsig->GetParameters(),csig.GetMatrixArray());
-//     float bg_error = fbg->IntegralError(low,high, fbg->GetParameters(),cbg.GetMatrixArray());
-
-//     outtree.addToBranch(0, sig_integral);
-//     outtree.addToBranch(1, sig_error);
-//     outtree.addToBranch(2, bg_integral);
-//     outtree.addToBranch(3, bg_error);
-
-//     return outtree;
-// }
-
-
+    vals[0] = sig_integral;
+    vals[1] = sig_error;
+    vals[2] = hsig_integral;
+    vals[3] = hsig_error;
+}
 
 void SproutFit::setStyle(){
     ffit->SetLineColor(fit_line_color);
@@ -328,21 +277,14 @@ void SproutFit::setStyle(){
     fbg->SetLineWidth(line_width);
 }
 
-// void SproutFit::writeInput(){
-//     std::fstream ob;
-//     if(ftree.getNumEntries(0)!=0){
-//         ob.open("FitParamInput.txt", std::ios::app);
-//         for(int i=0; i<count; i++){
-//             for(int j=0; j<npar; j++){
-//                 ob << ftree.get(j,i) << "  ";
-//             }
-//             ob << "\n";
-//         }
-//         ob.close();
-//     }
-//     else{std::cout << "Error in SproutFit: No specified fit input parameters. File not written" << std::endl;}
-// }
+void SproutFit::setFit(std::string bf_func, std::string sig_func, double xlow, double xup, double siglow, double sigup, std::vector<double> pars){
+    bg_name = bf_func;
+    sig_name = sig_func;
+    xmin = xlow;
+    xmax = xup;
+    xsigmin = siglow;
+    xsigmax = sigup;
+    param = pars;
 
-// void SproutFit::printInput(){
-//     ftree.print();
-// }
+    setFitProperties();
+}

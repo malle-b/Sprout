@@ -22,69 +22,23 @@ TH1F& SproutPlot::getTH1F(TString name, int bins, double xmin, double xmax, TStr
 	return fvec.back();
 }
 
-TH1F& SproutPlot::getTH1F(std::vector<float> data, TString name, TString xlabel, TString ylabel){
-	makeTH1F(data, name, xlabel, ylabel); //fhist1 is cleared and adjusted 
+TH1F& SproutPlot::getTH1F(std::vector<float> data,TString name, int bins, TString xlabel, TString ylabel){
+	makeTH1F(data, name, bins, xlabel, ylabel); //fhist1 is cleared and adjusted 
 	return fvec.back();
 }
 
-// SproutTree SproutPlot::fitTree(SproutTree tree, SproutFit* hfit){ // Think of a way to do this without double for-loop
-// 	// fcanvas gets cleared here and initialized to contain the same number of histograms as 'tree' has branches. 
-// 	makeTCanvas(tree.getNumBranches()); 
+TH1F& SproutPlot::getTH1F(int i){
+	std::list<TH1F>::iterator it = begin();
+	int j=0;
+	while(j<i){it++; j++;}
+	return *it;
+}
 
-// 	//Initialize output-SproutTree containing the number of signal/background events + errors
-// 	SproutTree outtree(4);
-
-// 	// Loop over each branch in 'tree'
-// 	for(int i=0; i<tree.getNumBranches(); i++){
-// 		makeTH1F(tree.getBranch(i), "hfit"+int2str(i)); //fhist1 gets cleared and filled with data in branch i in 'tree'
-// 		setPlotText(&fhist1,"bin "+int2str(i)); //fhist1 plot text set to "bin i"
-
-// 		fcanvas.cd(i+1); //open the canvas for drawing. 
-// 		hfit->fit(&fhist1); //perform the fit on fhist1. The fitted function is drawn automatically. 
-
-// 		//get the fitted backgorund and signal functions
-// 		TF1* bg = hfit->getBackground();
-// 		TF1* sig = hfit->getSignal();
-
-// 		fhist1.DrawCopy(); //draw the histogram 
-// 		fhist1.Add(bg,-1); //subtract the fitted background from fhist1
-// 		fhist1.DrawClone("same"); //draw background-subtracted histogram 
-// 		sig->DrawCopy("same"); //draw the fitted signal function 
-// 		bg->DrawCopy("same"); //draw the fitted background function 
-
-// 		//Calculate the lower and upper edge of the background-subtracted histogram 
-// 		double low = fhist1.GetXaxis()->GetXmin();
-// 		double high = fhist1.GetXaxis()->GetXmax();
-
-// 		//Integrate the fitted signal and background functions over the range low-high. 
-// 		SproutTree counts = hfit->integrate(low, high,fhist1.GetBinWidth(1)); //save results in 'counts'
-		
-// 		//Add the results saved in 'count' to the output 'outtree'
-// 		for(int j=0; j<outtree.getNumBranches(); j++){outtree.addToBranch(j,counts.get(j,0));}
-// 	 }
-// 	writeCanvas("big_boifit"); //Save and write the canvas 
-// 	return outtree; //return SproutTree with number of signal and background events + errors
-// }
-
-void SproutPlot::plotTree(SproutTree tree){
-	//fcanvas gets cleared and initialized to contain the same number of histograms as 'tree' has branches. 
-	//TCanvas can = TCanvas();
-	//setTCanvas(&can, tree.getNumBranches());
-
+void SproutPlot::plotTree(SproutTree tree, int bins, TString xlabel, TString ylabel){
 	//Loop over each branch in 'tree'
 	for(int i=0; i<tree.getNumBranches(); i++){
-		//fhist1 gets cleared and filled with data in branch i in 'tree'
-		// makeTH1F(tree.getBranch(i), "h"+int2str(i));
-		// fhist1.SetTitle("B"+int2str(i));
-
-		TH1F& temp = getTH1F(tree.getBranch(i), "h"+int2str(i));
+		TH1F& temp = getTH1F(tree.getBranch(i), "h"+int2str(i), bins, xlabel, ylabel);
 		temp.SetTitle("B"+int2str(i+1));
-		
-		//fhist1.SetTitleOffset(0.06);
-		//setPlotText(&fhist1,"bin "+int2str(i)); //fhist1 plot text set to "bin i"
-
-		//can.cd(i+1); //open canvas for drawing 
-		//fhist1.DrawClone(); //draw the histogram
 	}
 }
 
@@ -206,7 +160,7 @@ void SproutPlot::makeTH1F(TString name, int bins, double xmin, double xmax, TStr
 
 }
 
-void SproutPlot::makeTH1F(std::vector<float> data, TString name, TString xlabel, TString ylabel){
+void SproutPlot::makeTH1F(std::vector<float> data, TString name, int bins, TString xlabel, TString ylabel){
 	//Finds suitable values for binning and histogram range 
 	float min=0; float max=1; int count = 0;
 	long number = data.size();
@@ -222,11 +176,18 @@ void SproutPlot::makeTH1F(std::vector<float> data, TString name, TString xlabel,
 	fhist1.Reset("ICESM"); //Resets fhist1
 	setStyle(&fhist1); //sets the default style 
 
-	/*Sets the number of bins and histogram range 
-	depending the number of digits in 'number', i.e. the size of data.*/
-	if(count < 2){fhist1.SetBins(2, min, max);} //number < 10, data is divided into 2 bins 
-	else if(count < 4){fhist1.SetBins(10^(count), min, max);} //number < 10 000, data is divided into 10^(count) bins
-	else{fhist1.SetBins(10^3, min,max);} // number >= 10 000, data is divided into 10^3 bins
+
+	if(bins==0){
+		/*Sets the number of bins and histogram range 
+		depending the number of digits in 'number', i.e. the size of data.*/
+		if(count < 2){fhist1.SetBins(2, min, max);} //number < 10, data is divided into 2 bins 
+		else if(count < 4){fhist1.SetBins(10^(count), min, max);} //number < 10 000, data is divided into 10^(count) bins
+		else{fhist1.SetBins(10^3, min,max);} // number >= 10 000, data is divided into 10^3 bins
+	}
+	else{
+		fhist1.SetBins(bins,min,max);
+	}
+
 
 	//Sets the specified histogram properties. 
 	fhist1.SetName(name);

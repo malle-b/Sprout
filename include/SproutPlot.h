@@ -40,12 +40,15 @@ public:
     *
     * @param data vector containing floats that will be used ot fill the returned histogram
     * @param name name of the histogram 
+    * @param bins number of bins. If set to 0 (default) a suitible value is found automatically
     * @param xlabel label displayed on x-axis. Set to "x" by default
     * @param ylabel label displayed on y-axis. Set to "counts" by default 
     *
     * @return filled TH1F histogram 
     */
-    TH1F& getTH1F(std::vector<float> data, TString name, TString xlabel="x", TString ylabel="Counts");
+    TH1F& getTH1F(std::vector<float> data, TString name, int bins, TString xlabel="x", TString ylabel="Counts");
+
+    TH1F& getTH1F(int i);
 
     /**
     * Fits all branches of 'tree' to some signal and background model functions specified in 'hfit'
@@ -75,8 +78,9 @@ public:
     * branch. 
     * 
     * @param tree SproutTree for which a histogram is to be drawn for each branch. 
+    * @param bins Number of bins. If set to 0 (default) a suitible value is found automatically
     */
-    void plotTree(SproutTree tree);
+    void plotTree(SproutTree tree, int bins=0, TString xlabel="x", TString ylabel="counts");
 
     /**
     * Sets the default line appearance for TH1F histograms. The specified style will be used for all 
@@ -132,7 +136,6 @@ public:
     * @param plot_text specifies a plot text to be displayed on the drawn histogram. 
     */
     void writeHist(TString plot_text = "");
-
     void writeCanvas(TString name);
 
     void setTCanvas(TCanvas* fcanvas);
@@ -156,7 +159,7 @@ public:
     TString int2str(int i){TString str; str.Form("%d", i); return str;}
 
     void makeTH1F(TString name, int bins ,double xmin, double xmax,TString xlabel="x", TString ylabel="Counts");
-    void makeTH1F(std::vector<float> data, TString name, TString xlabel="x", TString ylabel="Counts");
+    void makeTH1F(std::vector<float> data, TString name, int bins ,TString xlabel="x", TString ylabel="Counts");
 
 
 
