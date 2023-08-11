@@ -16,9 +16,28 @@ marker_color(1),
 marker_style(1),
 marker_size(1){}
 
+void SproutPlot::add(TString filename, TString h_identify){
+	TFile f = TFile(filename);
+	TList *list = f.GetListOfKeys();
+
+	TKey *key;
+	TIter iter(list);
+	static TString classname("TH1F");
+
+	while((key = (TKey*)iter())) {
+		if(key->GetClassName() == classname) {
+		TH1F *hist = (TH1F*)key->ReadObj();
+		if(hist){
+			TString histname = hist->GetName();
+			if(histname.Contains(h_identify)){fvec.push_back(*hist);}
+			delete hist;
+		}
+		}
+	}
+}
+
 TH1F& SproutPlot::getTH1F(TString name, int bins, double xmin, double xmax, TString xlabel, TString ylabel){
 	makeTH1F(name, bins, xmin, xmax, xlabel, ylabel); //fhist1 is cleared and adjusted
-	std::cout << "fvec size " << fvec.size() << std::endl;
 	return fvec.back();
 }
 
@@ -69,6 +88,13 @@ void SproutPlot::setStyle(TH1F* h){
 	h->SetLineStyle(line_style);
 	h->SetLineWidth(line_width);
 	h->SetLineColor(line_color);
+}
+
+
+void SproutPlot::writeBasic(){
+	for(TH1F h : fvec){
+		h.Write();
+	}
 }
 
 void SproutPlot::writeHist(TString plot_text){

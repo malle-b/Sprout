@@ -23,7 +23,7 @@
 class SproutFit{
 public:
 
-    //Constructor 
+    //Default constructor 
     SproutFit();
 
     ~SproutFit(){delete fsig; delete fbg; delete ffit; delete cfit; delete csig; delete cbg;} // Destructor 
@@ -50,6 +50,7 @@ public:
     *    starting values as those obtained in the previous step. 
     *
     * 5. Steps 2-4 are repeated two more times.
+    *
     * 
     * @param h TH1F histogram to be fitted 
     * @param save_as if specified, the histogram and fit results are drawn and saved as 
@@ -59,7 +60,45 @@ public:
 
 
     /**
-    * :) 
+    * Fits the sum of a specified signal and background function to each histogram contained in the SproutPlot
+    * object passed as the first argument. The type of fit, its ranges and start parameters (optional) is specified 
+    * in a .txt file (by default named FitParam.txt). Such an input file must be created and filled by the user prior 
+    * to calling this function. 
+    *
+    * Required format of the input .txt file where row i corresponds to histogram i in SproutPlot
+    *   - Parameter 1: Name of the background function. This class uses the same name convention as ROOT::TFormula.
+    *     See documentation (https://root.cern.ch/doc/master/classTFormula.html) for valid expressions. 
+    *   - Parameter 2: Name of the signal function (Any valid expression of ROOT::TFormula)
+    *   - Parameters 3 and 4: lower and upper range of the fit. If both are set to the same value, the fit is performed
+    *     over the entire histogram range. 
+    *   - Parameters 5 and 6: lower and upper range of the signal region. 
+    *   - Additional parameters (optional): Starting values of the background function followed by starting values of the 
+    *     signal function. 
+    * Note that the input file doesn't need to contain the same number of lines as the number of histograms held in (SproutPlot).
+    * If there are fewer of the former, the last read line will be used to set the fit properties of all subsequent histograms. 
+    *
+    * After the fit, the input file is overwritten to contain the fitted parameters of the signal and background functions. 
+    *
+    * The fitting procedure of each histogram in SproutPlot is as follows: 
+    * 1. The histogram is split into three regions based on the ranges specified in SproutFit::setFit: 
+    *    -The signal region, between siglow and sigup. 
+    *    -The lower region (below signal), between xlow and siglow.
+    *    -The upper region (above signal), between sigup and xup. 
+    * 2. The specified background function, bg_func, is fitted simultaneously to the lower and upper region.
+    * 3. The sum of the signal and background function, bf_func+sig_func, is fitted to the the signal 
+    *    region with fixed values of bf_func obtained in step 2. 
+    * 4. The sum of the signal and background is fitted to the full region between xlow and xup with 
+    *    starting values as those obtained in the previous step. 
+    * 5. Steps 2-4 are repeated two more times.
+    *
+    * @param splot SproutPlot containing a collection of histograms, each of which is fitted. 
+    * @param save_as (optional). If specified, a .png file showing all fitted histograms will be saved with the
+    * specified path/name. 
+    * @param stree (optional). If a pointer to a sproutTree object containing at least 4 branches is passed it is 
+    * filled with the results of SproutPlot::integrate for each fitted histogram. 
+    * @param save_hist (optinal). If set to true, a separate figure of each fitted histogram is generated and 
+    * saved as a .png file with path/name specified in save_as. 
+    * 
     */
     void fit(SproutPlot splot, TString save_as = " ", SproutTree* stree = nullptr, bool save_hist=false); 
 
@@ -68,21 +107,21 @@ public:
     * 
     * @return pointer to the TF1 object corresponding to the fitted function 
     */
-    //TF1* getFit(){return ffit;}
+    TF1* getFit(){return ffit;}
 
     /**
     * Get the fitted signal function 
     *
     * @return pointer to the TF1 object corresponding to the fitted signal function 
     */
-    //TF1* getSignal(){return fsig;}
+    TF1* getSignal(){return fsig;}
 
     /**
     * Get the fitted signal funciton 
     * 
     * @return pointer to the TF1 object corresponding to the fitted background function 
     */
-    //TF1* getBackground(){return fbg;}
+    TF1* getBackground(){return fbg;}
 
 
     /**
@@ -107,7 +146,28 @@ public:
     TMatrixDSym getBackgroundCovariance(){return *cbg;}
 
     /**
+    * Calculates the number of events in the signal peak of a fitted histogram (note that SproutFit::fit)
+    * must have been called before this function. 
+    *
+    * The integral is perfomred over the total fitting range in two different ways for comparison. If the reuslts
+    * differ signigicantly, the user should take notice and identify the cause of the discrepancy.  
+    * The events in the signal peak is estimated as follows: 
     * 
+    * First method: The fitted signal function is integrated over the fitting range and divided by the bin width. 
+    * The uncertainty is obtained through error propagation of the fit parameter covariance matrix. 
+    *
+    * Second method: The integral of the fitted background function is subtracted from each histogram bin and 
+    * the remaining bin contents are summed. The uncertainty is obtained through error propagation of the 
+    * background integral uncertainty (propagated from the covariance matrix) and the histogram uncertainties. 
+    * 
+    * The results of these two methods are written to the array "vals" passed as an argument to this function. 
+    * val[0] is set to the number of peak events obatained through method 1. 
+    * val[1] is the uncertainty of the former. 
+    * val[2] is set to the number of peak events obtained through method 2. 
+    * val[3] is set to the uncertainty of the former. 
+    *
+    * @param h fitted histogram for which the number of signal counts is to be estimated. 
+    * @param vals array into which the result is written. 
     */
     void integrate(TH1F h, float vals[4]);
 

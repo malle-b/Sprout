@@ -5,6 +5,7 @@
 #include "TH1F.h"
 #include "TLatex.h"
 #include "TStyle.h"
+#include "TKey.h"
 
 #include "SproutTree.h"
 
@@ -18,6 +19,12 @@ public:
     // ~SproutPlot(){delete fcanvas; delete fhist1;} // Destructor 
     // SproutPlot(const SproutPlot& that) = delete; // Copy constructor set to delete, object cannot be copied
     // SproutPlot& operator=(const SproutPlot& that) = delete; // Assignmet operator set to delete, object cannot be assigned
+
+    /**
+    * Add all histograms whose name contains the the specified identifyer 
+    * are added to the SproutPlot. 
+    */
+    void add(TString filename, TString h_identify);
 
     /** 
     * Returns an empty TH1F histogram with properties set to the specified parameters.
@@ -127,6 +134,11 @@ public:
     * @param h TH1F histogram pointer for which the default style is to be set. 
     */
     void setStyle(TH1F* h);
+
+    /**
+    * Saves all histograms in the sporutplot to a root file and/or writes them to a .png file
+    */
+    void writeBasic();
 
     /**
     * Saves the given TH1F histogram as a .png-file with the same name as the histogram 
