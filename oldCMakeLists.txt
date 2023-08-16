@@ -1,0 +1,85 @@
+cmake_minimum_required(VERSION 3.0)
+
+project(
+  Sprout
+  VERSION 1.0
+  LANGUAGES CXX)
+
+#Finds ROOT
+find_package(ROOT REQUIRED)
+if ( NOT ROOT_FOUND )
+message(FATAL_ERROR "ROOT is required but missing !")
+endif ( NOT ROOT_FOUND )
+
+#Sets path of source and header files 
+set(SRCFILES
+    ${PROJECT_SOURCE_DIR}/source/SproutPlot.cxx 
+    ${PROJECT_SOURCE_DIR}/source/SproutTree.cxx 
+    ${PROJECT_SOURCE_DIR}/source/SproutFit.cxx)
+
+set(HFILES 
+    ${PROJECT_SOURCE_DIR}/include/SproutPlot.h 
+    ${PROJECT_SOURCE_DIR}/include/SproutTree.h 
+    ${PROJECT_SOURCE_DIR}/include/SproutFit.h)
+
+#Include this to access the cmake functions from ROOT
+include(${ROOT_USE_FILE})
+
+#Dictionary needed to run code with ROOT's Cling interpreter 
+ROOT_GENERATE_DICTIONARY(
+    SproutDict ${HFILES}
+    MODULE ${PROJECT_NAME} 
+    LINKDEF include/SproutLinkDef.h)
+
+#Adds and links the project library with ROOT 
+add_library(Sprout SHARED ${SRCFILES} SproutDict.cxx ${HFILES}) #SproutDict.cxx is created when calling ROOT_GENERATE_DICTIONARY
+add_library(Sprout::Sprout ALIAS Sprout)
+target_link_libraries(Sprout ${ROOT_LIBRARIES})
+
+target_include_directories(
+    Sprout
+    PUBLIC $<INSTALL_INTERFACE:include> # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+
+set_target_properties(
+    ${PROJECT_NAME}
+    PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR}
+            VERSION ${PROJECT_VERSION}
+            PUBLIC_HEADER "${HFILES}")
+
+export(PACKAGE ${PROJECT_NAME})
+
+include(GNUInstallDirs)
+#set(CMAKE_INSTALL_PREFIX ~/hades/software/install)
+set(CMAKE_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}Targets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(
+    EXPORT ${PROJECT_NAME}Targets
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE Sprout::
+    DESTINATION ${CMAKE_INSTALL_CMAKEDIR} 
+    COMPONENT dev)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    Config.cmake.in ${PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_CMAKEDIR}
+    PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
+
+write_basic_package_version_file(
+    ${PROJECT_NAME}ConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    DESTINATION ${CMAKE_INSTALL_CMAKEDIR})

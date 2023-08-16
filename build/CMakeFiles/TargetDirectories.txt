@@ -2,3 +2,7 @@
 /home/malin/hades/software/src/Sprout/build/CMakeFiles/Sprout.dir
 /home/malin/hades/software/src/Sprout/build/CMakeFiles/edit_cache.dir
 /home/malin/hades/software/src/Sprout/build/CMakeFiles/rebuild_cache.dir
+/home/malin/hades/software/src/Sprout/build/CMakeFiles/list_install_components.dir
+/home/malin/hades/software/src/Sprout/build/CMakeFiles/install.dir
+/home/malin/hades/software/src/Sprout/build/CMakeFiles/install/local.dir
+/home/malin/hades/software/src/Sprout/build/CMakeFiles/install/strip.dir
