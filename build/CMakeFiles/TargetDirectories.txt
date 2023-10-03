@@ -1,8 +1,0 @@
-/u/mbohman/hades/software/Sprout/build/CMakeFiles/install/strip.dir
-/u/mbohman/hades/software/Sprout/build/CMakeFiles/install/local.dir
-/u/mbohman/hades/software/Sprout/build/CMakeFiles/Sprout.dir
-/u/mbohman/hades/software/Sprout/build/CMakeFiles/list_install_components.dir
-/u/mbohman/hades/software/Sprout/build/CMakeFiles/SproutDict.dir
-/u/mbohman/hades/software/Sprout/build/CMakeFiles/rebuild_cache.dir
-/u/mbohman/hades/software/Sprout/build/CMakeFiles/edit_cache.dir
-/u/mbohman/hades/software/Sprout/build/CMakeFiles/install.dir
