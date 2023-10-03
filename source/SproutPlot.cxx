@@ -9,6 +9,7 @@ ClassImp(SproutPlot) // Needed for compatability with ROOT's Cling interpreter
 //Constructor 
 SproutPlot::SproutPlot(): 
 fhist1(TH1F()),
+fhist2(TH2F()),
 line_color(1),
 line_style(1), 
 line_width(3),
@@ -17,7 +18,7 @@ marker_style(1),
 marker_size(1){}
 
 void SproutPlot::add(TString filename, TString h_identify){
-	TFile f = TFile(filename);
+	TFile f(filename);
 	TList *list = f.GetListOfKeys();
 
 	TKey *key;
@@ -51,6 +52,20 @@ TH1F& SproutPlot::getTH1F(int i){
 	int j=0;
 	while(j<i){it++; j++;}
 	return *it;
+}
+
+TH2F& SproutPlot::getTH2F(TString name, int binsx, double xmin, double xmax, int binsy, double ymin, double ymax, TString xlabel, TString ylabel){
+	fhist2.Reset("ICESM"); //Resets fhist2
+	setStyle(&fhist2); //Sets the default style
+	// Sets the specified properties to fhist1
+	fhist2.SetName(name);
+	fhist2.SetBins(binsx, xmin, xmax, binsy, ymin, ymax);
+    fhist2.SetXTitle(xlabel);
+    fhist2.SetYTitle(ylabel);
+
+	fvec2.push_back(fhist2);
+	
+	return fvec2.back();
 }
 
 void SproutPlot::plotTree(SproutTree tree, int bins, TString xlabel, TString ylabel){
@@ -90,30 +105,61 @@ void SproutPlot::setStyle(TH1F* h){
 	h->SetLineColor(line_color);
 }
 
+void SproutPlot::setStyle(TH2F* h){
+	//Sets default style of the given histogram 
+	gStyle->SetOptStat(0);
+	h->GetXaxis()->SetLabelSize(0.06);
+	h->GetXaxis()->SetTitleSize(0.06);
+	h->GetXaxis()->SetTitleOffset(0.7);
+	h->GetXaxis()->CenterTitle();
 
-void SproutPlot::writeBasic(){
+	h->GetYaxis()->SetLabelSize(0.06);
+	h->GetYaxis()->SetTitleSize(0.06);
+	h->GetYaxis()->SetTitleOffset(0.7);
+	h->GetYaxis()->CenterTitle();
+	if(h->GetMaximum()/1000 >1) h->GetYaxis()->SetMaxDigits(3);
+	if(h->GetMaximum()/10000 >1) h->GetYaxis()->SetMaxDigits(4);
+	
+	h->SetMarkerStyle(marker_style);
+	h->SetMarkerSize(marker_size);
+	h->SetMarkerColor(marker_color);
+}
+
+
+void SproutPlot::writeBasic(TString opt){
 	for(TH1F h : fvec){
+		h.Write();
+	}
+
+	for(TH2F h : fvec2){
 		h.Write();
 	}
 }
 
-void SproutPlot::writeHist(TString plot_text){
+void SproutPlot::writeHist(TString opt, TString plot_text){
 	for(TH1F h : fvec){
-		TCanvas can = TCanvas(); 
+		TCanvas can; 
 		setTCanvas(&can);
 
 		can.cd(); //Open fcanvas for drawing 
-    	h.Draw();
+    	h.Draw(opt);
 
     	setPlotText(&h, plot_text);
 		writeCanvas(h.GetName()); //write and save fcanvas with the same name as the histogram. 
 	}
+
+	for(TH2F h : fvec2){
+		TCanvas can; 
+		setTCanvas(&can);
+		can.cd(); //Open fcanvas for drawing 
+    	h.Draw(opt);
+		writeCanvas(h.GetName());
+	}
 }
 
-void SproutPlot::writeCanvas(TString name){
-	TCanvas can = TCanvas(); 
+void SproutPlot::writeCanvas(TString name, TString save_as){
+	TCanvas can; 
 	setTCanvas(&can, fvec.size());
-	std::cout << "get here " << std::endl;
 
 	int i=0;
 	for(TH1F h : fvec){
@@ -121,9 +167,20 @@ void SproutPlot::writeCanvas(TString name){
 		h.DrawClone();
 		i++;
 	}
-
+	can.SetName(name);
 	can.Write(); //Writies fcanvas to file, provided one is open
-	can.SaveAs(name+".png"); //saves fcanvas as a .png-file with the specified name. 
+	if(save_as != ""){can.SaveAs(save_as);} //saves fcanvas as a .png-file with the specified name. 
+}
+
+SproutTree SproutPlot::getBinEdges(TH1F h){
+	SproutTree stree(2);
+	int bins = h.GetXaxis()->GetNbins();
+
+	for(int i=1; i<bins+1; i++){
+		stree.addToBranch(0,h.GetXaxis()->GetBinLowEdge(i));
+		stree.addToBranch(1,h.GetXaxis()->GetBinUpEdge(i));
+	}
+	return stree;
 }
 
 //------------------------------------------

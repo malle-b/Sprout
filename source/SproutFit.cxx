@@ -15,7 +15,7 @@ line_width(3)
 
 void SproutFit::fit(SproutPlot splot, TString save_as, SproutTree* stree, bool save_hist){
 
-    TCanvas can = TCanvas(); 
+    TCanvas can; 
     splot.setTCanvas(&can, splot.getSize());
 
     std::fstream ob;
@@ -32,18 +32,18 @@ void SproutFit::fit(SproutPlot splot, TString save_as, SproutTree* stree, bool s
         else{fit(h);}
         
         can.cd(i+1);
+        h.SetTitle("h"+int2str(i+1));
         drawResult(h);
 
         i++;
         writeOutput();
-
         if(stree!=nullptr){
             float counts[4]; 
             integrate(h,counts);
-            int i=0;
+            int j=0;
             for(float val : counts){
-                stree->addToBranch(i,val);
-                i++;
+                stree->addToBranch(j,val);
+                j++;
             }
         }
     }
@@ -121,7 +121,7 @@ void SproutFit::fit(TH1F h, TString save_as){
 
     if(save_as != ""){
         SproutPlot plt = SproutPlot();
-        TCanvas can = TCanvas();
+        TCanvas can;
         plt.setTCanvas(&can);
 
         can.cd();
@@ -131,6 +131,7 @@ void SproutFit::fit(TH1F h, TString save_as){
 }
 
 void SproutFit::drawResult(TH1F h){
+    h.SetMinimum(0);
     h.DrawCopy(); //draw the histogram 
     TH1F* htemp = (TH1F*) h.Clone("htemp");
     htemp->Add(fbg,-1); //subtract the fitted background from fhist1

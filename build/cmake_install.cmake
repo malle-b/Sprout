@@ -1,8 +1,8 @@
-# Install script for directory: /home/malin/hades/software/src/Sprout
+# Install script for directory: /u/mbohman/hades/software/Sprout
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/malin/hades/software/src/TestInstall")
+  set(CMAKE_INSTALL_PREFIX "/lustre/hades/user/mbohman/LSPOL")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -37,11 +37,6 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-# Set default install directory permissions.
-if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/usr/bin/objdump")
-endif()
-
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libSprout.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libSprout.so")
@@ -49,12 +44,12 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libSprout.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/malin/hades/software/src/Sprout/build/libSprout.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/u/mbohman/hades/software/Sprout/build/libSprout.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libSprout.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libSprout.so")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libSprout.so"
-         OLD_RPATH "/home/malin/hades/software/install/root/lib:"
+         OLD_RPATH "/cvmfs/hadessoft.gsi.de/install/debian10/root-6.24.02/lib:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libSprout.so")
@@ -69,7 +64,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/Sprout/SproutTargets.cmake")
     file(DIFFERENT EXPORT_FILE_CHANGED FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/Sprout/SproutTargets.cmake"
-         "/home/malin/hades/software/src/Sprout/build/CMakeFiles/Export/lib/cmake/Sprout/SproutTargets.cmake")
+         "/u/mbohman/hades/software/Sprout/build/CMakeFiles/Export/lib/cmake/Sprout/SproutTargets.cmake")
     if(EXPORT_FILE_CHANGED)
       file(GLOB OLD_CONFIG_FILES "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/Sprout/SproutTargets-*.cmake")
       if(OLD_CONFIG_FILES)
@@ -78,18 +73,23 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
       endif()
     endif()
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Sprout" TYPE FILE FILES "/home/malin/hades/software/src/Sprout/build/CMakeFiles/Export/lib/cmake/Sprout/SproutTargets.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Sprout" TYPE FILE FILES "/u/mbohman/hades/software/Sprout/build/CMakeFiles/Export/lib/cmake/Sprout/SproutTargets.cmake")
   if("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^()$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Sprout" TYPE FILE FILES "/home/malin/hades/software/src/Sprout/build/CMakeFiles/Export/lib/cmake/Sprout/SproutTargets-noconfig.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Sprout" TYPE FILE FILES "/u/mbohman/hades/software/Sprout/build/CMakeFiles/Export/lib/cmake/Sprout/SproutTargets-noconfig.cmake")
   endif()
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES
-    "/home/malin/hades/software/src/Sprout/include/SproutPlot.h"
-    "/home/malin/hades/software/src/Sprout/include/SproutTree.h"
-    "/home/malin/hades/software/src/Sprout/include/SproutFit.h"
+    "/u/mbohman/hades/software/Sprout/include/SproutPlot.h"
+    "/u/mbohman/hades/software/Sprout/include/SproutTree.h"
+    "/u/mbohman/hades/software/Sprout/include/SproutFit.h"
+    "/u/mbohman/hades/software/Sprout/include/SproutParam.h"
     )
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE FILE FILES "/u/mbohman/hades/software/Sprout/build/libSprout_rdict.pcm")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -100,5 +100,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/malin/hades/software/src/Sprout/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/u/mbohman/hades/software/Sprout/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

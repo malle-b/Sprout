@@ -3,6 +3,7 @@
 
 #include "TCanvas.h"
 #include "TH1F.h"
+#include "TH2F.h"
 #include "TLatex.h"
 #include "TStyle.h"
 #include "TKey.h"
@@ -56,6 +57,9 @@ public:
     TH1F& getTH1F(std::vector<float> data, TString name, int bins, TString xlabel="x", TString ylabel="Counts");
 
     TH1F& getTH1F(int i);
+
+    TH2F& getTH2F(TString name, int binsx, double xmin, double xmax, int binsy, double ymin, double ymax, TString xlabel="x", TString ylabel="Counts");
+
 
     /**
     * Fits all branches of 'tree' to some signal and background model functions specified in 'hfit'
@@ -134,11 +138,11 @@ public:
     * @param h TH1F histogram pointer for which the default style is to be set. 
     */
     void setStyle(TH1F* h);
-
+    void setStyle(TH2F* h);
     /**
     * Saves all histograms in the sporutplot to a root file and/or writes them to a .png file
     */
-    void writeBasic();
+    void writeBasic(TString opt = "");
 
     /**
     * Saves the given TH1F histogram as a .png-file with the same name as the histogram 
@@ -147,20 +151,24 @@ public:
     * @param h pointer to the TH1F histogram that is to be saved. 
     * @param plot_text specifies a plot text to be displayed on the drawn histogram. 
     */
-    void writeHist(TString plot_text = "");
-    void writeCanvas(TString name);
+    void writeHist(TString opt = "", TString plot_text = "");
+    void writeCanvas(TString name="my_canvas", TString save_as="");
 
     void setTCanvas(TCanvas* fcanvas);
     void setTCanvas(TCanvas* fcanvas, int nhist);
 
     int getSize(){return fvec.size();}
 
+    SproutTree getBinEdges(TH1F h);
+
     std::list<TH1F>::iterator begin() {return fvec.begin();}
     std::list<TH1F>::iterator end() {return fvec.end();}
 
     private:
     TH1F fhist1;
+    TH2F fhist2;
     std::list<TH1F> fvec;
+    std::list<TH2F> fvec2;
     int line_color; 
     int line_style; 
     int line_width;
