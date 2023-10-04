@@ -3,22 +3,29 @@
 
 #include "TCanvas.h"
 #include "TH1F.h"
+#include "TH2F.h"
 #include "TLatex.h"
 #include "TStyle.h"
+#include "TKey.h"
 
 #include "SproutTree.h"
-#include "SproutFit.h"
 
 #include <iostream>
-#include <vector>
+#include <list>
 
 class SproutPlot {
 public:
 
     SproutPlot(); // Constructor 
-    ~SproutPlot(){delete fcanvas; delete fhist1;} // Destructor 
-    SproutPlot(const SproutPlot& that) = delete; // Copy constructor set to delete, object cannot be copied
-    SproutPlot& operator=(const SproutPlot& that) = delete; // Assignmet operator set to delete, object cannot be assigned
+    // ~SproutPlot(){delete fcanvas; delete fhist1;} // Destructor 
+    // SproutPlot(const SproutPlot& that) = delete; // Copy constructor set to delete, object cannot be copied
+    // SproutPlot& operator=(const SproutPlot& that) = delete; // Assignmet operator set to delete, object cannot be assigned
+
+    /**
+    * Add all histograms whose name contains the the specified identifyer 
+    * are added to the SproutPlot. 
+    */
+    void add(TString filename, TString h_identify);
 
     /** 
     * Returns an empty TH1F histogram with properties set to the specified parameters.
@@ -32,7 +39,7 @@ public:
     *
     * @return empty TH1F histogram 
     */
-    TH1F getTH1F(TString name, int bins, double xmin, double xmax, TString xlabel="x", TString ylabel="Counts");
+    TH1F& getTH1F(TString name, int bins, double xmin, double xmax, TString xlabel="x", TString ylabel="Counts");
 
 
     /**
@@ -41,12 +48,18 @@ public:
     *
     * @param data vector containing floats that will be used ot fill the returned histogram
     * @param name name of the histogram 
+    * @param bins number of bins. If set to 0 (default) a suitible value is found automatically
     * @param xlabel label displayed on x-axis. Set to "x" by default
     * @param ylabel label displayed on y-axis. Set to "counts" by default 
     *
     * @return filled TH1F histogram 
     */
-    TH1F getTH1F(std::vector<float> data, TString name, TString xlabel="x", TString ylabel="Counts");
+    TH1F& getTH1F(std::vector<float> data, TString name, int bins, TString xlabel="x", TString ylabel="Counts");
+
+    TH1F& getTH1F(int i);
+
+    TH2F& getTH2F(TString name, int binsx, double xmin, double xmax, int binsy, double ymin, double ymax, TString xlabel="x", TString ylabel="Counts");
+
 
     /**
     * Fits all branches of 'tree' to some signal and background model functions specified in 'hfit'
@@ -64,7 +77,7 @@ public:
     * Branch 2 the number of background events and
     * Branch 3 the background event uncertainty.    
     */
-    SproutTree fitTree(SproutTree tree, SproutFit* hfit);
+    //SproutTree fitTree(SproutTree tree, SproutFit* hfit);
 
 
     /**
@@ -76,8 +89,9 @@ public:
     * branch. 
     * 
     * @param tree SproutTree for which a histogram is to be drawn for each branch. 
+    * @param bins Number of bins. If set to 0 (default) a suitible value is found automatically
     */
-    void plotTree(SproutTree tree);
+    void plotTree(SproutTree tree, int bins=0, TString xlabel="x", TString ylabel="counts");
 
     /**
     * Sets the default line appearance for TH1F histograms. The specified style will be used for all 
@@ -124,6 +138,11 @@ public:
     * @param h TH1F histogram pointer for which the default style is to be set. 
     */
     void setStyle(TH1F* h);
+    void setStyle(TH2F* h);
+    /**
+    * Saves all histograms in the sporutplot to a root file and/or writes them to a .png file
+    */
+    void writeBasic(TString opt = "");
 
     /**
     * Saves the given TH1F histogram as a .png-file with the same name as the histogram 
@@ -132,11 +151,24 @@ public:
     * @param h pointer to the TH1F histogram that is to be saved. 
     * @param plot_text specifies a plot text to be displayed on the drawn histogram. 
     */
-    void writeHist(TH1F* h, TString plot_text = "");
+    void writeHist(TString opt = "", TString plot_text = "");
+    void writeCanvas(TString name="my_canvas", TString save_as="");
+
+    void setTCanvas(TCanvas* fcanvas);
+    void setTCanvas(TCanvas* fcanvas, int nhist);
+
+    int getSize(){return fvec.size();}
+
+    SproutTree getBinEdges(TH1F h);
+
+    std::list<TH1F>::iterator begin() {return fvec.begin();}
+    std::list<TH1F>::iterator end() {return fvec.end();}
 
     private:
-    TCanvas* fcanvas;
-    TH1F* fhist1;
+    TH1F fhist1;
+    TH2F fhist2;
+    std::list<TH1F> fvec;
+    std::list<TH2F> fvec2;
     int line_color; 
     int line_style; 
     int line_width;
@@ -147,12 +179,11 @@ public:
     TString int2str(int i){TString str; str.Form("%d", i); return str;}
 
     void makeTH1F(TString name, int bins ,double xmin, double xmax,TString xlabel="x", TString ylabel="Counts");
-    void makeTH1F(std::vector<float> data, TString name, TString xlabel="x", TString ylabel="Counts");
+    void makeTH1F(std::vector<float> data, TString name, int bins ,TString xlabel="x", TString ylabel="Counts");
 
-    void makeTCanvas();
-    void makeTCanvas(int nhist);
 
-    void writeCanvas(TString name);
+
+    
     
     ClassDef(SproutPlot, 1) // Needed for compatability with ROOT's Cling interpreter 
 
