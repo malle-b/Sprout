@@ -23,7 +23,7 @@ void rootlogon(){
 In your ROOT macro, you'll then be able to use Sprout by including the paths to its header files. 
 
 ## Using Sprout in an excecutable 
-To your project's CMakeLists.txt, add ``` include(your_sprout_install_dir/lib/cmake/Sprout/SproutTargets.cmake) ``` and link it to your target along with ROOT::Core. Below you'll find a simple, working example of a CmakeLists.txt file that creates and links an excecutable to Sprout. 
+To your project's CMakeLists.txt, add ``` include(your_sprout_install_dir/lib/cmake/Sprout/SproutTargets.cmake) ``` and link it to your target along with ROOT::Core. Below you'll find a simple, working example of a CMakeLists.txt file that creates and links an excecutable to Sprout. 
 
 ```
 cmake_minimum_required(VERSION 3.10)
