@@ -26,9 +26,9 @@ void testMacro1(){
 
     TFile outFile("test.root", "recreate");
     outFile.cd();
-    splot.setTH1FDrawOpt("E");
-    splot.setTH2FDrawOpt("LEGO");
-    splot.setTitle("Title").writeHist("sim");
+    //splot.setTitle("Title").writeCanvas("myCan","pp #rightarrow pK^{+}#Sigma^{0}#pi^{0}");
+    splot.setTitle("Title").setPlotText("Smash").writeHist();
+    splot.setTitle("Title").setPlotText("Smash").saveHistAs();
     outFile.Close();
 
     delete xyg;

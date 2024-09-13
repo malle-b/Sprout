@@ -78,18 +78,49 @@ void SproutPlot::plotTree(SproutTree tree, int bins, TString xlabel, TString yla
 	}
 }
 
-void SproutPlot::setPlotText(TString text){
+SproutPlot SproutPlot::setPlotText(TString text){
 	if(text != ""){
-		TPaveText pt = TPaveText(0.801,0.786,0.951,0.936,"NDC");
+		int latex_modifyer = text.CountChar('#')*4 + text.CountChar('^')*3;
+
+		double text_box_x1;
+		double text_box_x2;
+		double text_box_y1 = 0.867575;
+		double text_box_y2 = 0.940639;
+		
+		if(text.Length() - latex_modifyer <= 4){
+			text_box_x1 = 0.7207207;
+			text_box_x2 = 0.8678678;
+		}
+		else if(text.Length() - latex_modifyer <= 4){
+			text_box_x1 = 0.7207207;
+			text_box_x2 = 0.8678678;
+		}
+		else if(text.Length() - latex_modifyer <= 11){
+			text_box_x1 = 0.5765765;
+			text_box_x2 = 0.873873;			
+		}
+		else if(text.Length() - latex_modifyer <= 14){
+			text_box_x1 = 0.561561;
+			text_box_x2 = 0.9129129;
+		}
+		else if(text.Length() - latex_modifyer <= 17){
+			text_box_x1 = 0.561561;
+			text_box_x2 = 1;
+		}
+		else{
+			text_box_x1 = 0.525525;
+			text_box_x2 = 1;
+		}
+
+		TPaveText pt = TPaveText(text_box_x1, text_box_y1, text_box_x2, text_box_y2,"NDC");
 		pt.SetBorderSize(1);
-		pt.SetTextFont(4);
-		pt.SetTextColor(kBlack);
-		pt.SetTextSize(0.08);
 		pt.SetLineColor(kBlack);
 		pt.SetLineWidth(3);
 		pt.AddText(text); 
-		pt.DrawClone("same");
+		text_box = pt;
+		//text_box.DrawClone("same");
 	}
+	return *this;
 }
 
 void SproutPlot::setStyle(TH1F* h){
@@ -143,9 +174,10 @@ void SproutPlot::writeBasic(){
 	}
 }
 
-void SproutPlot::writeHist(TString plot_text){
+void SproutPlot::writeHist(){
 	gROOT->SetBatch(kTRUE); // Turn on batch mode to avoid pop-ups
 	for(TH1F h : fvec){
+		h.SetStats(0);
 		TCanvas can(h.GetName()); 
 		setTCanvas(&can);
 
@@ -153,47 +185,106 @@ void SproutPlot::writeHist(TString plot_text){
 		if(draw_opt1 != ""){h.Draw(draw_opt1);}
 		else{h.Draw();}
 
-    	setPlotText(plot_text);
+    	text_box.DrawClone("same");
 		can.Write();
 	}
 
 	for(TH2F h : fvec2){
+		h.SetStats(0);
 		TCanvas can(h.GetName()); 
 		setTCanvas(&can);
 		can.cd(); //Open fcanvas for drawing 
     	if(draw_opt2 != ""){h.Draw(draw_opt2);}
-		else{h.Draw();}
-		setPlotText(plot_text);
+		else{h.Draw("colz");}
+		text_box.DrawClone("same");
 		can.Write();
 	}
 	gROOT->SetBatch(kFALSE); // Turn on Batch-mode again.
 }
 
-void SproutPlot::writeCanvas(TString name, TString plot_text,TString save_as){
+void SproutPlot::writeCanvas(TString name){
 	gROOT->SetBatch(kTRUE); // Needed for the Draw() to work properly for some reason...
 	TCanvas can(name); 
 	setTCanvas(&can, fvec.size()+fvec2.size());
 	
 	int i=0;
 	for(TH1F h : fvec){
+		h.SetStats(0);
 		can.cd(i+1);
 		if(draw_opt1 != ""){h.DrawClone(draw_opt1);}
 		else{h.DrawClone();}
-		setPlotText(plot_text);
+		text_box.DrawClone("same");
 		i++;
 	}
 
 	for(TH2F h : fvec2){
+		h.SetStats(0);
 		can.cd(i+1);
 		if(draw_opt2 != ""){h.DrawClone(draw_opt2);}
-		else{h.DrawClone();}
-		setPlotText(plot_text);
+		else{h.DrawClone("colz");}
+		text_box.DrawClone("same");
 		i++;
 	}
 
 	can.SetName(name);
 	can.Write(); //Writies fcanvas to file, provided one is open
-	if(save_as != ""){can.SaveAs(save_as);} //saves fcanvas as a .png-file with the specified name.
+	//if(save_as != ""){can.SaveAs(save_as);} //saves fcanvas as a .png-file with the specified name.
+	gROOT->SetBatch(kFALSE); // Turn on Batch-mode again. 
+}
+
+void SproutPlot::saveHistAs(TString filePrefix,TString fileSuffix){
+	gROOT->SetBatch(kTRUE); // Turn on batch mode to avoid pop-ups
+	for(TH1F h : fvec){
+		h.SetStats(0);
+		TCanvas can(h.GetName()); 
+		setTCanvas(&can);
+
+		can.cd(); //Open fcanvas for drawing
+		if(draw_opt1 != ""){h.Draw(draw_opt1);}
+		else{h.Draw();}
+
+    	text_box.DrawClone("same");
+		can.Print(filePrefix+h.GetName()+fileSuffix);
+	}
+
+	for(TH2F h : fvec2){
+		h.SetStats(0);
+		TCanvas can(h.GetName()); 
+		setTCanvas(&can);
+		can.cd(); //Open fcanvas for drawing 
+    	if(draw_opt2 != ""){h.Draw(draw_opt2);}
+		else{h.Draw("colz");}
+		text_box.DrawClone("same");
+		can.Print(filePrefix+h.GetName()+fileSuffix);
+	}
+	gROOT->SetBatch(kFALSE); // Turn on Batch-mode again.	
+}
+void SproutPlot::saveCanvasAs(TString fileName){
+	gROOT->SetBatch(kTRUE); // Needed for the Draw() to work properly for some reason...
+	TCanvas can(fileName); 
+	setTCanvas(&can, fvec.size()+fvec2.size());
+	
+	int i=0;
+	for(TH1F h : fvec){
+		h.SetStats(0);
+		can.cd(i+1);
+		if(draw_opt1 != ""){h.DrawClone(draw_opt1);}
+		else{h.DrawClone();}
+		text_box.DrawClone("same");
+		i++;
+	}
+
+	for(TH2F h : fvec2){
+		h.SetStats(0);
+		can.cd(i+1);
+		if(draw_opt2 != ""){h.DrawClone(draw_opt2);}
+		else{h.DrawClone("colz");}
+		text_box.DrawClone("same");
+		i++;
+	}
+
+	can.SetName(fileName);
+	can.Print(fileName); //saves fcanvas as a .png-file with the specified name.
 	gROOT->SetBatch(kFALSE); // Turn on Batch-mode again. 
 }
 

@@ -131,7 +131,7 @@ public:
     * @param h1 TH1F histogram pointer for which a plot text should be added. 
     * @param text text to be displayed on the plot. 
     */
-    void setPlotText(TString text);
+    SproutPlot setPlotText(TString text);
 
     /**
     * Sets the style of a given TH1F histogram to the default. Can be used to update 
@@ -153,8 +153,11 @@ public:
     * @param h pointer to the TH1F histogram that is to be saved. 
     * @param plot_text specifies a plot text to be displayed on the drawn histogram. 
     */
-    void writeHist(TString plot_text = "");
-    void writeCanvas(TString name="my_canvas", TString plot_text="",TString save_as="");
+    void writeHist();
+    void writeCanvas(TString name="myCanvas");
+
+    void saveHistAs(TString filePrefix = "", TString fileSuffix=".png");
+    void saveCanvasAs(TString fileName="myCanvas.png");
 
     void setTCanvas(TCanvas* fcanvas);
     void setTCanvas(TCanvas* fcanvas, int nhist);
@@ -189,6 +192,7 @@ public:
     int marker_size;
     TString draw_opt1;
     TString draw_opt2;
+    TPaveText text_box;
 
     TString int2str(int i){TString str; str.Form("%d", i); return str;}
 
