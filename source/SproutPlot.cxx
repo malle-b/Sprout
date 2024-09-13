@@ -15,7 +15,9 @@ line_style(1),
 line_width(3),
 marker_color(1),
 marker_style(1),
-marker_size(1){}
+marker_size(1),
+draw_opt1(""),
+draw_opt2(""){}
 
 void SproutPlot::add(TString filename, TString h_identify){
 	TFile f(filename);
@@ -76,13 +78,18 @@ void SproutPlot::plotTree(SproutTree tree, int bins, TString xlabel, TString yla
 	}
 }
 
-void SproutPlot::setPlotText(TH1F* h1, TString text){
-	//Sets parameters for text style and where on the histogram it should appear. 
-    TLatex latexText(h1->GetXaxis()->GetBinUpEdge(h1->GetXaxis()->GetLast())*0.8, h1->GetMaximum()*0.85, text);
-	latexText.SetTextFont(42);
-	latexText.SetTextSize(0.08);
-	latexText.SetTextColor(15);
-	latexText.DrawClone();
+void SproutPlot::setPlotText(TString text){
+	if(text != ""){
+		TPaveText pt = TPaveText(0.801,0.786,0.951,0.936,"NDC");
+		pt.SetBorderSize(1);
+		pt.SetTextFont(4);
+		pt.SetTextColor(kBlack);
+		pt.SetTextSize(0.08);
+		pt.SetLineColor(kBlack);
+		pt.SetLineWidth(3);
+		pt.AddText(text); 
+		pt.DrawClone("same");
+	}
 }
 
 void SproutPlot::setStyle(TH1F* h){
@@ -126,7 +133,7 @@ void SproutPlot::setStyle(TH2F* h){
 }
 
 
-void SproutPlot::writeBasic(TString opt){
+void SproutPlot::writeBasic(){
 	for(TH1F h : fvec){
 		h.Write();
 	}
@@ -136,40 +143,58 @@ void SproutPlot::writeBasic(TString opt){
 	}
 }
 
-void SproutPlot::writeHist(TString opt, TString plot_text){
+void SproutPlot::writeHist(TString plot_text){
+	gROOT->SetBatch(kTRUE); // Turn on batch mode to avoid pop-ups
 	for(TH1F h : fvec){
-		TCanvas can; 
+		TCanvas can(h.GetName()); 
 		setTCanvas(&can);
 
-		can.cd(); //Open fcanvas for drawing 
-    	h.Draw(opt);
+		can.cd(); //Open fcanvas for drawing
+		if(draw_opt1 != ""){h.Draw(draw_opt1);}
+		else{h.Draw();}
 
-    	setPlotText(&h, plot_text);
-		writeCanvas(h.GetName()); //write and save fcanvas with the same name as the histogram. 
+    	setPlotText(plot_text);
+		can.Write();
 	}
 
 	for(TH2F h : fvec2){
-		TCanvas can; 
+		TCanvas can(h.GetName()); 
 		setTCanvas(&can);
 		can.cd(); //Open fcanvas for drawing 
-    	h.Draw(opt);
-		writeCanvas(h.GetName());
+    	if(draw_opt2 != ""){h.Draw(draw_opt2);}
+		else{h.Draw();}
+		setPlotText(plot_text);
+		can.Write();
 	}
+	gROOT->SetBatch(kFALSE); // Turn on Batch-mode again.
 }
 
-void SproutPlot::writeCanvas(TString name, TString save_as){
-	TCanvas can; 
-	setTCanvas(&can, fvec.size());
-
+void SproutPlot::writeCanvas(TString name, TString plot_text,TString save_as){
+	gROOT->SetBatch(kTRUE); // Needed for the Draw() to work properly for some reason...
+	TCanvas can(name); 
+	setTCanvas(&can, fvec.size()+fvec2.size());
+	
 	int i=0;
 	for(TH1F h : fvec){
 		can.cd(i+1);
-		h.DrawClone();
+		if(draw_opt1 != ""){h.DrawClone(draw_opt1);}
+		else{h.DrawClone();}
+		setPlotText(plot_text);
 		i++;
 	}
+
+	for(TH2F h : fvec2){
+		can.cd(i+1);
+		if(draw_opt2 != ""){h.DrawClone(draw_opt2);}
+		else{h.DrawClone();}
+		setPlotText(plot_text);
+		i++;
+	}
+
 	can.SetName(name);
 	can.Write(); //Writies fcanvas to file, provided one is open
-	if(save_as != ""){can.SaveAs(save_as);} //saves fcanvas as a .png-file with the specified name. 
+	if(save_as != ""){can.SaveAs(save_as);} //saves fcanvas as a .png-file with the specified name.
+	gROOT->SetBatch(kFALSE); // Turn on Batch-mode again. 
 }
 
 SproutTree SproutPlot::getBinEdges(TH1F h){
@@ -181,6 +206,53 @@ SproutTree SproutPlot::getBinEdges(TH1F h){
 		stree.addToBranch(1,h.GetXaxis()->GetBinUpEdge(i));
 	}
 	return stree;
+}
+
+SproutPlot SproutPlot::setTitle(TString title){
+	for(TH1F& h1: fvec){
+		h1.SetTitle(title);
+		h1.SetTitleSize(0.06);
+	}
+	for(TH2F& h2: fvec2){
+		h2.SetTitle(title);
+		h2.SetTitleSize(0.06);
+	}
+	return *this;
+}
+
+SproutPlot SproutPlot::operator+(SproutPlot obj){
+	try{
+		if(obj.fvec.size() != fvec.size() || obj.fvec2.size() != fvec2.size()){
+			if((fvec.size() != 0 && fvec2.size() !=0) && (obj.fvec.size() != 0 && obj.fvec2.size() !=0)){
+				throw(1);
+			}
+		}
+		
+		if(fvec.size() != 0 || fvec2.size() != 0){
+			std::list<TH1F>::iterator it1 = obj.fvec.begin();
+			for(TH1F& h : fvec){
+				if(it1 != obj.fvec.end()){
+					h.Add(&*it1);
+					it1++;
+				}
+			} 
+			std::list<TH2F>::iterator it2 = obj.fvec2.begin();
+			for(TH2F& h : fvec2){
+				if(it2 != obj.fvec2.end()){
+					h.Add(&*it2);
+					it2++;
+				}
+			} 
+			return *this;
+		}
+		else{
+			return obj;
+		}
+	}
+	catch(int a){
+		std::cout<< "SproutPlot::operator+ addition failed. Unequal number of histograms" << std::endl;
+		exit(0);
+	}
 }
 
 //------------------------------------------

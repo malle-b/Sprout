@@ -6,10 +6,8 @@ project(
   LANGUAGES CXX)
 
 
-set(ROOT_DIR /cvmfs/hadessoft.gsi.de/install/debian10/root-6.24.02)
-#list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} $ENV{ROOTSYS}/etc/cmake $ENV{ROOTSYS}/cmake/modules/ ${CMAKE_CURRENT_SOURCE_DIR})
-list(APPEND CMAKE_PREFIX_PATH ${ROOT_DIR} ${ROOT_DIR}/etc/cmake ${ROOT_DIR}/cmake/modules/ ${CMAKE_CURRENT_SOURCE_DIR})
-#set(ROOT_DIR /cvmfs/hadessoft.gsi.de/install/debian10/root-6.24.02/etc/cmake)
+# set(ROOT_DIR /cvmfs/hadessoft.gsi.de/install/debian10/root-6.24.02)
+# list(APPEND CMAKE_PREFIX_PATH ${ROOT_DIR} ${ROOT_DIR}/etc/cmake ${ROOT_DIR}/cmake/modules/ ${CMAKE_CURRENT_SOURCE_DIR})
 
 #Finds ROOT
 find_package(ROOT REQUIRED)

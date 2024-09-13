@@ -7,6 +7,8 @@
 #include "TLatex.h"
 #include "TStyle.h"
 #include "TKey.h"
+#include "TPaveText.h"
+#include "TROOT.h"
 
 #include "SproutTree.h"
 
@@ -129,7 +131,7 @@ public:
     * @param h1 TH1F histogram pointer for which a plot text should be added. 
     * @param text text to be displayed on the plot. 
     */
-    void setPlotText(TH1F* h1, TString text);
+    void setPlotText(TString text);
 
     /**
     * Sets the style of a given TH1F histogram to the default. Can be used to update 
@@ -142,7 +144,7 @@ public:
     /**
     * Saves all histograms in the sporutplot to a root file and/or writes them to a .png file
     */
-    void writeBasic(TString opt = "");
+    void writeBasic();
 
     /**
     * Saves the given TH1F histogram as a .png-file with the same name as the histogram 
@@ -151,11 +153,16 @@ public:
     * @param h pointer to the TH1F histogram that is to be saved. 
     * @param plot_text specifies a plot text to be displayed on the drawn histogram. 
     */
-    void writeHist(TString opt = "", TString plot_text = "");
-    void writeCanvas(TString name="my_canvas", TString save_as="");
+    void writeHist(TString plot_text = "");
+    void writeCanvas(TString name="my_canvas", TString plot_text="",TString save_as="");
 
     void setTCanvas(TCanvas* fcanvas);
     void setTCanvas(TCanvas* fcanvas, int nhist);
+
+    void setTH1FDrawOpt(TString opt){draw_opt1=opt;};
+    void setTH2FDrawOpt(TString opt){draw_opt2=opt;};
+
+    SproutPlot setTitle(TString title);
 
     int getSize(){return fvec.size();}
 
@@ -163,6 +170,11 @@ public:
 
     std::list<TH1F>::iterator begin() {return fvec.begin();}
     std::list<TH1F>::iterator end() {return fvec.end();}
+
+    std::list<TH2F>::iterator begin2() {return fvec2.begin();}
+    std::list<TH2F>::iterator end2() {return fvec2.end();}
+
+    SproutPlot operator+(SproutPlot obj);
 
     private:
     TH1F fhist1;
@@ -175,15 +187,13 @@ public:
     int marker_color; 
     int marker_style; 
     int marker_size;
+    TString draw_opt1;
+    TString draw_opt2;
 
     TString int2str(int i){TString str; str.Form("%d", i); return str;}
 
     void makeTH1F(TString name, int bins ,double xmin, double xmax,TString xlabel="x", TString ylabel="Counts");
     void makeTH1F(std::vector<float> data, TString name, int bins ,TString xlabel="x", TString ylabel="Counts");
-
-
-
-    
     
     ClassDef(SproutPlot, 1) // Needed for compatability with ROOT's Cling interpreter 
 
