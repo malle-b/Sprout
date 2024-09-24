@@ -171,11 +171,6 @@ public:
 
     SproutTree getBinEdges(TH1F h);
 
-    std::list<TH1F>::iterator begin() {return fvec.begin();}
-    std::list<TH1F>::iterator end() {return fvec.end();}
-
-    std::list<TH2F>::iterator begin2() {return fvec2.begin();}
-    std::list<TH2F>::iterator end2() {return fvec2.end();}
 
     SproutPlot operator+(SproutPlot obj);
 
