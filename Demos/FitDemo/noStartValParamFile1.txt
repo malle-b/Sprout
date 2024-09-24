@@ -1,0 +1,9 @@
+pol2 gaus 0 10 3 6 
+pol2 gaus 0 10 3 6   
+pol2 gaus 0 10 3 6 
+pol2 gaus 0 10 3 6  
+pol2 gaus 0 10 3 6   
+pol2 gaus 0 10 3 6   
+pol2 gaus 0 10 3 6  
+pol2 gaus 0 10 3 6   
+pol2 gaus 0 10 3 6 

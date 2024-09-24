@@ -16,13 +16,15 @@ find_package(ROOT REQUIRED)
 set(SRCFILES
     ${PROJECT_SOURCE_DIR}/source/SproutPlot.cxx 
     ${PROJECT_SOURCE_DIR}/source/SproutTree.cxx 
-    ${PROJECT_SOURCE_DIR}/source/SproutFit.cxx)
+    ${PROJECT_SOURCE_DIR}/source/SproutFit.cxx
+    ${PROJECT_SOURCE_DIR}/source/SproutCut.cxx)
 
 set(HFILES 
     ${PROJECT_SOURCE_DIR}/include/SproutPlot.h 
     ${PROJECT_SOURCE_DIR}/include/SproutTree.h 
     ${PROJECT_SOURCE_DIR}/include/SproutFit.h
-    ${PROJECT_SOURCE_DIR}/include/SproutParam.h)
+    ${PROJECT_SOURCE_DIR}/include/SproutParam.h
+    ${PROJECT_SOURCE_DIR}/include/SproutCut.h)
   
 include(GNUInstallDirs) #Adds a bunch of install variables to the cmake cache
 #set(CMAKE_INSTALL_PREFIX /home/malin/hades/software/src/TestInstall)

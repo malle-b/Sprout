@@ -25,6 +25,7 @@ public:
 
     //Default constructor 
     SproutFit();
+    SproutFit(std::string fitParamFile);
 
     ~SproutFit(){delete fsig; delete fbg; delete ffit; delete cfit; delete csig; delete cbg;} // Destructor 
     SproutFit(const SproutFit& that) = delete; //Copy constructor set to delete. Object cannot be copied

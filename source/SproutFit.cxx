@@ -13,8 +13,21 @@ fit_line_style(2), sig_line_style(2), bg_line_style(2),
 line_width(3) 
 {}
 
-void SproutFit::fit(SproutPlot splot, TString save_as, SproutTree* stree, bool save_hist){
+SproutFit::SproutFit(std::string fitParamFile) :
+inputfile("temp"),
+fsig(new TF1()), fbg(new TF1()), ffit(new TF1()),
+sig_name(""), bg_name(""),
+xmin(0), xmax(0), xsigmin(0), xsigmax(0),
+npar_sig(0), npar_bg(0), npar(0),
+chi2_sig(0), chi2_bg(0), chi2(0),
+cfit(new TMatrixDSym()), csig(new TMatrixDSym()), cbg(new TMatrixDSym()),
+fit_line_color(1), sig_line_color(2), bg_line_color(3),
+fit_line_style(2), sig_line_style(2), bg_line_style(2),
+line_width(3) 
+{inputfile = fitParamFile;}
 
+void SproutFit::fit(SproutPlot splot, TString save_as, SproutTree* stree, bool save_hist){
+    gROOT->SetBatch(kTRUE); // Turn on batch mode to avoid pop-ups
     TCanvas can; 
     splot.setTCanvas(&can, splot.getSize());
 
@@ -57,6 +70,8 @@ void SproutFit::fit(SproutPlot splot, TString save_as, SproutTree* stree, bool s
 
     std::remove(char_array);
     std::rename("TestParamOutput.txt", char_array);
+    gROOT->SetBatch(kFALSE); // Turn off batch mode 
+
 }
 
 void SproutFit::fitBackground(TH1F h){
@@ -131,6 +146,7 @@ void SproutFit::fit(TH1F h, TString save_as){
 }
 
 void SproutFit::drawResult(TH1F h){
+    //gROOT->SetBatch(kTRUE); // Turn on batch mode to avoid pop-ups
     h.SetMinimum(0);
     h.DrawCopy(); //draw the histogram 
     TH1F* htemp = (TH1F*) h.Clone("htemp");
@@ -171,6 +187,8 @@ void SproutFit::drawResult(TH1F h){
     pt.AddText("#chi^{2}_{#nu}(sig) = "+double2str(chi2_sig));
     pt.AddText("#chi^{2}_{#nu}(tot) = "+double2str(chi2));
     pt.DrawClone("same");
+    //gROOT->SetBatch(kFALSE); // Turn on batch mode to avoid pop-ups
+
 }
 
 void SproutFit::updateParam(){

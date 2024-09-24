@@ -128,12 +128,12 @@ void SproutPlot::setStyle(TH1F* h){
 	gStyle->SetOptStat(0);
 	h->GetXaxis()->SetLabelSize(0.06);
 	h->GetXaxis()->SetTitleSize(0.06);
-	h->GetXaxis()->SetTitleOffset(0.7);
+	h->GetXaxis()->SetTitleOffset(0.75);
 	h->GetXaxis()->CenterTitle();
 
 	h->GetYaxis()->SetLabelSize(0.06);
 	h->GetYaxis()->SetTitleSize(0.06);
-	h->GetYaxis()->SetTitleOffset(0.7);
+	h->GetYaxis()->SetTitleOffset(0.75);
 	h->GetYaxis()->CenterTitle();
 	if(h->GetMaximum()/1000 >1) h->GetYaxis()->SetMaxDigits(3);
 	if(h->GetMaximum()/10000 >1) h->GetYaxis()->SetMaxDigits(4);
@@ -148,12 +148,12 @@ void SproutPlot::setStyle(TH2F* h){
 	gStyle->SetOptStat(0);
 	h->GetXaxis()->SetLabelSize(0.06);
 	h->GetXaxis()->SetTitleSize(0.06);
-	h->GetXaxis()->SetTitleOffset(0.7);
+	h->GetXaxis()->SetTitleOffset(0.75);
 	h->GetXaxis()->CenterTitle();
 
 	h->GetYaxis()->SetLabelSize(0.06);
 	h->GetYaxis()->SetTitleSize(0.06);
-	h->GetYaxis()->SetTitleOffset(0.7);
+	h->GetYaxis()->SetTitleOffset(0.75);
 	h->GetYaxis()->CenterTitle();
 	if(h->GetMaximum()/1000 >1) h->GetYaxis()->SetMaxDigits(3);
 	if(h->GetMaximum()/10000 >1) h->GetYaxis()->SetMaxDigits(4);
