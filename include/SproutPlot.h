@@ -141,6 +141,12 @@ public:
     */
     void setStyle(TH1F* h);
     void setStyle(TH2F* h);
+
+    /**
+    * Writes the SproutPlot object directly the given .root file
+    */
+    void write(TFile* file, TString name);
+
     /**
     * Saves all histograms in the sporutplot to a root file and/or writes them to a .png file
     */
@@ -174,6 +180,9 @@ public:
 
     SproutPlot operator+(SproutPlot obj);
 
+    std::list<TH1F>::iterator begin() {return fvec.begin();}
+    std::list<TH1F>::iterator end() {return fvec.end();}
+    
     private:
     TH1F fhist1;
     TH2F fhist2;

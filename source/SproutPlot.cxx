@@ -50,7 +50,7 @@ TH1F& SproutPlot::getTH1F(std::vector<float> data,TString name, int bins, TStrin
 }
 
 TH1F& SproutPlot::getTH1F(int i){
-	std::list<TH1F>::iterator it = begin();
+	std::list<TH1F>::iterator it = fvec.begin();
 	int j=0;
 	while(j<i){it++; j++;}
 	return *it;
@@ -163,6 +163,9 @@ void SproutPlot::setStyle(TH2F* h){
 	h->SetMarkerColor(marker_color);
 }
 
+void SproutPlot::write(TFile* file, TString name){
+	file->WriteObject(&(*this), name); //write tree to file
+}
 
 void SproutPlot::writeBasic(){
 	for(TH1F h : fvec){
@@ -428,7 +431,7 @@ void SproutPlot::makeTH1F(std::vector<float> data, TString name, int bins, TStri
 		depending the number of digits in 'number', i.e. the size of data.*/
 		if(count < 2){fhist1.SetBins(2, min, max);} //number < 10, data is divided into 2 bins 
 		else if(count < 4){fhist1.SetBins(10^(count), min, max);} //number < 10 000, data is divided into 10^(count) bins
-		else{fhist1.SetBins(10^3, min,max);} // number >= 10 000, data is divided into 10^3 bins
+		else{fhist1.SetBins(10e3, min,max);} // number >= 10 000, data is divided into 10^3 bins
 	}
 	else{
 		fhist1.SetBins(bins,min,max);
