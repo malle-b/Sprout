@@ -2,6 +2,7 @@
 #define SPROUTPLOT_H
 
 #include "TCanvas.h"
+#include "TString.h"
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TLatex.h"
@@ -14,6 +15,7 @@
 
 #include <iostream>
 #include <list>
+#include <unordered_map>
 
 class SproutPlot {
 public:
@@ -58,10 +60,26 @@ public:
     */
     TH1F& getTH1F(std::vector<float> data, TString name, int bins, TString xlabel="x", TString ylabel="Counts");
 
-    TH1F& getTH1F(int i);
+
+    /**
+    * Returns a stored TH1F histogram with the given name, provided that one exists. 
+    *
+    * @param name name of the histogram to be retrieved 
+    *
+    * @return stored histogram with the given name
+    */
+    TH1F& getTH1F(TString name);
 
     TH2F& getTH2F(TString name, int binsx, double xmin, double xmax, int binsy, double ymin, double ymax, TString xlabel="x", TString ylabel="Counts");
-
+    
+    /**
+    * Returns a stored TH2F histogram with the given name, provided that one exists. 
+    *
+    * @param name name of the histogram to be retrieved 
+    *
+    * @return stored histogram with the given name
+    */
+    TH2F& getTH2F(TString name);
 
     /**
     * Fits all branches of 'tree' to some signal and background model functions specified in 'hfit'
@@ -148,22 +166,43 @@ public:
     void write(TFile* file, TString name);
 
     /**
-    * Saves all histograms in the sporutplot to a root file and/or writes them to a .png file
-    */
-    void writeBasic();
-
-    /**
-    * Saves the given TH1F histogram as a .png-file with the same name as the histogram 
-    * and saves it to a .root-file, provided that one is opened. 
-    * 
-    * @param h pointer to the TH1F histogram that is to be saved. 
-    * @param plot_text specifies a plot text to be displayed on the drawn histogram. 
+    * Saves all stored histograms to a .root file, provided that one is open.
     */
     void writeHist();
+
+    /**
+    * Puts all stored histograms into a single TCanvas and saves this to a
+    * .root file, provided that one is open. 
+    * 
+    * @param name specifies the name with which the canvas is saved
+    */
     void writeCanvas(TString name="myCanvas");
 
-    void saveHistAs(TString filePrefix = "", TString fileSuffix=".png");
-    void saveCanvasAs(TString fileName="myCanvas.png");
+    /**
+    * Saves all stored histograms as .png files with the same name as the histogram itsef.
+    * A histogram named "h1" will be saved as "h1.png"
+    * 
+    * The filePrefix can be used to specify a path to the location in which you wish to 
+    * save the histograms. 
+    * if a file prefix is specified as "some_path/run1_", a histogram named "h1" will be
+    * saved as "run1_h1.png" at the location specified by "some_path", provided that this 
+    * path is valid. 
+    *
+    * @param filePrefix specifies the prefix to the .png file name with which the histograms are saved. 
+    */
+    void saveHist(TString filePrefix = "");
+
+    /**
+    * Puts all stored histograms into a single canvas and saves this as a .png file. 
+    * The user must specify a file name in the function argument. 
+    *
+    * By specifying "myCanvas", the file will be saved as "myCanvas.png".
+    * By specifying "some_path/run1_myCanvas", the file will be saved as "run1_myCanvas.png"
+    * at the location specified by "some_path", provided that this path is valid. 
+    *  
+    * @param fileName specifies the name of the created .png file displaying all stored histograms. 
+    */
+    void saveCanvas(TString fileName);
 
     void setTCanvas(TCanvas* fcanvas);
     void setTCanvas(TCanvas* fcanvas, int nhist);
@@ -173,21 +212,28 @@ public:
 
     SproutPlot setTitle(TString title);
 
-    int getSize(){return fvec.size();}
-
     SproutTree getBinEdges(TH1F h);
-
 
     SproutPlot operator+(SproutPlot obj);
 
-    std::list<TH1F>::iterator begin() {return fvec.begin();}
-    std::list<TH1F>::iterator end() {return fvec.end();}
-    
+    int getTH1Size(){return th1_map.size();}
+    int getTH2Size(){return th2_map.size();}
+
+    TH1F& getTH1F(int i);
+    TH2F& getTH2F(int i);
+
+    auto beginTH1(){return th1_map.begin();}
+    auto endTH1(){return th1_map.end();}
+
+    auto beginTH2(){return th2_map.begin();}
+    auto endTH2(){return th2_map.end();}
+
     private:
+    std::map<std::string, TH1F> th1_map;
+    std::map<std::string, TH2F> th2_map;
+
     TH1F fhist1;
     TH2F fhist2;
-    std::list<TH1F> fvec;
-    std::list<TH2F> fvec2;
     int line_color; 
     int line_style; 
     int line_width;

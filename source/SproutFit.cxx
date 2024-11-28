@@ -29,14 +29,16 @@ line_width(3)
 void SproutFit::fit(SproutPlot splot, TString save_as, SproutTree* stree, bool save_hist){
     gROOT->SetBatch(kTRUE); // Turn on batch mode to avoid pop-ups
     TCanvas can; 
-    splot.setTCanvas(&can, splot.getSize());
+    splot.setTCanvas(&can, splot.getTH1Size());
 
     std::fstream ob;
     ob.open(inputfile, std::ios::in);
     std::string line;
 
     int i=0;
-    for(TH1F& h : splot){
+    for(auto it = splot.beginTH1(); it != splot.endTH1(); it++){
+        TH1F& h = it->second;
+        
         readLine(&ob,line);
 
         setFitProperties();

@@ -7,9 +7,7 @@ ClassImp(SproutPlot) // Needed for compatability with ROOT's Cling interpreter
 //------------------------------------------
 
 //Constructor 
-SproutPlot::SproutPlot(): 
-fhist1(TH1F()),
-fhist2(TH2F()),
+SproutPlot::SproutPlot():
 line_color(1),
 line_style(1), 
 line_width(3),
@@ -26,48 +24,104 @@ void SproutPlot::add(TString filename, TString h_identify){
 	TKey *key;
 	TIter iter(list);
 	static TString classname("TH1F");
+	static TString classname2("TH2F");
 
 	while((key = (TKey*)iter())) {
 		if(key->GetClassName() == classname) {
-		TH1F *hist = (TH1F*)key->ReadObj();
-		if(hist){
-			TString histname = hist->GetName();
-			if(histname.Contains(h_identify)){fvec.push_back(*hist);}
-			delete hist;
+			TH1F *hist = (TH1F*)key->ReadObj();
+			if(hist){
+				TString histname = hist->GetName();
+				if(histname.Contains(h_identify)){
+					std::string name(histname.Data());
+					th1_map[name] = *hist;
+				}
+				delete hist;
+			}
 		}
+		else if(key->GetClassName() == classname2) {
+			TH2F *hist = (TH2F*)key->ReadObj();
+			if(hist){
+				TString histname = hist->GetName();
+				if(histname.Contains(h_identify)){
+					std::string name(histname.Data());
+					th2_map[name] = *hist;
+				}
+				delete hist;
+			}
 		}
 	}
 }
 
 TH1F& SproutPlot::getTH1F(TString name, int bins, double xmin, double xmax, TString xlabel, TString ylabel){
 	makeTH1F(name, bins, xmin, xmax, xlabel, ylabel); //fhist1 is cleared and adjusted
-	return fvec.back();
+	std::string hist_name(name.Data());
+	return th1_map.at(hist_name);
 }
 
 TH1F& SproutPlot::getTH1F(std::vector<float> data,TString name, int bins, TString xlabel, TString ylabel){
 	makeTH1F(data, name, bins, xlabel, ylabel); //fhist1 is cleared and adjusted 
-	return fvec.back();
+	std::string hist_name(name.Data());
+	return th1_map.at(hist_name);
+}
+
+TH1F& SproutPlot::getTH1F(TString name){
+	std::string hist_name(name.Data());
+	return th1_map.at(hist_name);
 }
 
 TH1F& SproutPlot::getTH1F(int i){
-	std::list<TH1F>::iterator it = fvec.begin();
-	int j=0;
-	while(j<i){it++; j++;}
-	return *it;
+	try{
+		auto it = th1_map.begin();
+		for(int j=0; j<i;j++){
+			it++;
+			if(it == th1_map.end()){throw 0;}
+		}
+		TH1F& h = it->second;
+		return h;
+	}
+	catch(int j){
+		std::cout << "Error in SproutPlot::getTH1F(int): TH1 index out of bounds" << std::endl;
+		exit(0);
+	}
+	TH1F& h = th1_map.begin()->second;
+	return h;
 }
 
 TH2F& SproutPlot::getTH2F(TString name, int binsx, double xmin, double xmax, int binsy, double ymin, double ymax, TString xlabel, TString ylabel){
 	fhist2.Reset("ICESM"); //Resets fhist2
 	setStyle(&fhist2); //Sets the default style
-	// Sets the specified properties to fhist1
+	// Sets the specified properties to fhist2
 	fhist2.SetName(name);
 	fhist2.SetBins(binsx, xmin, xmax, binsy, ymin, ymax);
     fhist2.SetXTitle(xlabel);
     fhist2.SetYTitle(ylabel);
 
-	fvec2.push_back(fhist2);
-	
-	return fvec2.back();
+	std::string hist_name(name.Data());
+	th2_map[hist_name] = fhist2;
+	return th2_map.at(hist_name);
+}
+
+TH2F& SproutPlot::getTH2F(TString name){
+	std::string hist_name(name.Data());
+	return th2_map.at(hist_name);
+}
+
+TH2F& SproutPlot::getTH2F(int i){
+	try{
+		auto it = th2_map.begin();
+		for(int j=0; j<i;j++){
+			it++;
+			if(it == th2_map.end()){throw 0;}
+		}
+		TH2F& h = it->second;
+		return h;
+	}
+	catch(int j){
+		std::cout << "Error in SproutPlot::getTH2F(int): TH2 index out of bounds" << std::endl;
+		exit(0);
+	}
+	TH2F& h = th2_map.begin()->second;
+	return h;
 }
 
 void SproutPlot::plotTree(SproutTree tree, int bins, TString xlabel, TString ylabel){
@@ -167,19 +221,10 @@ void SproutPlot::write(TFile* file, TString name){
 	file->WriteObject(&(*this), name); //write tree to file
 }
 
-void SproutPlot::writeBasic(){
-	for(TH1F h : fvec){
-		h.Write();
-	}
-
-	for(TH2F h : fvec2){
-		h.Write();
-	}
-}
-
 void SproutPlot::writeHist(){
-	gROOT->SetBatch(kTRUE); // Turn on batch mode to avoid pop-ups
-	for(TH1F h : fvec){
+	gROOT->SetBatch(kTRUE); // Turn on batch mode to avoid pop-ups	
+	for(auto& it : th1_map){
+		TH1F h = it.second;
 		h.SetStats(0);
 		TCanvas can(h.GetName()); 
 		setTCanvas(&can);
@@ -192,26 +237,31 @@ void SproutPlot::writeHist(){
 		can.Write();
 	}
 
-	for(TH2F h : fvec2){
+	for(auto& it : th2_map){
+		TH2F h = it.second;
 		h.SetStats(0);
 		TCanvas can(h.GetName()); 
 		setTCanvas(&can);
-		can.cd(); //Open fcanvas for drawing 
-    	if(draw_opt2 != ""){h.Draw(draw_opt2);}
+
+		can.cd(); //Open fcanvas for drawing
+		if(draw_opt2 != ""){h.Draw(draw_opt2);}
 		else{h.Draw("colz");}
-		text_box.DrawClone("same");
+
+    	text_box.DrawClone("same");
 		can.Write();
 	}
+
 	gROOT->SetBatch(kFALSE); // Turn on Batch-mode again.
 }
 
 void SproutPlot::writeCanvas(TString name){
 	gROOT->SetBatch(kTRUE); // Needed for the Draw() to work properly for some reason...
 	TCanvas can(name); 
-	setTCanvas(&can, fvec.size()+fvec2.size());
+	setTCanvas(&can, th1_map.size()+th2_map.size());
 	
 	int i=0;
-	for(TH1F h : fvec){
+	for(auto& it : th1_map){
+		TH1F h = it.second;
 		h.SetStats(0);
 		can.cd(i+1);
 		if(draw_opt1 != ""){h.DrawClone(draw_opt1);}
@@ -220,7 +270,8 @@ void SproutPlot::writeCanvas(TString name){
 		i++;
 	}
 
-	for(TH2F h : fvec2){
+	for(auto& it : th2_map){
+		TH2F h = it.second;
 		h.SetStats(0);
 		can.cd(i+1);
 		if(draw_opt2 != ""){h.DrawClone(draw_opt2);}
@@ -231,13 +282,15 @@ void SproutPlot::writeCanvas(TString name){
 
 	can.SetName(name);
 	can.Write(); //Writies fcanvas to file, provided one is open
-	//if(save_as != ""){can.SaveAs(save_as);} //saves fcanvas as a .png-file with the specified name.
 	gROOT->SetBatch(kFALSE); // Turn on Batch-mode again. 
 }
 
-void SproutPlot::saveHistAs(TString filePrefix,TString fileSuffix){
+void SproutPlot::saveHist(TString filePrefix){
 	gROOT->SetBatch(kTRUE); // Turn on batch mode to avoid pop-ups
-	for(TH1F h : fvec){
+	TString fileSuffix = ".png";
+
+	for(auto& it : th1_map){
+		TH1F h = it.second;
 		h.SetStats(0);
 		TCanvas can(h.GetName()); 
 		setTCanvas(&can);
@@ -250,7 +303,8 @@ void SproutPlot::saveHistAs(TString filePrefix,TString fileSuffix){
 		can.Print(filePrefix+h.GetName()+fileSuffix);
 	}
 
-	for(TH2F h : fvec2){
+	for(auto& it : th2_map){
+		TH2F h = it.second;
 		h.SetStats(0);
 		TCanvas can(h.GetName()); 
 		setTCanvas(&can);
@@ -262,13 +316,15 @@ void SproutPlot::saveHistAs(TString filePrefix,TString fileSuffix){
 	}
 	gROOT->SetBatch(kFALSE); // Turn on Batch-mode again.	
 }
-void SproutPlot::saveCanvasAs(TString fileName){
+void SproutPlot::saveCanvas(TString fileName){
 	gROOT->SetBatch(kTRUE); // Needed for the Draw() to work properly for some reason...
+	fileName = fileName+".png";
 	TCanvas can(fileName); 
-	setTCanvas(&can, fvec.size()+fvec2.size());
+	setTCanvas(&can, th1_map.size()+th2_map.size());
 	
 	int i=0;
-	for(TH1F h : fvec){
+	for(auto& it : th1_map){
+		TH1F h = it.second;
 		h.SetStats(0);
 		can.cd(i+1);
 		if(draw_opt1 != ""){h.DrawClone(draw_opt1);}
@@ -277,7 +333,8 @@ void SproutPlot::saveCanvasAs(TString fileName){
 		i++;
 	}
 
-	for(TH2F h : fvec2){
+	for(auto& it : th2_map){
+		TH2F h = it.second;
 		h.SetStats(0);
 		can.cd(i+1);
 		if(draw_opt2 != ""){h.DrawClone(draw_opt2);}
@@ -303,11 +360,13 @@ SproutTree SproutPlot::getBinEdges(TH1F h){
 }
 
 SproutPlot SproutPlot::setTitle(TString title){
-	for(TH1F& h1: fvec){
+	for(auto& it : th1_map){
+		TH1F& h1 = it.second;
 		h1.SetTitle(title);
 		h1.SetTitleSize(0.06);
 	}
-	for(TH2F& h2: fvec2){
+	for(auto& it : th2_map){
+		TH2F& h2 = it.second;
 		h2.SetTitle(title);
 		h2.SetTitleSize(0.06);
 	}
@@ -316,27 +375,39 @@ SproutPlot SproutPlot::setTitle(TString title){
 
 SproutPlot SproutPlot::operator+(SproutPlot obj){
 	try{
-		if(obj.fvec.size() != fvec.size() || obj.fvec2.size() != fvec2.size()){
-			if((fvec.size() != 0 && fvec2.size() !=0) && (obj.fvec.size() != 0 && obj.fvec2.size() !=0)){
+		// If they don't contian the same number of histograms provided none of them are 0, throw. 
+		if(obj.th1_map.size() != th1_map.size() || obj.th2_map.size() != th2_map.size()){
+			if((th1_map.size() != 0 && th2_map.size() !=0) && (obj.th1_map.size() != 0 && obj.th2_map.size() !=0)){
 				throw(1);
 			}
 		}
 		
-		if(fvec.size() != 0 || fvec2.size() != 0){
-			std::list<TH1F>::iterator it1 = obj.fvec.begin();
-			for(TH1F& h : fvec){
-				if(it1 != obj.fvec.end()){
-					h.Add(&*it1);
-					it1++;
+		// If this SproutPlot is non-zero
+		if(th1_map.size() != 0 || th2_map.size() != 0){
+			for(auto& it : th1_map){
+				TH1F& h = it.second;
+
+				TString hist_name = h.GetName();
+				std::string name(hist_name.Data());
+
+				if(obj.th1_map.size() != 0){
+					TH1F h_obj = obj.th1_map.at(name);
+					h.Add(&h_obj);
 				}
-			} 
-			std::list<TH2F>::iterator it2 = obj.fvec2.begin();
-			for(TH2F& h : fvec2){
-				if(it2 != obj.fvec2.end()){
-					h.Add(&*it2);
-					it2++;
+			}
+
+			for(auto& it : th2_map){
+				TH2F& h = it.second;
+
+				TString hist_name = h.GetName();
+				std::string name(hist_name.Data());
+
+				if(obj.th2_map.size() != 0){
+					TH2F h_obj = obj.th2_map.at(name);
+					h.Add(&h_obj);					
 				}
-			} 
+
+			}
 			return *this;
 		}
 		else{
@@ -405,8 +476,8 @@ void SproutPlot::makeTH1F(TString name, int bins, double xmin, double xmax, TStr
     fhist1.SetXTitle(xlabel);
     fhist1.SetYTitle(ylabel);
 
-	fvec.push_back(fhist1);
-
+	std::string hist_name(name.Data());
+	th1_map[hist_name] = fhist1;
 }
 
 void SproutPlot::makeTH1F(std::vector<float> data, TString name, int bins, TString xlabel, TString ylabel){
@@ -445,7 +516,9 @@ void SproutPlot::makeTH1F(std::vector<float> data, TString name, int bins, TStri
 
 	//Fills fhist1 with the contents in 'data'. 
 	for(int i=0; i<data.size(); i++){fhist1.Fill(data[i]);}
-	fvec.push_back(fhist1);
+	
+	std::string hist_name(name.Data());
+	th1_map[hist_name] = fhist1;
 }
 
 

@@ -16,7 +16,7 @@ void fitDemoMacro(){
     the previously created distribution 
     */
     for(int i=0; i<9; i++){
-        TH1F& h = plots.getTH1F("name", 70, 0, 10);
+        TH1F& h = plots.getTH1F("name"+std::to_string(i), 70, 0, 10);
         h.FillRandom("rndFunc",10000);
     }
 

@@ -1,5 +1,8 @@
 void HistDemoMacro(){
     
+    /*
+    Create a SproutPlot object
+    */
     SproutPlot splot;
 
     /*
@@ -48,12 +51,12 @@ void HistDemoMacro(){
     outFile.cd();
 
     /*
-    Write all histograms to an open .root file as a single canvas, named myCanvas
+    Write all histograms to an open .root file into a single canvas, named "myCanvas"
     */
     splot.writeCanvas("myCanvas");
 
     /*
-    Write all histograms to an open .root file separately separately 
+    Write all histograms to an open .root file separately  
     */
     splot.writeHist();
 
@@ -67,14 +70,31 @@ void HistDemoMacro(){
     splot.setTH2FDrawOpt("LEGO");
 
     /*
+    Iterate through all stored 1d histogram and change their title 
+    to their respective name 
+    */
+    for(int i=0; i<splot.getTH1Size(); i++){
+        TH1F& h = splot.getTH1F(i);
+        h.SetTitle(h.GetName());
+    }
+
+    /*
+    Do the same thing for the 2d histograms
+    */
+    for(int i=0; i<splot.getTH2Size(); i++){
+        TH2F& h = splot.getTH2F(i);
+        h.SetTitle(h.GetName());
+    } 
+
+    /*
     Save all histograms as a single canvas to a .png file in MyPlots
     */
-    splot.saveCanvasAs("MyPlots/myCanvas.png");
+    splot.saveCanvas("MyPlots/myCanvas");
 
     /*
     Save all histograms separately as .png files in MyPlots
     */
-    splot.saveHistAs("MyPlots/",".png");
+    splot.saveHist("MyPlots/");
 
     delete xyg;
 }
