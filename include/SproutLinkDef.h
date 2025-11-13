@@ -11,6 +11,6 @@
 #pragma link C++ class SproutPlot+;
 #pragma link C++ class SproutTree+;
 #pragma link C++ class SproutFit+;
-
-
+#pragma link C++ class SproutCutValue+;
+#pragma link C++ class SproutCut+;
 #endif

@@ -222,6 +222,9 @@ public:
     TH1F& getTH1F(int i);
     TH2F& getTH2F(int i);
 
+    int sizeTH1F(){return th1_map.size();}
+    int sizeTH2F(){return th2_map.size();}
+
     auto beginTH1(){return th1_map.begin();}
     auto endTH1(){return th1_map.end();}
 
