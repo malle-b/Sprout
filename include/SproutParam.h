@@ -27,7 +27,10 @@ struct Value{
 
     float get(float a, std::string key){
         try{
-            if(type != "float"){throw(a);}
+            if(type != "float"){
+                if(type == "int"){return (float) i;}
+                else{throw(a);}
+            }
             else{return f;}
         }
         catch(float i){

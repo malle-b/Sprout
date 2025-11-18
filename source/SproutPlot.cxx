@@ -257,7 +257,7 @@ void SproutPlot::writeHist(){
 void SproutPlot::writeCanvas(TString name){
 	gROOT->SetBatch(kTRUE); // Needed for the Draw() to work properly for some reason...
 	TCanvas can(name); 
-	setTCanvas(&can, th1_map.size()+th2_map.size());
+	if(th1_map.size()>0 || th2_map.size()>0){setTCanvas(&can, th1_map.size()+th2_map.size());}
 	
 	int i=0;
 	for(auto& it : th1_map){

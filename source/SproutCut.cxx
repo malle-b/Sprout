@@ -189,7 +189,7 @@ void SproutCut::writeQAplot(std::string title){
     gROOT->SetBatch(kFALSE); // Turn on Batch-mode again. 
 }
 
-void SproutCut::tuneCuts(std::string title){
+int SproutCut::tuneCuts(std::string title){
     try{
         if(bcuts.size()==0){throw 1;}
 
@@ -365,16 +365,15 @@ void SproutCut::tuneCuts(std::string title){
                 cutVal.bg_th1f.Draw("HIST same");
             }
 
-            std::cout << title +"_"+ p.first << "   "; 
-            if(cutVal.min_value_set) std::cout<<high_plot_min_x<<"   ";
-            if(cutVal.max_value_set) std::cout<<high_plot_max_x;
-            std::cout << " " << std::endl;
+            if(cutVal.min_value_set) std::cout<<title +"_" << p.first << "_min   "<<high_plot_min_x<<std::endl;
+            if(cutVal.max_value_set) std::cout<<title +"_" <<p.first << "_max   "<<high_plot_max_x<<std::endl;
             
 
             cut_index++;
         }
         can.Write();
         gROOT->SetBatch(kFALSE); // Needed for the Draw() to work properly for some reason...
+        return 1;
 
     }
     catch(int n){
@@ -383,6 +382,7 @@ void SproutCut::tuneCuts(std::string title){
                             "\n Call SproutCut::cut(std::string name, float val, bool isSignal) before tuning \n";}
         
     }
+    return 0;
 }
 
 
