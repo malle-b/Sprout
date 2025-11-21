@@ -64,7 +64,10 @@ int SproutCut::cut(std::string name, float val){
 
     cutVal.signal_th1f.Fill(val); cutVal.signal_th1f_filled=true; //signal hist is filled by default
 
-    if(cutVal.min_value_set && cutVal.max_value_set && val <= cutVal.max_value && val>=cutVal.min_value){return 1;}
+    if(cutVal.min_value_set && cutVal.max_value_set){
+        if(val <= cutVal.max_value && val>=cutVal.min_value){return 1;}
+        else{return 0;}
+    }
     else if(cutVal.max_value_set && val <= cutVal.max_value){return 1;}
     else if(cutVal.min_value_set && val>=cutVal.min_value){return 1;}
     else{return 0;}
@@ -76,7 +79,10 @@ int SproutCut::cut(std::string name, float val, bool isSignal){
     if(isSignal){cutVal.signal_th1f.Fill(val); cutVal.signal_th1f_filled=true;}
     else{cutVal.bg_th1f.Fill(val); cutVal.bg_th1f_filled=true;}
 
-    if(cutVal.min_value_set && cutVal.max_value_set && val <= cutVal.max_value && val>=cutVal.min_value){return 1;}
+    if(cutVal.min_value_set && cutVal.max_value_set){
+        if(val <= cutVal.max_value && val>=cutVal.min_value){return 1;}
+        else{return 0;}
+    }
     else if(cutVal.max_value_set && val <= cutVal.max_value){return 1;}
     else if(cutVal.min_value_set && val>=cutVal.min_value){return 1;}
     else{return 0;}
