@@ -46,6 +46,8 @@ void SproutCut::addcut(SproutCutValue& cut, std::string name, std::string descr,
     
     cut.signal_th1f = sp_qa.getTH1F(name, bins, min_range, max_range, descr, "counts");
     cut.bg_th1f = sp_qa.getTH1F(name, bins, min_range, max_range, descr, "counts");
+    cut.signal_th1f.SetMinimum(0);
+    cut.bg_th1f.SetMinimum(0);
     //sp_qa.clear(); NOT YET IMPLEMENTED IN SproutPlot
 
     bcuts.insert({name,cut});
@@ -308,9 +310,7 @@ int SproutCut::tuneCuts(std::string title){
                 if(high_plot_max_y>high_plot_min_y){plot_height=high_plot_max_y;}
                 else{plot_height = high_plot_min_y;}
                 
-                float scale;
-                if(height>plot_height){scale = plot_height/height;}
-                else{scale = plot_height/height;}
+                float scale = plot_height/height;
 
                 cutVal.signal_th1f.Scale(scale);
                 cutVal.bg_th1f.Scale(scale);
@@ -334,9 +334,7 @@ int SproutCut::tuneCuts(std::string title){
                 if(high_plot_max_y>high_plot_min_y){plot_height=high_plot_max_y;}
                 else{plot_height = high_plot_min_y;}
                 
-                float scale;
-                if(height>plot_height){scale = plot_height/height;}
-                else{scale = plot_height/height;}
+                float scale = plot_height/height;
 
                 cutVal.signal_th1f.Scale(scale);
                 cutVal.bg_th1f.Scale(scale);
@@ -360,9 +358,7 @@ int SproutCut::tuneCuts(std::string title){
                 if(high_plot_max_y>high_plot_min_y){plot_height=high_plot_max_y;}
                 else{plot_height = high_plot_min_y;}
                 
-                float scale;
-                if(height>plot_height){scale = plot_height/height;}
-                else{scale = plot_height/height;}
+                float scale = plot_height/height;
 
                 cutVal.signal_th1f.Scale(scale);
                 cutVal.bg_th1f.Scale(scale);
