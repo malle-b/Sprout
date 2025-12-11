@@ -169,7 +169,6 @@ void SproutCut::writeQAplot(std::string title){
         i++;
     }
 
-    // IMPLEMENT DRAW OF YIELD PLOT
     if(sp_yield_control.sizeTH1F() != 0){
         TLegend yield_legend = TLegend(0.640373197625106,0.7232761518972219,0.9677692960135709,0.9513046554601674);
 
@@ -371,6 +370,159 @@ int SproutCut::tuneCuts(std::string title){
             if(cutVal.max_value_set) std::cout<<title +"_" <<p.first << "_max   "<<high_plot_max_x<<std::endl;
             
 
+            cut_index++;
+        }
+        can.Write();
+        gROOT->SetBatch(kFALSE); // Needed for the Draw() to work properly for some reason...
+        return 1;
+
+    }
+    catch(int n){
+        if(n==1){std::cout<<"\n ERROR in SproutCut::tuneCuts: no cuts added! \n"; exit(0);}
+        if(n==2){std::cout<<"\n WARNING in SproutCut::tuneCuts: Cut Tuning not possible! \n No signal/background distributions found."<< 
+                            "\n Call SproutCut::cut(std::string name, float val, bool isSignal) before tuning \n";}
+        
+    }
+    return 0;
+}
+
+
+int SproutCut::tuneCuts(std::string title, double fractionOfSignal){
+    try{
+        if(bcuts.size()==0){throw 1;}
+
+        gROOT->SetBatch(kTRUE); // Needed for the Draw() to work properly for some reason...
+
+        TString can_name(title);
+        TCanvas can(can_name); sp_qa.setTCanvas(&can, bcuts.size());
+
+        //make canvas
+        int cut_index=0;
+        for(auto& p : bcuts){
+            SproutCutValue& cutVal = p.second;
+            int nbins = cutVal.signal_th1f.GetXaxis()->GetNbins();
+        
+            if(!cutVal.signal_th1f_filled || !cutVal.bg_th1f_filled){throw 2;}
+
+            // Set default cut-off values to upper and lower edge of the signal hist. 
+            float cut_off_min = cutVal.signal_th1f.GetXaxis()->GetBinLowEdge(1);
+            float cut_off_max = cutVal.signal_th1f.GetXaxis()->GetBinUpEdge(nbins);
+
+            double frac = 1;
+
+            double sig_full_integral = cutVal.signal_th1f.Integral(1,nbins);
+
+            if(cutVal.min_value_set && cutVal.max_value_set){
+                bool min_optimized=false;
+                bool max_optimized=false;
+
+                for(int i=1; i<=nbins; i++){
+                    double sig_integral1 = cutVal.signal_th1f.Integral(i,nbins);
+                    double sig_integral2 = cutVal.signal_th1f.Integral(1,nbins+1-i);
+
+                    if(sig_integral1/sig_full_integral >= fractionOfSignal+(1-fractionOfSignal)/2){cut_off_min = cutVal.signal_th1f.GetXaxis()->GetBinLowEdge(i);}
+                    else if(sig_integral1/sig_full_integral < fractionOfSignal+(1-fractionOfSignal)/2){min_optimized=true;}
+
+                    if(sig_integral2/sig_full_integral >= fractionOfSignal+(1-fractionOfSignal)/2){cut_off_max = cutVal.signal_th1f.GetXaxis()->GetBinUpEdge(nbins+1-i);}
+                    else if(sig_integral2/sig_full_integral < fractionOfSignal+(1-fractionOfSignal)/2){max_optimized=true;}
+
+                    if(min_optimized&&max_optimized){break;}
+                }
+
+            }
+            else if(cutVal.min_value_set){
+                
+                for(int i=1; i<=nbins; i++){
+                    double sig_error;
+                    double sig_integral = cutVal.signal_th1f.IntegralAndError(i,nbins, sig_error);
+
+                    if(sig_integral/sig_full_integral >= fractionOfSignal){cut_off_min = cutVal.signal_th1f.GetXaxis()->GetBinLowEdge(i);}
+                    else if(sig_integral/sig_full_integral < fractionOfSignal){break;}
+                    
+                }
+
+            }
+            else if(cutVal.max_value_set){
+                for(int i=1; i<=nbins; i++){
+                    double sig_error;
+                    double sig_integral = cutVal.signal_th1f.IntegralAndError(1,nbins+1-i,sig_error);
+                    
+                    if(sig_integral/sig_full_integral >= fractionOfSignal){cut_off_max = cutVal.signal_th1f.GetXaxis()->GetBinUpEdge(nbins+1-i);}
+                    else if(sig_integral/sig_full_integral < fractionOfSignal){break;}
+                    
+                }
+            }
+
+            
+
+            can.cd(cut_index+1);
+    
+            if(cutVal.min_value_set && cutVal.max_value_set){
+
+                float height;
+                if(cutVal.signal_th1f.GetMaximum() > cutVal.bg_th1f.GetMaximum()){
+                    height = 1.1*cutVal.signal_th1f.GetMaximum();
+                    cutVal.signal_th1f.Draw();
+                    cutVal.bg_th1f.Draw("same");
+                }
+                else{
+                    height = 1.1*cutVal.bg_th1f.GetMaximum();
+                    cutVal.bg_th1f.Draw();
+                    cutVal.signal_th1f.Draw("same");
+                }
+                
+                TGraph xmin = TGraph(2);
+                xmin.SetPoint(0,cut_off_min, 0);  xmin.SetPoint(1, cut_off_min, height*1.1);
+                xmin.SetLineColor(15); xmin.SetLineWidth(3); xmin.SetLineStyle(2);
+                xmin.DrawClone("same");
+
+                TGraph xmax = TGraph(2);
+                xmax.SetPoint(0, cut_off_max, 0);  xmax.SetPoint(1, cut_off_max, height*1.1);
+                xmax.SetLineColor(15); xmax.SetLineWidth(3); xmax.SetLineStyle(2);
+                xmax.DrawClone("same");
+            }
+            else if(cutVal.min_value_set){
+                float height;
+                if(cutVal.signal_th1f.GetMaximum() > cutVal.bg_th1f.GetMaximum()){
+                    height = 1.1*cutVal.signal_th1f.GetMaximum();
+                    cutVal.signal_th1f.Draw();
+                    cutVal.bg_th1f.Draw("same");
+                }
+                else{
+                    height = 1.1*cutVal.bg_th1f.GetMaximum();
+                    cutVal.bg_th1f.Draw();
+                    cutVal.signal_th1f.Draw("same");
+                }
+
+                TGraph xmin = TGraph(2);
+                xmin.SetPoint(0,cut_off_min, 0);  xmin.SetPoint(1, cut_off_min, height*1.1);
+                xmin.SetLineColor(15); xmin.SetLineWidth(3); xmin.SetLineStyle(2);
+                xmin.DrawClone("same");
+
+            }
+            else if(cutVal.max_value_set){
+                float height;
+                if(cutVal.signal_th1f.GetMaximum() > cutVal.bg_th1f.GetMaximum()){
+                    height = 1.1*cutVal.signal_th1f.GetMaximum();
+                    cutVal.signal_th1f.Draw();
+                    cutVal.bg_th1f.Draw("same");
+                }
+                else{
+                    height = 1.1*cutVal.bg_th1f.GetMaximum();
+                    cutVal.bg_th1f.Draw();
+                    cutVal.signal_th1f.Draw("same");
+                }
+                
+                TGraph xmax = TGraph(2);
+                xmax.SetPoint(0, cut_off_max, 0);  xmax.SetPoint(1, cut_off_max, height*1.1);
+                xmax.SetLineColor(15); xmax.SetLineWidth(3); xmax.SetLineStyle(2);
+                xmax.DrawClone("same");
+
+            }
+
+            if(cutVal.min_value_set) std::cout<<title +"_" << p.first << "_min   "<<cut_off_min<<std::endl;
+            if(cutVal.max_value_set) std::cout<<title +"_" <<p.first << "_max   "<<cut_off_max<<std::endl;
+            
             cut_index++;
         }
         can.Write();

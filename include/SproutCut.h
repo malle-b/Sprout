@@ -36,6 +36,7 @@ class SproutCut {
     void writeQAplot(std::string title = "QAplots"); //write TCanvas to file 
     SproutPlot getQaHists(){return sp_qa;}
     int tuneCuts(std::string title);
+    int tuneCuts(std::string title, double fractionOfSignal);
 
     private:
     void addcut(SproutCutValue& cut, std::string name, std::string descr, float min_range, float max_range);
