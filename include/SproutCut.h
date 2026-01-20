@@ -22,15 +22,15 @@ class SproutCut {
     void addCutWindow(std::string name, std::string descr, float min, float max);
     void addCutMinimum(std::string name, std::string descr, float value, float QAplotRange = 100);
     void addCutMaximum(std::string name, std::string descr, float value, float QAplotRange = 100);
-    void setYieldQAPlot(std::string xTitle, int bins, float xMin, float xMax);
+    void setYieldQAPlot(std::string name, std::string xTitle, int bins, float xMin, float xMax);
     
-    void fillYieldQAPlot(float val, std::string name="no_cuts"){sp_yield_control.getTH1F(name).Fill(val);}
+    void fillYieldQAPlot(std::string name, std::string cutName="no_cuts", float val=0);
     //void setCutoff(std::string name, float min, float max);
     void print();
     int cut(std::string name, float val);
     int cut(std::string name, float val, bool isSignal);
-    int cut(std::string name, float val, float controlVal);
-    int cut(std::string name, float val, bool isSignal, float controlVal);
+    // int cut(std::string name, float val, float controlVal);
+    // int cut(std::string name, float val, bool isSignal, float controlVal);
     
     void write(TFile* file, TString name); //write SproutCut to file 
     void writeQAplot(std::string title = "QAplots"); //write TCanvas to file 
@@ -44,8 +44,9 @@ class SproutCut {
     //std::unordered_map<std::string, TH1F&> bhists;
 
     SproutPlot sp_qa;
-    SproutPlot sp_yield_control;
+    //SproutPlot sp_yield_control;
 
+    std::map<std::string, SproutPlot> map_yeild_control;
 
     ClassDef(SproutCut, 1) // Needed for compatability with ROOT's Cling interpreter 
 };

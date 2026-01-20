@@ -54,11 +54,13 @@ void SproutCut::addcut(SproutCutValue& cut, std::string name, std::string descr,
 }
 
 
-void SproutCut::setYieldQAPlot(std::string xTitle, int bins, float xMin, float xMax){
+void SproutCut::setYieldQAPlot(std::string name, std::string xTitle, int bins, float xMin, float xMax){
+    SproutPlot sp_yield_control;
     sp_yield_control.getTH1F("no_cuts", bins, xMin, xMax, xTitle, "counts");
     for(auto& p : bcuts){
         sp_yield_control.getTH1F(p.first, bins, xMin, xMax, xTitle, "counts");
     }
+    map_yeild_control[name] = sp_yield_control;
 }
 
 int SproutCut::cut(std::string name, float val){
@@ -90,17 +92,21 @@ int SproutCut::cut(std::string name, float val, bool isSignal){
     else{return 0;}
 }
 
-int SproutCut::cut(std::string name, float val, float controlVal){
-    int result = cut(name, val);
-    if(result){sp_yield_control.getTH1F(name).Fill(controlVal);}
-    return result;
+void SproutCut::fillYieldQAPlot(std::string name, std::string cutName, float val){
+    map_yeild_control[name].getTH1F(cutName).Fill(val);
 }
 
-int SproutCut::cut(std::string name, float val, bool isSignal, float controlVal){
-    int result = cut(name, val, isSignal);
-    if(result){sp_yield_control.getTH1F(name).Fill(controlVal);}
-    return result;
-}
+// int SproutCut::cut(std::string name, float val, float controlVal){
+//     int result = cut(name, val);
+//     if(result){sp_yield_control.getTH1F(name).Fill(controlVal);}
+//     return result;
+// }
+
+// int SproutCut::cut(std::string name, float val, bool isSignal, float controlVal){
+//     int result = cut(name, val, isSignal);
+//     if(result){sp_yield_control.getTH1F(name).Fill(controlVal);}
+//     return result;
+// }
 
 void SproutCut::write(TFile* file, TString name){
 	file->WriteObject(&(*this), name); 
@@ -112,7 +118,7 @@ void SproutCut::writeQAplot(std::string title){
     TString can_name(title);
     TCanvas can(can_name);
     
-    if(sp_yield_control.sizeTH1F()!=0){sp_qa.setTCanvas(&can, bcuts.size()+1);}
+    if(map_yeild_control.size()!=0){sp_qa.setTCanvas(&can, bcuts.size()+map_yeild_control.size());}
     else{sp_qa.setTCanvas(&can, bcuts.size());}
      
     int i=0;
@@ -169,28 +175,30 @@ void SproutCut::writeQAplot(std::string title){
         i++;
     }
 
-    if(sp_yield_control.sizeTH1F() != 0){
-        TLegend yield_legend = TLegend(0.640373197625106,0.7232761518972219,0.9677692960135709,0.9513046554601674);
+    for(auto& sp : map_yeild_control){
+        SproutPlot sp_yield_control = sp.second;
+        if(sp_yield_control.sizeTH1F() != 0){
+            TLegend yield_legend = TLegend(0.640373197625106,0.7232761518972219,0.9677692960135709,0.9513046554601674);
 
 
-        can.cd(i+1);
-        sp_yield_control.getTH1F("no_cuts").SetStats(0);
-        sp_yield_control.getTH1F("no_cuts").DrawClone();
-        yield_legend.AddEntry(&sp_yield_control.getTH1F("no_cuts"),"no_cuts");
+            can.cd(i+1);
+            sp_yield_control.getTH1F("no_cuts").SetStats(0);
+            sp_yield_control.getTH1F("no_cuts").DrawClone();
+            yield_legend.AddEntry(&sp_yield_control.getTH1F("no_cuts"),"no_cuts");
 
-        int i=0;
-        for(auto& p : bcuts){
-            sp_yield_control.getTH1F(p.first).SetLineColor(40+i%10);
-            sp_yield_control.getTH1F(p.first).SetStats(0);
-            sp_yield_control.getTH1F(p.first).Draw("same");
-            yield_legend.AddEntry(&sp_yield_control.getTH1F(p.first),TString (p.first));
-            i++;
+            int j=0;
+            for(auto& p : bcuts){
+                sp_yield_control.getTH1F(p.first).SetLineColor(40+j%10);
+                sp_yield_control.getTH1F(p.first).SetStats(0);
+                sp_yield_control.getTH1F(p.first).DrawClone("same");
+                yield_legend.AddEntry(&sp_yield_control.getTH1F(p.first),TString (p.first));
+                j++;
+            }
+
+            yield_legend.DrawClone("same");
         }
-
-        yield_legend.DrawClone("same");
+        i++;
     }
-    
-
     can.Write();
 
     gROOT->SetBatch(kFALSE); // Turn on Batch-mode again. 
@@ -579,7 +587,12 @@ SproutCut SproutCut::operator+(const SproutCut obj){
             scut.bcuts.insert({name,scutVal});
         }
 
-        scut.sp_yield_control = this->sp_yield_control+obj.sp_yield_control;
+        //scut.map_yeild_control = this->map_yeild_control+obj.map_yeild_control;
+
+        for(auto& sp : this->map_yeild_control){
+            std::map<std::string, SproutPlot> obj_map_yield_control = obj.map_yeild_control;
+            scut.map_yeild_control[sp.first] = sp.second+obj_map_yield_control[sp.first];
+        }
 
         return scut;
 
