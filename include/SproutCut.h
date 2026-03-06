@@ -20,8 +20,8 @@ class SproutCut {
     SproutCut operator+(const SproutCut obj);
 
     void addCutWindow(std::string name, std::string descr, float min, float max);
-    void addCutMinimum(std::string name, std::string descr, float value, float QAplotRange = 100);
-    void addCutMaximum(std::string name, std::string descr, float value, float QAplotRange = 100);
+    void addCutMinimum(std::string name, std::string descr, float value, float hist_min_range, float hist_max_range);
+    void addCutMaximum(std::string name, std::string descr, float value, float hist_min_range, float hist_max_range);
     void setYieldQAPlot(std::string name, std::string xTitle, int bins, float xMin, float xMax);
     
     void fillYieldQAPlot(std::string name, std::string cutName="no_cuts", float val=0);

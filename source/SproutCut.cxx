@@ -19,26 +19,26 @@ void SproutCut::addCutWindow(std::string name, std::string descr, float min, flo
     addcut(cutVal, name, descr, min_range, max_range);
 }
 
-void SproutCut::addCutMinimum(std::string name, std::string descr, float value, float QAplotRange){
+void SproutCut::addCutMinimum(std::string name, std::string descr, float value, float hist_min_range, float hist_max_range){
     SproutCutValue cutVal;
 
     cutVal.min_value = value; cutVal.min_value_set=true;
 
-    float min_range = value - 0.3*QAplotRange;
-    float max_range = value + 0.7*QAplotRange;
+    // float min_range = value - 0.3*QAplotRange;
+    // float max_range = value + 0.7*QAplotRange;
 
-    addcut(cutVal, name, descr, min_range, max_range);
+    addcut(cutVal, name, descr, hist_min_range, hist_max_range);
 }
 
-void SproutCut::addCutMaximum(std::string name, std::string descr, float value, float QAplotRange){
+void SproutCut::addCutMaximum(std::string name, std::string descr, float value, float hist_min_range, float hist_max_range){
     SproutCutValue cutVal;
     
     cutVal.max_value = value; cutVal.max_value_set=true;
 
-    int min_range = value-0.7*QAplotRange;
-    int max_range = value+0.3*QAplotRange;
+    // int min_range = value-0.7*QAplotRange;
+    // int max_range = value+0.3*QAplotRange;
 
-    addcut(cutVal, name, descr, min_range, max_range);
+    addcut(cutVal, name, descr, hist_min_range, hist_max_range);
 }
 
 void SproutCut::addcut(SproutCutValue& cut, std::string name, std::string descr, float min_range, float max_range){
