@@ -475,6 +475,7 @@ void SproutPlot::makeTH1F(TString name, int bins, double xmin, double xmax, TStr
 	fhist1.SetBins(bins, xmin, xmax);
     fhist1.SetXTitle(xlabel);
     fhist1.SetYTitle(ylabel);
+	fhist1.SetMinimum(0);
 
 	std::string hist_name(name.Data());
 	th1_map[hist_name] = fhist1;
@@ -513,6 +514,7 @@ void SproutPlot::makeTH1F(std::vector<float> data, TString name, int bins, TStri
 	fhist1.SetName(name);
     fhist1.SetXTitle(xlabel);
     fhist1.SetYTitle(ylabel);
+	fhist1.SetMinimum(0);
 
 	//Fills fhist1 with the contents in 'data'. 
 	for(int i=0; i<data.size(); i++){fhist1.Fill(data[i]);}
