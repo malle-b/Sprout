@@ -114,7 +114,8 @@ void SproutCut::write(TFile* file, TString name){
 
 void SproutCut::writeQAplot(std::string title){
     gROOT->SetBatch(kTRUE); // Needed for the Draw() to work properly for some reason...
-
+    gStyle->SetCanvasPreferGL(true);
+    
     TString can_name(title);
     TCanvas can(can_name);
     
@@ -143,11 +144,17 @@ void SproutCut::writeQAplot(std::string title){
             cutVal.signal_th1f.Draw();
             cutVal.bg_th1f.Draw("same");
             height = cutVal.signal_th1f.GetMaximum() + 0.1 * cutVal.signal_th1f.GetMaximum();
+
+            if(cutVal.min_value_set){drawShade(&cutVal.signal_th1f, cutVal.min_value, false).DrawClone("same");}
+            if(cutVal.max_value_set){drawShade(&cutVal.signal_th1f, cutVal.max_value, true).DrawClone("same");}
         }
         else{
             cutVal.bg_th1f.Draw();
             cutVal.signal_th1f.Draw("same");
             height = cutVal.bg_th1f.GetMaximum() + 0.1 * cutVal.bg_th1f.GetMaximum();
+
+            if(cutVal.min_value_set){TBox box = drawShade(&cutVal.bg_th1f, cutVal.min_value, false); box.DrawClone("same");}
+            if(cutVal.max_value_set){TBox box = drawShade(&cutVal.bg_th1f, cutVal.max_value, true); box.DrawClone("same");}
         }
 
         if(cutVal.bg_th1f_filled){
@@ -202,6 +209,33 @@ void SproutCut::writeQAplot(std::string title){
     can.Write();
 
     gROOT->SetBatch(kFALSE); // Turn on Batch-mode again. 
+}
+
+TBox SproutCut::drawShade(TH1F* h, double x_min, bool shadeRight){
+
+    double x_low  = h->GetXaxis()->GetXmin();
+    double x_high = h->GetXaxis()->GetXmax();
+
+    double y_low  = h->GetYaxis()->GetXmin();
+    double y_high = h->GetMaximum()*1.05;
+
+    double x1, x2;
+
+    if (shadeRight) {
+        x1 = x_min;
+        x2 = x_high;
+    } else {
+        x1 = x_low;
+        x2 = x_min;
+    }
+
+    gStyle->SetCanvasPreferGL(true);
+    TBox box(x1, y_low, x2, y_high);
+    box.SetFillStyle(3003);
+    box.SetFillColor(15); // low opacity grey
+    box.SetLineWidth(0);
+    return box;
+    //box.DrawClone("same");
 }
 
 int SproutCut::tuneCuts(std::string title){

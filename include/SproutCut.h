@@ -12,6 +12,7 @@
 #include "TCanvas.h"
 #include "TGraphErrors.h"
 #include "TLegend.h"
+#include "TBox.h"
 
 class SproutCut {
     public:
@@ -40,6 +41,8 @@ class SproutCut {
 
     private:
     void addcut(SproutCutValue& cut, std::string name, std::string descr, float min_range, float max_range);
+    TBox drawShade(TH1F* h, double x_min, bool shadeRight);
+
     std::unordered_map<std::string, SproutCutValue> bcuts;
     //std::unordered_map<std::string, TH1F&> bhists;
 
