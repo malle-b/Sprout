@@ -167,18 +167,18 @@ void SproutCut::writeQAplot(std::string title){
         }
 
 
-        if(cutVal.min_value_set){
-            TGraph xmin = TGraph(2);
-            xmin.SetPoint(0,cutVal.min_value, 0);     xmin.SetPoint(1, cutVal.min_value, height);
-            xmin.SetLineColor(15); xmin.SetLineWidth(3); xmin.SetLineStyle(2);
-            xmin.DrawClone("same");
-        }
-        if(cutVal.max_value_set){
-            TGraph xmax = TGraph(2);
-            xmax.SetPoint(0, cutVal.max_value, 0);  xmax.SetPoint(1, cutVal.max_value, height);
-            xmax.SetLineColor(15); xmax.SetLineWidth(3); xmax.SetLineStyle(2);
-            xmax.DrawClone("same");
-        }
+        // if(cutVal.min_value_set){
+        //     TGraph xmin = TGraph(2);
+        //     xmin.SetPoint(0,cutVal.min_value, 0);     xmin.SetPoint(1, cutVal.min_value, height);
+        //     xmin.SetLineColor(15); xmin.SetLineWidth(3); xmin.SetLineStyle(2);
+        //     xmin.DrawClone("same");
+        // }
+        // if(cutVal.max_value_set){
+        //     TGraph xmax = TGraph(2);
+        //     xmax.SetPoint(0, cutVal.max_value, 0);  xmax.SetPoint(1, cutVal.max_value, height);
+        //     xmax.SetLineColor(15); xmax.SetLineWidth(3); xmax.SetLineStyle(2);
+        //     xmax.DrawClone("same");
+        // }
         i++;
     }
 
