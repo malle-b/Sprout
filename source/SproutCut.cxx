@@ -232,7 +232,7 @@ TBox SproutCut::drawShade(TH1F* h, double x_min, bool shadeRight){
     gStyle->SetCanvasPreferGL(true);
     TBox box(x1, y_low, x2, y_high);
     box.SetFillStyle(3003);
-    box.SetFillColor(15); // low opacity grey
+    box.SetFillColor(12); // low opacity grey
     box.SetLineWidth(0);
     return box;
     //box.DrawClone("same");
