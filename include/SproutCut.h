@@ -43,7 +43,7 @@ class SproutCut {
     void addcut(SproutCutValue& cut, std::string name, std::string descr, float min_range, float max_range);
     TBox drawShade(TH1F* h, double x_min, bool shadeRight);
 
-    std::unordered_map<std::string, SproutCutValue> bcuts;
+    std::map<std::string, SproutCutValue> bcuts;
     //std::unordered_map<std::string, TH1F&> bhists;
 
     SproutPlot sp_qa;

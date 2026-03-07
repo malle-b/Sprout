@@ -594,7 +594,7 @@ SproutCut SproutCut::operator+(const SproutCut obj){
         for(auto& p : this->bcuts){
 
             std::string name = p.first;
-            std::unordered_map<std::string, SproutCutValue> objbcuts = obj.bcuts;
+            std::map<std::string, SproutCutValue> objbcuts = obj.bcuts;
 
             if(objbcuts != this->bcuts){throw 2;}  
 
