@@ -306,7 +306,7 @@ int SproutCut::tuneCuts(std::string title){
 
                     double yerr = sqrt(pow(sig_error,2)*pow(dydS,2) + pow(bg_error,2)*pow(dydB,2)); 
                     
-                    if(!isnan(y)){
+                    if(!std::isnan(y)){
                     plot_max.SetPoint(i-1,x,y);
                     if(y>high_plot_max_y){high_plot_max_y=y; high_plot_max_x=x;}
                     //plot.SetPointError(i-1,0,yerr);

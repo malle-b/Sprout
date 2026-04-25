@@ -9,6 +9,7 @@
 #include "TMatrixDSym.h"
 #include "TGraph.h"
 #include "TPaveText.h"
+#include "TError.h"
 
 //C++ includes
 #include <fstream>
@@ -54,8 +55,7 @@ public:
     *
     * 
     * @param h TH1F histogram to be fitted 
-    * @param save_as if specified, the histogram and fit results are drawn and saved as 
-    * .png file with the specified path/name. 
+    * @param save_as Specify a filepath (either .png or .root) to which the fit plots will be saved. 
     */
     void fit(TH1F h, TString save_as = "");   
 
@@ -93,8 +93,7 @@ public:
     * 5. Steps 2-4 are repeated two more times.
     *
     * @param splot SproutPlot containing a collection of histograms, each of which is fitted. 
-    * @param save_as (optional). If specified, a .png file showing all fitted histograms will be saved with the
-    * specified path/name. 
+    * @param save_as (optional). Specify a filepath (either .png or .root) to which the fit plots will be saved. 
     * @param stree (optional). If a pointer to a sproutTree object containing at least 4 branches is passed it is 
     * filled with the results of SproutPlot::integrate for each fitted histogram. 
     * @param save_hist (optinal). If set to true, a separate figure of each fitted histogram is generated and 
@@ -166,6 +165,12 @@ public:
     * val[1] is the uncertainty of the former. 
     * val[2] is set to the number of peak events obtained through method 2. 
     * val[3] is set to the uncertainty of the former. 
+    * val[4] is set to the number of background events in the signal region 
+    * val[5] is the uncertainty of the former. 
+    * val[6] is set to the number of background events in the background region  
+    * val[7] is set to the uncertainty of the former. 
+    * val[8] is set to the sideband subtraction factor alpha = (N bakground in signal region)/(N background in background region) 
+    * val[9] is set to the uncertainty of the former. 
     *
     * @param h fitted histogram for which the number of signal counts is to be estimated. 
     * @param vals array into which the result is written. 
@@ -174,6 +179,13 @@ public:
 
     void setFileName(std::string filename){inputfile = filename;}
 
+    /** 
+     * If called before fit, the fitted plots will 
+     * be saved to the specified file. 
+     * 
+     * @param file pointer to a .root file
+    */
+    void setSaveFile(TFile* file, std::string canvasName = "fit_results"){savefile = file; save_canvas_name=canvasName;}
 
     void setStyle();
     void setLineStyle(int fitcolor=15, int sigcolor=42, int bgcolor=35,
@@ -220,6 +232,9 @@ private:
     int line_width; // line width displayed when drawn 
     
     std::string inputfile; // name of the input file 
+
+    TFile* savefile; // file for saving fit plots
+    std::string save_canvas_name; //name of canvas with fit plots saved to savefile
 
     TString int2str(int i){TString str; str.Form("%d", i); return str;}
     TString double2str(double d){TString str; str.Form("%g", d); return str;}

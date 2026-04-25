@@ -2,16 +2,20 @@
 
 SproutFit::SproutFit() :
 inputfile("FitParam.txt"),
+savefile(nullptr),
 fsig(new TF1()), fbg(new TF1()), ffit(new TF1()),
 sig_name(""), bg_name(""),
 xmin(0), xmax(0), xsigmin(0), xsigmax(0),
 npar_sig(0), npar_bg(0), npar(0),
 chi2_sig(0), chi2_bg(0), chi2(0),
 cfit(new TMatrixDSym()), csig(new TMatrixDSym()), cbg(new TMatrixDSym()),
-fit_line_color(1), sig_line_color(2), bg_line_color(3),
-fit_line_style(2), sig_line_style(2), bg_line_style(2),
+fit_line_color(7), sig_line_color(8), bg_line_color(6),
+fit_line_style(1), sig_line_style(1), bg_line_style(1),
 line_width(3) 
-{}
+{   
+gErrorIgnoreLevel = kError;   // ignore warnings, show only errors
+gErrorIgnoreLevel = kFatal;   // show only fatal errors
+}
 
 SproutFit::SproutFit(std::string fitParamFile) :
 inputfile("temp"),
@@ -21,10 +25,13 @@ xmin(0), xmax(0), xsigmin(0), xsigmax(0),
 npar_sig(0), npar_bg(0), npar(0),
 chi2_sig(0), chi2_bg(0), chi2(0),
 cfit(new TMatrixDSym()), csig(new TMatrixDSym()), cbg(new TMatrixDSym()),
-fit_line_color(1), sig_line_color(2), bg_line_color(3),
-fit_line_style(2), sig_line_style(2), bg_line_style(2),
+fit_line_color(7), sig_line_color(8), bg_line_color(6),
+fit_line_style(1), sig_line_style(1), bg_line_style(1),
 line_width(3) 
-{inputfile = fitParamFile;}
+{inputfile = fitParamFile;
+gErrorIgnoreLevel = kError;   // ignore warnings, show only errors
+gErrorIgnoreLevel = kFatal;   // show only fatal errors
+}
 
 void SproutFit::fit(SproutPlot splot, TString save_as, SproutTree* stree, bool save_hist){
     gROOT->SetBatch(kTRUE); // Turn on batch mode to avoid pop-ups
@@ -38,7 +45,7 @@ void SproutFit::fit(SproutPlot splot, TString save_as, SproutTree* stree, bool s
     int i=0;
     for(auto it = splot.beginTH1(); it != splot.endTH1(); it++){
         TH1F& h = it->second;
-        
+
         readLine(&ob,line);
 
         setFitProperties();
@@ -47,13 +54,13 @@ void SproutFit::fit(SproutPlot splot, TString save_as, SproutTree* stree, bool s
         else{fit(h);}
         
         can.cd(i+1);
-        h.SetTitle("h"+int2str(i+1));
+        h.SetTitle(TString(h.GetTitle())+" fit "+int2str(i+1));
         drawResult(h);
 
         i++;
         writeOutput();
         if(stree!=nullptr){
-            float counts[4]; 
+            float counts[10]={0}; 
             integrate(h,counts);
             int j=0;
             for(float val : counts){
@@ -63,8 +70,12 @@ void SproutFit::fit(SproutPlot splot, TString save_as, SproutTree* stree, bool s
         }
     }
 
-    if(save_as != " "){can.SaveAs(save_as+".png");}
-    
+    if(save_as.EndsWith(".png")){can.SaveAs(save_as);}
+    if(savefile != nullptr){
+        savefile->cd();
+        can.Write(TString(save_canvas_name));
+    }
+
     ob.close();
 
     const int length = inputfile.length();
@@ -128,6 +139,8 @@ void SproutFit::fit(TH1F h, TString save_as){
     fitBackground(h);
     fitSignal(h);
     TFitResultPtr r = h.Fit(ffit, "SQ0", "",xmin, xmax);
+
+    if(r.Get() == nullptr){return;}
     updateParam();
 
     chi2 = ffit->GetChisquare()/ffit->GetNDF();
@@ -136,6 +149,8 @@ void SproutFit::fit(TH1F h, TString save_as){
     cfit->GetSub(npar_bg,npar-1, *csig,""); 
     cfit->GetSub(0,(npar_bg-1), *cbg,"");
 
+    
+
     if(save_as != ""){
         SproutPlot plt = SproutPlot();
         TCanvas can;
@@ -143,18 +158,22 @@ void SproutFit::fit(TH1F h, TString save_as){
 
         can.cd();
         drawResult(h);
-        can.SaveAs(save_as+".png");
+        if(save_as.EndsWith(".png")){can.SaveAs(save_as);}
+        if(savefile != nullptr){
+            savefile->cd();
+            can.Write(TString(save_canvas_name));
+        }
     }
 }
 
 void SproutFit::drawResult(TH1F h){
     //gROOT->SetBatch(kTRUE); // Turn on batch mode to avoid pop-ups
-    h.SetMinimum(0);
+    h.SetMinimum(0);  h.SetStats(0);
     h.DrawCopy(); //draw the histogram 
     TH1F* htemp = (TH1F*) h.Clone("htemp");
-    htemp->Add(fbg,-1); //subtract the fitted background from fhist1
-    htemp->DrawClone("same"); //draw background-subtracted histogram 
-    fsig->DrawCopy("same"); //draw the fitted signal function 
+    //htemp->Add(fbg,-1); //subtract the fitted background from fhist1
+    //htemp->DrawClone("same"); //draw background-subtracted histogram 
+    //fsig->DrawCopy("same"); //draw the fitted signal function 
     fbg->DrawCopy("same"); //draw the fitted background function 
     ffit->DrawCopy("same");
 
@@ -263,25 +282,49 @@ void SproutFit::writeOutput(){
     ob.close();
 }
 
-void SproutFit::integrate(TH1F h, float vals[4]){
+void SproutFit::integrate(TH1F h, float vals[10]){
+
+    if(h.GetEntries()==0){return;}
 
     float sig_integral = fsig->Integral(xmin,xmax)/(h.GetXaxis()->GetBinWidth(1)); 
     float sig_error = fsig->IntegralError(xmin,xmax, fsig->GetParameters(),csig->GetMatrixArray(),1.E-6)/(h.GetXaxis()->GetBinWidth(1)); 
 
-    float bg_integral = fbg->Integral(xmin,xmax);
+    float bg_integral = fbg->Integral(xmin,xmax)/(h.GetXaxis()->GetBinWidth(1));
     float bg_error = fbg->IntegralError(xmin,xmax, fbg->GetParameters(),cbg->GetMatrixArray(),1.E-6)/(h.GetXaxis()->GetBinWidth(1)); 
 
     h.Sumw2();
-    h.Add(fbg,-1,"I");
+    //h.Add(fbg,-1,"I"); //Should I realy be specified? might be wrong 
+    h.Add(fbg,-1); // might be wrong
     double h_error;
 
-    float hsig_integral = h.IntegralAndError(h.GetXaxis()->FindBin(xmin),h.GetXaxis()->FindBin(xmax),h_error);
+    float hsig_integral = h.IntegralAndError(h.GetXaxis()->FindBin(xsigmin),h.GetXaxis()->FindBin(xsigmax),h_error);
     float hsig_error = sqrt(h_error*h_error + bg_error*bg_error);
+
+    float bg_N_sig_region = fbg->Integral(xsigmin,xsigmax)/(h.GetXaxis()->GetBinWidth(1));
+    float bg_error_N_sig_region = fbg->IntegralError(xsigmin,xsigmax, fbg->GetParameters(),cbg->GetMatrixArray(),1.E-6)/(h.GetXaxis()->GetBinWidth(1)); 
+
+    float bg_N_bg_region1 = fbg->Integral(xmin,xsigmin)/(h.GetXaxis()->GetBinWidth(1));
+    float bg_error_N_bg_region1 = fbg->IntegralError(xmin,xsigmin, fbg->GetParameters(),cbg->GetMatrixArray(),1.E-6)/(h.GetXaxis()->GetBinWidth(1)); 
+
+    float bg_N_bg_region2 = fbg->Integral(xsigmax,xmax)/(h.GetXaxis()->GetBinWidth(1));
+    float bg_error_N_bg_region2 = fbg->IntegralError(xsigmax,xmax, fbg->GetParameters(),cbg->GetMatrixArray(),1.E-6)/(h.GetXaxis()->GetBinWidth(1)); 
+
+    float bg_N_bg_region = bg_N_bg_region1 + bg_N_bg_region2;
+    float bg_error_N_bg_region = sqrt(bg_error_N_bg_region1*bg_error_N_bg_region1 + bg_error_N_bg_region2*bg_error_N_bg_region2);
+
+    float alpha = bg_N_sig_region/bg_N_bg_region;
+    float alpha_error = sqrt(std::pow(bg_error_N_sig_region/bg_N_bg_region,2) + std::pow(bg_error_N_bg_region*bg_N_sig_region/(bg_N_bg_region*bg_N_bg_region),2));
 
     vals[0] = sig_integral;
     vals[1] = sig_error;
     vals[2] = hsig_integral;
     vals[3] = hsig_error;
+    vals[4] = bg_N_sig_region;
+    vals[5] = bg_error_N_sig_region;
+    vals[6] = bg_N_bg_region;
+    vals[7] = bg_error_N_bg_region;
+    vals[8] = alpha;
+    vals[9] = alpha_error;
 }
 
 void SproutFit::setStyle(){
